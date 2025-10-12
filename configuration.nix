@@ -42,26 +42,6 @@
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [ vim git ];
   };
-  programs.hyprland = {
-    enable = true;
-  };
-
-  programs.neovim = {
-    enable = true; 
-    defaultEditor = true;
-  };
-
-  programs.firefox = {
-    enable = true;
-  };
-  nixpkgs.config.allowUnfree = true;
-
-  environment.systemPackages = with pkgs; [
-    pkgs.kitty
-    pkgs.wezterm
-    pkgs.nerd-fonts.monaspace
-    wget
-  ];
 
   system.stateVersion = "25.05"; # Did you read the comment?
 }
