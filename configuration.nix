@@ -58,6 +58,8 @@
 
   environment.systemPackages = with pkgs; [
     pkgs.kitty
+    pkgs.wezterm
+    pkgs.nerd-fonts.monaspace
     wget
   ];
 
