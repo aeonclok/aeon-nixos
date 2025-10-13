@@ -13,6 +13,7 @@
   networking.hostName = "nixos"; # Define your hostname.
   networking.networkmanager.enable = true;
   
+  programs.hyprland.enable = true;
   time.timeZone = "Europe/Helsinki";
 
   i18n.defaultLocale = "en_US.UTF-8";
