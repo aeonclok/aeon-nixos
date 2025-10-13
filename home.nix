@@ -1,5 +1,3 @@
-
-
 { config, pkgs, ... }:
 {
   home.username = "reima";
@@ -527,43 +525,165 @@ return config
       bind-key C-Space send-prefix
     '';
   };
-  programs.hyprpanel = {
+  # programs.hyprpanel = {
+  #   enable = true;
+  #   settings = {
+  #
+  #     layout = {
+  #       bar.layouts = {
+  #         "0" = {
+  #           left = [ "dashboard" "workspaces" ];
+  #           middle = [ "media" ];
+  #           right = [ "volume" "systray" "notifications" ];
+  #         };
+  #       };
+  #     };
+  #
+  #     bar.launcher.autoDetectIcon = true;
+  #     bar.workspaces.show_icons = true;
+  #
+  #     menus.clock = {
+  #       time = {
+  #         military = true;
+  #         hideSeconds = true;
+  #       };
+  #       weather.unit = "metric";
+  #     };
+  #
+  #     menus.dashboard.directories.enabled = false;
+  #     menus.dashboard.stats.enable_gpu = true;
+  #
+  #     theme.bar.transparent = true;
+  #
+  #     theme.font = {
+  #       name = "MonaspiceNe Nerd Font Light";
+  #       size = "16px";
+  #     };
+  #   };
+  # };
+
+  programs.waybar = {
     enable = true;
+
+    systemd.enable = true;
+
+    # Waybar JSON settings (module layout & behavior)
     settings = {
+      mainBar = {
+        layer = "top";
+        position = "top";
+        height = 32;
+        margin = "0 0 6 0";
 
-      layout = {
-        bar.layouts = {
-          "0" = {
-            left = [ "dashboard" "workspaces" ];
-            middle = [ "media" ];
-            right = [ "volume" "systray" "notifications" ];
-          };
+        # Use your Nerd Font
+        "font-family" = "MonaspiceNe Nerd Font";
+        "font-size" = 12;
+
+        # Modules
+        modules-left  = [ "hyprland/workspaces" "window" ];
+        modules-center = [ "clock" ];
+        modules-right = [ "pulseaudio" "network" "battery" "tray" ];
+
+        "hyprland/workspaces" = { "all-outputs" = true; "format" = "{name}"; };
+
+        window.format = "{title}";
+        window.max-length = 50;
+
+        clock = {
+          format = "{:%a %Y-%m-%d  %H:%M}";
+          tooltip = false;
         };
-      };
 
-      bar.launcher.autoDetectIcon = true;
-      bar.workspaces.show_icons = true;
-
-      menus.clock = {
-        time = {
-          military = true;
-          hideSeconds = true;
+        network = {
+          format-wifi = "  {essid} {signal}%";
+          format-ethernet = "󰈁  {ifname}";
+          format-disconnected = "󰤭  offline";
+          tooltip = true;
         };
-        weather.unit = "metric";
-      };
 
-      menus.dashboard.directories.enabled = false;
-      menus.dashboard.stats.enable_gpu = true;
+        pulseaudio = {
+          format = "{icon} {volume}%";
+          format-muted = "󰝟  muted";
+          "format-icons" = { default = [ "" "" "" ]; };
+          tooltip = false;
+        };
 
-      theme.bar.transparent = true;
+        battery = {
+          format = "{icon} {capacity}%";
+          "format-icons" = [ "󰁺" "󰁼" "󰁿" "󰂂" "󰁹" ];
+          tooltip = true;
+        };
 
-      theme.font = {
-        name = "MonaspiceNe Nerd Font Light";
-        size = "16px";
+        tray = { icon-size = 18; spacing = 8; };
       };
     };
-  };
 
+    # CSS theme using your palette
+    style = ''
+      /* === Your palette === */
+      @define-color base      #1d2021;
+      @define-color mantle    #141414;
+      @define-color crust     #141414;
+      @define-color surface0  #32302f;
+      @define-color surface1  #458588;
+      @define-color surface2  #504945;
+      @define-color overlay0  #665c54;
+      @define-color overlay1  #7c6f64;
+      @define-color overlay2  #928374;
+      @define-color subtext0  #928374;
+      @define-color subtext1  #458588;
+      @define-color text      #d4be98;
+      @define-color rosewater #ddc7a1;
+      @define-color flamingo  #ea6962;
+      @define-color red       #c14a4a;
+      @define-color peach     #d3869b;
+      @define-color yellow    #d4be98;
+      @define-color green     #a9b665;
+      @define-color teal      #89b482;
+      @define-color blue      #7daea3;
+      @define-color mauve     #e78a4e;
+      @define-color sapphire  #458588;
+
+      * {
+        font-family: "MonaspiceNe Nerd Font";
+        font-size: 12px;
+      }
+
+      window#waybar {
+        background: @base;
+        color: @text;
+        border: 0px solid transparent;
+      }
+
+      #workspaces button {
+        color: @subtext0;
+        background: transparent;
+        padding: 0 8px;
+        border-radius: 6px;
+      }
+      #workspaces button.active {
+        background: @surface0;
+        color: @text;
+      }
+      #workspaces button:hover {
+        background: @surface1;
+        color: @base;
+      }
+
+      #window, #clock, #network, #pulseaudio, #battery, #tray {
+        padding: 6px 10px;
+        margin: 4px 6px;
+        border-radius: 8px;
+        background: @surface0;
+        color: @text;
+      }
+
+      #clock { background: @surface1; color: @base; }
+      #network.disconnected { background: @overlay0; color: @rosewater; }
+      #pulseaudio.muted { background: @overlay0; color: @overlay2; }
+      #battery.critical { background: @red; color: @base; }
+    '';
+  };
 
   programs.firefox = {
     enable = true;
