@@ -35,13 +35,17 @@
     variant = "winkeys";
   };
 
+  services.tailscale.enable = true;
+
   console.keyMap = "fi";
+  
+  programs.fish.enable = true;
 
   users.users.reima = {
     isNormalUser = true;
     description = "reima";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [ vim git ];
+    shell = pkgs.fish;
   };
 
   system.stateVersion = "25.05"; # Did you read the comment?
