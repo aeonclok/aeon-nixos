@@ -1,21 +1,13 @@
-
 { config, pkgs, ... }:
-
 {
-  imports =
-    [ 
-      ./hardware-configuration.nix
-    ];
+  imports = [];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
   networking.networkmanager.enable = true;
-  
-  programs.hyprland.enable = true;
-  time.timeZone = "Europe/Helsinki";
 
+  time.timeZone = "Europe/Helsinki";
   i18n.defaultLocale = "en_US.UTF-8";
 
   i18n.extraLocaleSettings = {
@@ -35,10 +27,8 @@
     variant = "winkeys";
   };
 
-  services.tailscale.enable = true;
-
   console.keyMap = "fi";
-  
+
   programs.fish.enable = true;
 
   users.users.reima = {
@@ -47,6 +37,5 @@
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.fish;
   };
-
-  system.stateVersion = "25.05"; # Did you read the comment?
 }
+
