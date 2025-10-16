@@ -15,6 +15,8 @@
 
   programs.git = {
      enable = true;
+     userName  = "Reima Kokko";
+     userEmail = "reima.kokko@valolink.fi";
   };
 
   programs.firefox = {
