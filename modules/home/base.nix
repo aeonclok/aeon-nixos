@@ -7,6 +7,13 @@
     nerd-fonts.monaspace
     wget
     fastfetch
+    wl-clipboard
+    cliphist   
+    rofi
+    wl-clip-persist
+    tldr
+    ncdu
+    tree
   ];
 
   programs.lazygit = {
