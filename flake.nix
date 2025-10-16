@@ -2,12 +2,14 @@
   description = "reima-nixos";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-                  nvf.url = "github:NotAShelf/nvf";
-  nvf.inputs.nixpkgs.follows = "nixpkgs";
-  };
+    nvf = {
+      url = "github:NotAShelf/nvf";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
   outputs = { self, nixpkgs, home-manager, ... }:
     let
@@ -15,6 +17,20 @@
       pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
     in {
       nixosConfigurations = {
+        thinkpad = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit pkgs; };
+          modules = [
+            ./hosts/thinkpad/configuration.nix
+            ./hosts/thinkpad/hardware-configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useUserPackages = true;
+              home-manager.useGlobalPkgs = true;
+              home-manager.users.reima = import ./hosts/thinkpad/home.nix;
+            }
+          ];
+        };
         thinkcentre = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit pkgs; };
