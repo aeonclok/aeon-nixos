@@ -10,8 +10,9 @@
       url = "github:NotAShelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+        };
 
-  outputs = { self, nixpkgs, home-manager, ... }:
+  outputs = { self, nvf, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
@@ -25,6 +26,10 @@
             ./hosts/thinkpad/hardware-configuration.nix
             home-manager.nixosModules.home-manager
             {
+	      home-manager.sharedModules = [
+                nvf.homeManagerModules.default
+              ];
+
               home-manager.useUserPackages = true;
               home-manager.useGlobalPkgs = true;
               home-manager.users.reima = import ./hosts/thinkpad/home.nix;
