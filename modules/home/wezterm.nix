@@ -1,4 +1,5 @@
 { config, pkgs, ... }:
+{
 programs.wezterm = {
   enable = true;
   extraConfig = ''
@@ -119,3 +120,4 @@ config.font_rules = {
 return config
   '';
 };
+}
