@@ -6,7 +6,7 @@
     ../../modules/system/tailscale.nix
   ];
 
-  networking.hostName = "nixos-laptop";
+  networking.hostName = "thinkcentre";
   system.stateVersion = "25.05";
 }
 

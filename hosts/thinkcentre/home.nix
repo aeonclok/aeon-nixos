@@ -7,6 +7,7 @@
     ../../modules/home/hyprland.nix
     ../../modules/home/waybar.nix
     ../../modules/home/nvf.nix
+    ../../modules/home/tmux.nix
   ];
 
   home.username = "reima";

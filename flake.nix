@@ -11,29 +11,28 @@
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
-      lib = pkgs.lib;
     in {
       nixosConfigurations = {
-        nixos-laptop = lib.nixosSystem {
+        thinkcentre = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit pkgs; };
           modules = [
-            ./hosts/nixos-laptop/hardware-configuration.nix
-            ./hosts/nixos-laptop/configuration.nix
+            ./hosts/thinkcentre/configuration.nix
+            ./hosts/thinkcentre/hardware-configuration.nix
             home-manager.nixosModules.home-manager
             {
               home-manager.useUserPackages = true;
               home-manager.useGlobalPkgs = true;
-              home-manager.users.reima = import ./hosts/nixos-laptop/home.nix;
+              home-manager.users.reima = import ./hosts/thinkcentre/home.nix;
             }
           ];
         };
       };
 
-      homeConfigurations."reima@nixos-laptop" =
+      homeConfigurations."reima@thinkcentre" =
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          modules = [ ./hosts/nixos-laptop/home.nix ];
+          modules = [ ./hosts/thinkcentre/home.nix ];
         };
     };
 }
