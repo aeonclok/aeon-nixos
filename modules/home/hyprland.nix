@@ -33,6 +33,8 @@
           passes = 2;
         };
       };
+      
+      exec-once = "waybar";
 
       "$mod" = "Alt_L";
       bind = [

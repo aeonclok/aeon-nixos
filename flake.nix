@@ -29,7 +29,6 @@
 	      home-manager.sharedModules = [
                 nvf.homeManagerModules.default
               ];
-
               home-manager.useUserPackages = true;
               home-manager.useGlobalPkgs = true;
               home-manager.users.reima = import ./hosts/thinkpad/home.nix;
@@ -44,6 +43,9 @@
             ./hosts/thinkcentre/hardware-configuration.nix
             home-manager.nixosModules.home-manager
             {
+              home-manager.sharedModules = [
+                nvf.homeManagerModules.default
+              ];
               home-manager.useUserPackages = true;
               home-manager.useGlobalPkgs = true;
               home-manager.users.reima = import ./hosts/thinkcentre/home.nix;
