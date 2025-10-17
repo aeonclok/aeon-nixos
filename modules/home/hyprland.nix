@@ -1,5 +1,16 @@
 { config, pkgs, ... }:
 {
+  services.hyprpaper = {
+    enable = true;
+    settings = {
+      ipc = "on";
+      splash = false;
+      splash_offset = 2.0;
+      preload = [ "/home/reima/nix/background.jpg" ];
+      wallpaper = [ "eDP-1,/home/reima/nix/background.jpg" ];
+    };
+  };
+
   wayland.windowManager.hyprland = {
     enable = true;
 
