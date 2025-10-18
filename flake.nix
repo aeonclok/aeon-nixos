@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     # nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    fsel.url = "github:Mjoyufull/fsel";
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nvf = {
@@ -12,7 +13,7 @@
     };
         };
 
-  outputs = { self, nvf, nixpkgs, home-manager, ... }:
+  outputs = { self, fsel, nvf, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
@@ -32,6 +33,9 @@
               home-manager.useUserPackages = true;
               home-manager.useGlobalPkgs = true;
               home-manager.users.reima = import ./hosts/thinkpad/home.nix;
+              environment.systemPackages = [
+                (fsel.packages.${system}.default)
+              ];
             }
           ];
         };
@@ -54,6 +58,11 @@
         };
       };
 
+      homeConfigurations."reima@thinkpad" =
+        home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [ ./hosts/thinkcentre/home.nix ];
+        };
       homeConfigurations."reima@thinkcentre" =
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;

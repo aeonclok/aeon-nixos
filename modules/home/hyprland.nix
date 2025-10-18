@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
 {
+
   services.hyprpaper = {
     enable = true;
     settings = {
@@ -10,7 +11,7 @@
       wallpaper = [ "eDP-1,/home/reima/nix/background.jpg" ];
     };
   };
-
+      
   wayland.windowManager.hyprland = {
     enable = true;
 
@@ -45,7 +46,7 @@
         };
       };
       
-      exec-once = "waybar";
+      exec-once = [ "waybar" ];
 
       "$mod" = "Alt_L";
       bind = [
