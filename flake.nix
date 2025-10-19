@@ -17,6 +17,28 @@
       system = "x86_64-linux";
     in {
       nixosConfigurations = {
+        thinkpad-carbon = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [
+            {
+              nixpkgs.config.allowUnfree = true;
+              environment.systemPackages = [
+                fsel.packages.${system}.default
+              ];
+            }
+            ./hosts/thinkpad-carbon/configuration.nix
+            ./hosts/thinkpad-carbon/hardware-configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+	      home-manager.sharedModules = [
+                nvf.homeManagerModules.default
+              ];
+              home-manager.useUserPackages = true;
+              home-manager.useGlobalPkgs = true;
+              home-manager.users.reima = import ./hosts/thinkpad-carbon/home.nix;
+            }
+          ];
+        };
         thinkpad = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
@@ -63,6 +85,11 @@
         };
       };
 
+      homeConfigurations."reima@thinkpad-carbon" =
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
+          modules = [ ./hosts/thinkpad-carbon/home.nix ];
+        };
       homeConfigurations."reima@thinkpad" =
         home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
