@@ -11,6 +11,7 @@
     cliphist   
     rofi
     wl-clip-persist
+    hyprpaper
     tldr
     ncdu
     tree
