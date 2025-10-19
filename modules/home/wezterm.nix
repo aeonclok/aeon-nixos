@@ -6,7 +6,7 @@ programs.wezterm = {
 local wezterm = require "wezterm"
 local config = wezterm.config_builder()
 
-config.window_background_opacity = 0.90
+config.window_background_opacity = 0.80
 
 config.audible_bell = "Disabled"
 config.visual_bell = {
