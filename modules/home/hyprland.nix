@@ -106,7 +106,7 @@ programs.hyprlock = {
         };
       };
       
-      # exec-once = [ "hyprpaper" ];
+      exec-once = [ "hyprlock" ];
 
       "$mod" = "Alt_L";
       bind = [
