@@ -15,12 +15,10 @@
   outputs = { self, fsel, nvf, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
-      # pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
     in {
       nixosConfigurations = {
         thinkpad = nixpkgs.lib.nixosSystem {
           inherit system;
-          # specialArgs = { inherit pkgs; };
           modules = [
             {
               nixpkgs.config.allowUnfree = true;
@@ -43,7 +41,6 @@
         };
         thinkcentre = nixpkgs.lib.nixosSystem {
           inherit system;
-          # specialArgs = { inherit pkgs; };
           modules = [
             {
               nixpkgs.config.allowUnfree = true;
@@ -69,7 +66,7 @@
       homeConfigurations."reima@thinkpad" =
         home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
-          modules = [ ./hosts/thinkcentre/home.nix ];
+          modules = [ ./hosts/thinkpad/home.nix ];
         };
       homeConfigurations."reima@thinkcentre" =
         home-manager.lib.homeManagerConfiguration {

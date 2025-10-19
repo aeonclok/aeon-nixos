@@ -1,17 +1,21 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
 
   services.hyprpaper = {
     enable = true;
     settings = {
-      ipc = "on";
-      splash = false;
-      splash_offset = 2.0;
-      preload = [ "/home/reima/nix/background.jpg" ];
-      wallpaper = [ "eDP-1,/home/reima/nix/background.jpg" ];
+    ipc = "on";
+    splash = false;
+     # splash_offset = 2.0;
+    preload = [ "/home/reima/nix/background.jpg" ];
+    wallpaper = [ ",/home/reima/nix/background.jpg" ];
     };
   };
       
+  # systemd.user.services.hyprpaper.Unit.After = lib.mkForce [ "graphical-session.target" ];
+  # systemd.user.services.hyprpaper.Install.WantedBy = [ "graphical-session.target" ];
+
+
   wayland.windowManager.hyprland = {
     enable = true;
 
@@ -46,7 +50,7 @@
         };
       };
       
-      # exec-once = [ "waybar" ];
+      # exec-once = [ "hyprpaper" ];
 
       "$mod" = "Alt_L";
       bind = [
@@ -73,5 +77,5 @@
       ];
     };
   };
-}
 
+}

@@ -27,8 +27,18 @@
     variant = "winkeys";
   };
 
+  programs.hyprland.enable = true; 
+  services.displayManager.gdm.enable = true;
+  services.displayManager.gdm.wayland = true;
+  services.displayManager.defaultSession = "hyprland";
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "reima";
+  };
+
   console.keyMap = "fi";
 
+  services.tailscale.enable = true;
   programs.fish.enable = true;
 
   users.users.reima = {
