@@ -27,7 +27,8 @@
     variant = "winkeys";
   };
 
-  programs.hyprland.enable = true; 
+  programs.hyprland.enable = true;
+  security.pam.services.hyprlock = {};
   services.displayManager.gdm.enable = true;
   services.displayManager.gdm.wayland = true;
   services.displayManager.defaultSession = "hyprland";

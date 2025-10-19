@@ -12,9 +12,65 @@
     };
   };
       
-  # systemd.user.services.hyprpaper.Unit.After = lib.mkForce [ "graphical-session.target" ];
-  # systemd.user.services.hyprpaper.Install.WantedBy = [ "graphical-session.target" ];
+programs.hyprlock = {
+  enable = true;
 
+  settings = {
+    general = {
+      grace = 0; 
+    };
+
+    background = [
+      {
+        monitor = "";
+        path = "screenshot";   
+        blur_passes = 2;   
+        blur_size = 7;     
+        noise = 0.02;
+      }
+    ];
+
+    input-field = [
+      {
+        monitor = "";
+        size = "300, 40";
+        position = "0, -100";
+        rounding = 0;
+        outline_thickness = 1;
+
+        inner_color = "rgba(0,0,0,0.5)";
+        outer_color = "rgba(255,255,255,0.15)";
+        font_color  = "rgba(255,255,255,0.9)";
+        placeholder_text = "<type password>";
+        hide_on_empty = false;
+        fade_on_empty = false;
+        fade_timeout  = 0;
+        
+        font_family = "MonaspiceNe NFM";
+        font_size = 12;
+      }
+    ];
+
+    
+    label = [
+      {
+        monitor = "";
+        text = "$TIME";
+        font_family = "MonaspiceNe NFM";
+        font_size = 12;
+        position = "0, 80";
+      }
+    ];
+  };
+};
+
+
+  services.hypridle = {
+    enable = true;
+    settings.listener = [
+      { timeout = 300; "on-timeout" = "hyprlock"; }
+    ];
+  };
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -59,9 +115,9 @@
         "$mod, U, togglefloating"
         "$mod, F, fullscreen"
         "$mod, RETURN, exec, firefox"
+        "$mod, L, exec, hyprlock"
       ]
             ++ (
-        # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
         builtins.concatLists (builtins.genList (i:
             let ws = i + 1;
             in [
@@ -72,7 +128,6 @@
           9)
       );
       monitor = [
-        # "eDP-1,1920x1080@60,0x0,1"
         ",preferred,auto,1"
       ];
 
