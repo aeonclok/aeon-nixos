@@ -12,9 +12,22 @@
     rofi
     wl-clip-persist
     hyprpaper
-    tldr
+    # tldr
     ncdu
     tree
+    # CLI core
+    fd ripgrep bat eza procs tokei sd choose xan jq yq-go hyperfine just entr tealdeer
+    # TUI set
+    yazi nnn xplr broot btop gdu duf dust gitui gh gh-dash glow newsboat onefetch 
+    # Wayland / Hyprland
+    foot waybar wofi mako grim slurp swappy grimblast hyprpicker
+    xdg-desktop-portal-hyprland zathura imv mpv ytfzf
+    # net + misc
+    bandwhich bmon mtr httpie curlie
+    # Nix goodies
+    direnv nix-direnv nix-index comma nix-tree nix-du nvd nh nix-output-monitor deadnix statix nixpkgs-fmt
+    # secrets
+    pass age rage sops
   ];
 
   programs.lazygit = {
