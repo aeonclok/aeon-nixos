@@ -71,7 +71,7 @@
       homeConfigurations."reima@thinkcentre" =
         home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
-          modules = [ ./hosts/thinkcentre/home.nix ];
+          modules = [ ./hosts/thinkcentre/home.nix nvf.homeManagerModules.default ];
         };
     };
 }
