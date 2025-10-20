@@ -280,5 +280,7 @@ vimcmd_replace_symbol = "[<](fg:color_purple)"
 vimcmd_visual_symbol = "[<](fg:color_yellow)"
 '';
   };
+
+  programs.fzf.enable = true;
 }
 
