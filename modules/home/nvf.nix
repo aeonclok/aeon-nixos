@@ -6,7 +6,7 @@
 
   settings = {
     vim.extraPackages = with pkgs; [ ripgrep fd git ];
-
+    # vim.opt.clipboard = "unnamedplus";
     vim.theme.enable = false;
 
     vim.autocomplete.blink-cmp.enable = true;
