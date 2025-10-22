@@ -42,6 +42,8 @@
 
   console.keyMap = "fi";
 
+  services.openssh.enable = true;
+  programs.mosh.enable = true;
   services.tailscale.enable = true;
   programs.fish.enable = true;
 

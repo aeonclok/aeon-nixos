@@ -61,6 +61,28 @@
             }
           ];
         };
+        asusprime = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [
+            {
+              nixpkgs.config.allowUnfree = true;
+              environment.systemPackages = [
+                fsel.packages.${system}.default
+              ];
+            }
+            ./hosts/asusprime/configuration.nix
+            ./hosts/asusprime/hardware-configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.sharedModules = [
+                nvf.homeManagerModules.default
+              ];
+              home-manager.useUserPackages = true;
+              home-manager.useGlobalPkgs = true;
+              home-manager.users.reima = import ./hosts/asusprime/home.nix;
+            }
+          ];
+        };
       };
 
       homeConfigurations."reima@thinkpad" =
@@ -72,6 +94,11 @@
         home-manager.lib.homeManagerConfiguration {
           pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
           modules = [ ./hosts/thinkcentre/home.nix nvf.homeManagerModules.default ];
+        };
+      homeConfigurations."reima@asusprime" =
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
+          modules = [ ./hosts/asusprime/home.nix nvf.homeManagerModules.default ];
         };
     };
 }
