@@ -93,6 +93,7 @@ format = """
 [](color_orange)\
 $os\
 $username\
+$hostname\
 [](bg:color_yellow fg:color_orange)\
 $directory\
 [](fg:color_yellow bg:color_aqua)\
@@ -163,7 +164,12 @@ Pop = ""
 show_always = true
 style_user = "bg:color_orange fg:color_fg0"
 style_root = "bg:color_orange fg:color_fg0"
-format = "[ $user wsl-toimisto ]($style)"
+format = "[ $user/]($style)"
+
+[hostname]
+ssh_only = false
+style = "bg:color_orange fg:color_fg0"
+format = "[$hostname ]($style)"
 
 [directory]
 style = "fg:color_fg0 bg:color_yellow"

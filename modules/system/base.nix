@@ -42,9 +42,19 @@
 
   console.keyMap = "fi";
 
-  services.openssh.enable = true;
   programs.mosh.enable = true;
-  services.tailscale.enable = true;
+  services.tailscale = {
+    enable = true;
+    extraUpFlags = [
+      "--ssh"
+    ];
+  };
+
+  services.openssh = {
+    enable = true;      # optional; Tailscale SSH doesn’t require sshd, but many keep it running
+    openFirewall = false;
+  };
+
   programs.fish.enable = true;
 
   users.users.reima = {
