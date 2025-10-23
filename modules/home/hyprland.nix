@@ -127,8 +127,10 @@ programs.hyprlock = {
           )
           9)
       );
+      
       monitor = [
-        ",preferred,auto,1"
+        "desc:AU Optronics 0x2336,preferred,auto,1.6"
+        ",preferred,auto,1.6"
       ];
 
       misc = {

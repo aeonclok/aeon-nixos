@@ -1,4 +1,7 @@
-{ config, pkgs, ... }:
+{ lib, config, pkgs, ... }:
+let
+  mkLuaInline = lib.generators.mkLuaInline;
+in
 {
   programs.nvf = {
   enable = true;
@@ -9,25 +12,104 @@
     # vim.opt.clipboard = "unnamedplus";
     vim.theme.enable = false;
 
-    vim.autocomplete.blink-cmp.enable = true;
-    vim.telescope.enable = true;
-    vim.binds.whichKey.enable = true;
-
-    vim.statusline.lualine.enable = true;
-    vim.tabline.nvimBufferline.enable = true;
-
-    vim.git.gitsigns.enable = true;
-
-    vim.ui.noice.enable = true;
-    vim.notify.nvim-notify.enable = true;
-
-    # vim.diagnostics.trouble.enable = true;
-
-    vim.notes.todo-comments.enable = true;
-
-    vim.treesitter.enable = true;
+    # vim.autocomplete.blink-cmp.enable = true;
+    # vim.telescope.enable = true;
+    # vim.binds.whichKey.enable = true;
+    #
+    # vim.statusline.lualine.enable = true;
+    # vim.tabline.nvimBufferline.enable = true;
+    #
+    # vim.git.gitsigns.enable = true;
+    #
+    # vim.ui.noice.enable = true;
+   # vim.notify.nvim-notify.enable = true;
+    #
+    # # vim.diagnostics.trouble.enable = true;
+    #
+    # vim.notes.todo-comments.enable = true;
+    #
+    # vim.treesitter.enable = true;
     vim.lsp.enable = true;
 
+    vim.mini.ai.enable = true;
+    vim.mini.align.enable = true;
+    vim.mini.comment.enable = true;
+    vim.mini.completion.enable = true;
+    # vim.mini.keymap.enable = true;
+    vim.mini.move.enable = true;
+    vim.mini.operators.enable = true;
+    vim.mini.pairs.enable = true;
+    vim.mini.snippets.enable = true;
+    vim.mini.splitjoin.enable = true;
+    vim.mini.surround.enable  = true;
+    vim.mini.basics.enable = true;
+    vim.mini.bracketed.enable = true;
+    vim.mini.bufremove.enable = true;
+
+    vim.mini.clue = {
+      enable = true;
+      setupOpts = {
+        # exactly your triggers
+        triggers = [
+          { mode = "n"; keys = "<Leader>"; }
+          { mode = "x"; keys = "<Leader>"; }
+          { mode = "i"; keys = "<C-x>"; }
+          { mode = "n"; keys = "g"; }
+          { mode = "x"; keys = "g"; }
+          { mode = "n"; keys = "'"; }
+          { mode = "n"; keys = "`"; }
+          { mode = "x"; keys = "'"; }
+          { mode = "x"; keys = "`"; }
+          { mode = "n"; keys = "\""; }
+          { mode = "x"; keys = "\""; }
+          { mode = "i"; keys = "<C-r>"; }
+          { mode = "c"; keys = "<C-r>"; }
+          { mode = "n"; keys = "<C-w>"; }
+          { mode = "n"; keys = "z"; }
+          { mode = "x"; keys = "z"; }
+        ];
+
+        # the generated clue sets – emitted as Lua calls
+        clues = [
+          (mkLuaInline "require('mini.clue').gen_clues.builtin_completion()")
+          (mkLuaInline "require('mini.clue').gen_clues.g()")
+          (mkLuaInline "require('mini.clue').gen_clues.marks()")
+          (mkLuaInline "require('mini.clue').gen_clues.registers()")
+          (mkLuaInline "require('mini.clue').gen_clues.windows()")
+          (mkLuaInline "require('mini.clue').gen_clues.z()")
+        ];
+      };
+    };
+
+    # vim.mini.deps.enable = true;
+    vim.mini.diff.enable = true;
+    vim.mini.extra.enable = true;
+    vim.mini.files.enable = true;
+    vim.mini.git.enable = true;
+    vim.mini.jump.enable = true;
+    vim.mini.jump2d.enable = true;
+    vim.mini.misc.enable = true;
+    vim.mini.pick.enable = true;
+    vim.mini.sessions.enable = true;
+    vim.mini.visits.enable = true;
+    vim.mini.animate.enable = true;
+    # vim.mini.base16.enable = true;
+    vim.mini.colors.enable = true;
+    vim.mini.cursorword.enable = true;
+    vim.mini.hipatterns.enable = true;
+    # vim.mini.hues.enable = true;
+    vim.mini.icons.enable = true;
+    vim.mini.indentscope.enable = true;
+    vim.mini.map.enable = true;
+    vim.mini.notify.enable = true;
+    vim.mini.starter.enable = true;
+    vim.mini.statusline.enable = true;
+    vim.mini.tabline.enable = true;
+    vim.mini.trailspace.enable = true;
+    vim.mini.doc.enable = true;
+    vim.mini.fuzzy.enable = true;
+    vim.mini.test.enable = true;
+                        
     vim.languages.nix = {
       enable = true;
       treesitter.enable = true;
@@ -35,8 +117,8 @@
       lsp = {
         enable = true;
         server = "nixd";
-      };
 
+      };
       format = {
         enable = true;
         type = "alejandra";
@@ -201,9 +283,9 @@
     };
 
     vim.maps.normal = {
-      "<leader>e" = { action = "<cmd>Neotree toggle<cr>"; desc = "Explorer (Neo-tree)"; };
-      "<leader>ff" = { action = "<cmd>Telescope find_files<cr>"; desc = "Find files"; };
-      "<leader>fg" = { action = "<cmd>Telescope live_grep<cr>";  desc = "Grep"; };
+      # "<leader>e" = { action = "<cmd>Neotree toggle<cr>"; desc = "Explorer (Neo-tree)"; };
+      # "<leader>ff" = { action = "<cmd>Telescope find_files<cr>"; desc = "Find files"; };
+      # "<leader>fg" = { action = "<cmd>Telescope live_grep<cr>";  desc = "Grep"; };
       # "s"         = { action = function: "lua", lua = "require('flash').jump()", desc = "Flash jump"; };
     };
 
@@ -264,20 +346,20 @@
           desc = "Increase Window Width";
           silent = true;
         }
-        {
-          key = "<A-j>";
-          mode = [ "n" ];
-          action = ":m .+1<CR>==";
-          desc = "Move Line Down";
-          silent = true;
-        }
-        {
-          key = "<A-k>";
-          mode = [ "n" ];
-          action = ":m .-2<CR>==";
-          desc = "Move Line Up";
-          silent = true;
-        }
+        # {
+        #   key = "<A-j>";
+        #   mode = [ "n" ];
+        #   action = ":m .+1<CR>==";
+        #   desc = "Move Line Down";
+        #   silent = true;
+        # }
+        # {
+        #   key = "<A-k>";
+        #   mode = [ "n" ];
+        #   action = ":m .-2<CR>==";
+        #   desc = "Move Line Up";
+        #   silent = true;
+        # }
         {
           key = "<S-h>";
           mode = [ "n" ];

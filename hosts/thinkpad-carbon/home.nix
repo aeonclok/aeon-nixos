@@ -14,4 +14,3 @@
   home.homeDirectory = "/home/reima";
   home.stateVersion = "25.05";
 }
-
