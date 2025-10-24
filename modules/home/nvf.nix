@@ -30,6 +30,7 @@ in
     #
     # vim.treesitter.enable = true;
     vim.lsp.enable = true;
+    vim.formatter.conform-nvim.enable = true;
 
     vim.mini.ai.enable = true;
     vim.mini.align.enable = true;
