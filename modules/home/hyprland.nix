@@ -11,21 +11,21 @@
     wallpaper = [ ",/home/reima/nix/background.jpg" ];
     };
   };
-      
+
 programs.hyprlock = {
   enable = true;
 
   settings = {
     general = {
-      grace = 0; 
+      grace = 0;
     };
 
     background = [
       {
         monitor = "";
-        path = "screenshot";   
-        blur_passes = 2;   
-        blur_size = 7;     
+        path = "screenshot";
+        blur_passes = 2;
+        blur_size = 7;
         noise = 0.02;
       }
     ];
@@ -45,13 +45,13 @@ programs.hyprlock = {
         hide_on_empty = false;
         fade_on_empty = false;
         fade_timeout  = 0;
-        
+
         font_family = "MonaspiceNe NFM";
         font_size = 12;
       }
     ];
 
-    
+
     label = [
       {
         monitor = "";
@@ -105,7 +105,7 @@ programs.hyprlock = {
           passes = 2;
         };
       };
-      
+
       exec-once = [ "hyprlock" ];
 
       "$mod" = "Alt_L";
@@ -116,6 +116,34 @@ programs.hyprlock = {
         "$mod, F, fullscreen"
         "$mod, RETURN, exec, firefox"
         "$mod, L, exec, hyprlock"
+
+        # switch focus
+        "$mod, left,  movefocus, l"
+        "$mod, right, movefocus, r"
+        "$mod, up,    movefocus, u"
+        "$mod, down,  movefocus, d"
+        "$mod, h, movefocus, l"
+        "$mod, j, movefocus, d"
+        "$mod, k, movefocus, u"
+        "$mod, l, movefocus, r"
+
+        "$mod, left,  alterzorder, top"
+        "$mod, right, alterzorder, top"
+        "$mod, up,    alterzorder, top"
+        "$mod, down,  alterzorder, top"
+        "$mod, h, alterzorder, top"
+        "$mod, j, alterzorder, top"
+        "$mod, k, alterzorder, top"
+        "$mod, l, alterzorder, top"
+
+        "$mod SHIFT, left, movewindow, l"
+        "$mod SHIFT, right, movewindow, r"
+        "$mod SHIFT, up, movewindow, u"
+        "$mod SHIFT, down, movewindow, d"
+        "$mod SHIFT, h, movewindow, l"
+        "$mod SHIFT, j, movewindow, d"
+        "$mod SHIFT, k, movewindow, u"
+        "$mod SHIFT, l, movewindow, r"
       ]
             ++ (
         builtins.concatLists (builtins.genList (i:
@@ -127,7 +155,7 @@ programs.hyprlock = {
           )
           9)
       );
-      
+
       monitor = [
         "desc:AU Optronics 0x2336,preferred,auto,1.6"
         ",preferred,auto,1.6"
