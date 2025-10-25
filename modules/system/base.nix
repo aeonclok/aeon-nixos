@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   imports = [];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -27,7 +30,19 @@
 
   services.xserver.xkb = {
     layout = "fi";
-    variant = "winkeys";
+    options = "caps:escape";
+    # extraLayouts.fi_noesc = {
+    #   description = "fi, no esc, tab>esc";
+    #   languages = ["fi"];
+    #   symbolsFile = pkgs.writeText "fi_tabesc" ''
+    #     default partial alphanumeric_keys
+    #     xkb_symbols "basic" {
+    #       include "fi(winkeys)"
+    #       key <ESC> { [ NoSymbol ] };
+    #       key <TAB> { type="ONE_LEVEL", [ Escape ] };
+    #     };
+    #   '';
+    # };
   };
 
   programs.hyprland.enable = true;
@@ -51,7 +66,7 @@
   };
 
   services.openssh = {
-    enable = true;      # optional; Tailscale SSH doesn’t require sshd, but many keep it running
+    enable = true; # optional; Tailscale SSH doesn’t require sshd, but many keep it running
     openFirewall = false;
   };
 
@@ -60,8 +75,7 @@
   users.users.reima = {
     isNormalUser = true;
     description = "reima";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = ["networkmanager" "wheel"];
     shell = pkgs.fish;
   };
-
 }
