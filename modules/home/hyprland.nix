@@ -158,7 +158,8 @@ programs.hyprlock = {
 
       monitor = [
         "desc:AU Optronics 0x2336,preferred,auto,1.6"
-        ",preferred,auto,1.6"
+        "desc:AOC Q24P2W1 UFTQ4HA000235, preferred, auto, 1.25"
+        ",preferred,auto,1"
       ];
 
       misc = {

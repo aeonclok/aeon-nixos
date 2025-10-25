@@ -19,31 +19,56 @@
 
         # Modules
         modules-left  = [ "hyprland/workspaces" "window" ];
-        modules-center = [ "clock" ];
-        modules-right = [ "pulseaudio" "network" "battery" "tray" ];
+        modules-center = [ "clock"];
+        modules-right = [ "pulseaudio" "memory" "cpu" "disk" "network" "battery" "tray" ];
 
         "hyprland/workspaces" = { "all-outputs" = true; "format" = "{name}"; };
 
         window.format = "{title}";
         window.max-length = 50;
 
+        disk = {
+          format = "󰋊 {percentage_used}% ";
+          interval = 60;
+          on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
+        };
+
+        cpu = {
+          format = "  {usage}% ";
+          format-alt = "  {avg_frequency} GHz";
+          interval = 2;
+          on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
+        };
+
+        memory = {
+          format = "󰟜 {}% ";
+          format-alt = "󰟜 {used} GiB"; # 
+          interval = 2;
+          # on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
+        };
+
         clock = {
-          format = "{:%a %Y-%m-%d  %H:%M}";
-          tooltip = false;
+          format = "{:%a %d-%m-%Y  %H:%M}";
+          tooltip = true;
         };
 
         network = {
-          format-wifi = "  {essid} {signal}%";
-          format-ethernet = "󰈁  {ifname}";
-          format-disconnected = "󰤭  offline";
-          tooltip = true;
+        #   format-wifi = "  {essid} {signal}%";
+        #   format-ethernet = "󰈁  {ifname}";
+        #   format-disconnected = "󰤭  offline";
+        #   tooltip = true;
+          format-wifi = "  {signalStrength}%";
+          format-ethernet = "󰀂 ";
+          tooltip-format = "Connected to {essid} {ifname} via {gwaddr}";
+          format-linked = "{ifname} (No IP)";
+          format-disconnected = "󰖪 ";
         };
 
         pulseaudio = {
           format = "{icon} {volume}%";
           format-muted = "󰝟  muted";
           "format-icons" = { default = [ "" "" "" ]; };
-          tooltip = false;
+          # tooltip = false;
         };
 
         battery = {
