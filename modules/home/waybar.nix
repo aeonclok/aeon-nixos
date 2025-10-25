@@ -133,7 +133,7 @@
         color: @base;
       }
 
-      #window, #clock, #network, #pulseaudio, #battery, #tray {
+      #cpu, #disk, #memory, #window, #clock, #network, #pulseaudio, #battery, #tray {
         padding: 6px 10px;
         margin: 4px 6px;
         border-radius: 8px;
@@ -143,8 +143,8 @@
 
       #clock { background: @surface1; color: @base; }
       #network.disconnected { background: @overlay0; color: @rosewater; }
-      #pulseaudio.muted { background: @overlay0; color: @overlay2; }
       #battery.critical { background: @red; color: @base; }
+      #pulseaudio.muted { background: @overlay0; color: @overlay2; }
     '';
   };
 }

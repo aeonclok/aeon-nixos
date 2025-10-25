@@ -2,6 +2,17 @@
   description = "reima-nixos";
 
   inputs = {
+    lix = {
+      url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
+      flake = false;
+    };
+
+    lix-module = {
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/main.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.lix.follows = "lix";
+    };
+
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -12,7 +23,7 @@
     };
   };
 
-  outputs = { self, fsel, nvf, nixpkgs, home-manager, ... }:
+  outputs = { self, fsel, nvf, nixpkgs, home-manager, lix, lix-module, ... }:
     let
       system = "x86_64-linux";
     in {
@@ -20,6 +31,8 @@
         thinkpad-carbon = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
+            # ./machines/your-box
+            lix-module.nixosModules.default
             {
               nixpkgs.config.allowUnfree = true;
               environment.systemPackages = [
