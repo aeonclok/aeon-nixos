@@ -31,7 +31,6 @@
         thinkpad-carbon = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            # ./machines/your-box
             lix-module.nixosModules.default
             {
               nixpkgs.config.allowUnfree = true;
@@ -55,6 +54,7 @@
         thinkpad = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
+            lix-module.nixosModules.default
             {
               nixpkgs.config.allowUnfree = true;
               environment.systemPackages = [
@@ -77,6 +77,7 @@
         thinkcentre = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
+            lix-module.nixosModules.default
             {
               nixpkgs.config.allowUnfree = true;
               environment.systemPackages = [
@@ -99,6 +100,7 @@
         asusprime = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
+            lix-module.nixosModules.default
             {
               nixpkgs.config.allowUnfree = true;
               environment.systemPackages = [
