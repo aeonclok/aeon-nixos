@@ -29,6 +29,7 @@ in {
         theme.enable = false;
 
         lsp.enable = true;
+        lsp.trouble.enable = true;
 
         languages.nix = {
           enable = true;
@@ -66,6 +67,7 @@ in {
                 languages = ["vue"];
               }
             ];
+            # preferences = {preferGoToSourceDefinition = true;}; # <-- add this
           };
         };
 
@@ -327,6 +329,10 @@ in {
         };
 
         maps.normal = {
+          "<leader>gD" = {
+            action = "<cmd>lua vim.lsp.buf.definition()<CR>";
+            desc = "Go to definition";
+          };
           "<leader>ff" = {
             action = "<cmd>lua require('mini.pick').builtin.files()<CR>";
             desc = "Find files";
