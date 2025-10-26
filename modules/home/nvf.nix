@@ -21,15 +21,15 @@ in {
           nodePackages.vscode-langservers-extracted
           nodePackages.prettier
           nodePackages.eslint_d
+          vue-language-server
+          vtsls
+          nodejs_20
         ];
         clipboard.enable = true;
         clipboard.registers = "unnamedplus";
         clipboard.providers.wl-copy.enable = true;
 
         theme.enable = false;
-
-        lsp.enable = true;
-        lsp.trouble.enable = true;
 
         languages.nix = {
           enable = true;
@@ -40,36 +40,84 @@ in {
           extraDiagnostics.enable = true;
         };
 
-        languages.ts = {
+        lsp = {
+          # Define servers using Neovim 0.11 APIs via NVF
           enable = true;
-          lsp.enable = true;
+          trouble.enable = true;
+          servers = {
+            vtsls = {
+              filetypes = ["typescript" "javascript" "typescriptreact" "javascriptreact" "vue"];
+              # You can pass arbitrary fields; they'll be forwarded to vim.lsp.config()
+              settings = {
+                vtsls = {
+                  tsserver = {
+                    globalPlugins = [
+                      {
+                        name = "@vue/typescript-plugin";
+                        location = "${pkgs.nodePackages_latest."@vue/language-server"}/lib/node_modules/@vue/language-server";
+                        languages = ["vue"];
+                        configNamespace = "typescript";
+                      }
+                    ];
+                  };
+                };
+              };
+            };
+
+            # vue_ls can be empty if you're on recent versions that don’t need on_init hacks
+            vue_ls = {};
+          };
         };
+
+        # Turn on Tree-sitter and make sure vue grammar is present
+        treesitter = {
+          enable = true; # enables nvim-treesitter in NVF
+          grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+            vue
+            typescript
+            tsx
+            javascript
+            html
+            css
+          ];
+        };
+
+        # Tiny Lua stub to actually enable the servers (Neovim 0.11 API)
+        # luaConfigRC = ''
+        #   vim.lsp.enable({'vtsls','vue_ls'})
+        # '';
+
+        # languages.ts = {
+        #   enable = true;
+        #   lsp.enable = true;
+        # };
 
         languages.html.enable = true;
         languages.css.enable = true;
 
-        lsp.servers = {
-          vue_ls.enable = true;
-
-          ts_ls = {
-            enable = true;
-            filetypes = [
-              "typescript"
-              "javascript"
-              "typescriptreact"
-              "javascriptreact"
-              "vue"
-            ];
-            initOptions.plugins = [
-              {
-                name = "@vue/typescript-plugin";
-                location = "${pkgs.nodePackages."@vue/language-server"}/lib/node_modules/@vue/language-server";
-                languages = ["vue"];
-              }
-            ];
-            # preferences = {preferGoToSourceDefinition = true;}; # <-- add this
-          };
-        };
+        # lsp.servers = {
+        #   ts_ls.enable = true;
+        #   vue_ls = {
+        #     # ts_ls = {
+        #     enable = true;
+        #     filetypes = [
+        #       "typescript"
+        #       "javascript"
+        #       "typescriptreact"
+        #       "javascriptreact"
+        #       "vue"
+        #     ];
+        #     initOptions.typescript.tsdk = "${pkgs.nodePackages.typescript}/lib/node_modules/typescript/lib";
+        #     # initOptions.plugins = [
+        #     #   {
+        #     #     name = "@vue/typescript-plugin";
+        #     #     location = "${pkgs.nodePackages."@vue/language-server"}/lib/node_modules/@vue/language-server";
+        #     #     languages = ["vue"];
+        #     #   }
+        #     # ];
+        #     # preferences = {preferGoToSourceDefinition = true;}; # <-- add this
+        #   };
+        # };
 
         formatter.conform-nvim = {
           enable = true;
@@ -105,8 +153,8 @@ in {
               auto_setup = true;
             };
             mappings = {
-              force_twostep = "<C-Space>";
-              confirm = "<CR>";
+              force_twostep = "<c-space>";
+              confirm = "<cr>";
             };
           };
         };
@@ -131,15 +179,15 @@ in {
               }
               {
                 mode = "n";
-                keys = "<Leader>";
+                keys = "<leader>";
               }
               {
                 mode = "x";
-                keys = "<Leader>";
+                keys = "<leader>";
               }
               {
                 mode = "i";
-                keys = "<C-x>";
+                keys = "<c-x>";
               }
               {
                 mode = "n";
@@ -175,15 +223,15 @@ in {
               }
               {
                 mode = "i";
-                keys = "<C-r>";
+                keys = "<c-r>";
               }
               {
                 mode = "c";
-                keys = "<C-r>";
+                keys = "<c-r>";
               }
               {
                 mode = "n";
-                keys = "<C-w>";
+                keys = "<c-w>";
               }
               {
                 mode = "n";
@@ -196,12 +244,12 @@ in {
             ];
 
             clues = [
-              (mkLuaInline "require('mini.clue').gen_clues.builtin_completion()")
-              (mkLuaInline "require('mini.clue').gen_clues.g()")
-              (mkLuaInline "require('mini.clue').gen_clues.marks()")
-              (mkLuaInline "require('mini.clue').gen_clues.registers()")
-              (mkLuaInline "require('mini.clue').gen_clues.windows()")
-              (mkLuaInline "require('mini.clue').gen_clues.z()")
+              # (mkluainline "require('mini.clue').gen_clues.builtin_completion()")
+              # (mkluainline "require('mini.clue').gen_clues.g()")
+              # (mkluainline "require('mini.clue').gen_clues.marks()")
+              # (mkluainline "require('mini.clue').gen_clues.registers()")
+              # (mkluainline "require('mini.clue').gen_clues.windows()")
+              # (mkluainline "require('mini.clue').gen_clues.z()")
             ];
           };
         };
@@ -297,7 +345,7 @@ in {
                   which_key = true,
                   navic = {
                     enabled = true,
-                    custom_bg = "NONE",
+                    custom_bg = "none",
                   },
                   aerial = true,
                   cmp = true,
@@ -329,119 +377,123 @@ in {
         };
 
         maps.normal = {
-          "<leader>gD" = {
-            action = "<cmd>lua vim.lsp.buf.definition()<CR>";
-            desc = "Go to definition";
+          "<leader>gd" = {
+            action = "<cmd>lua vim.lsp.buf.definition()<cr>";
+            desc = "go to definition";
           };
           "<leader>ff" = {
-            action = "<cmd>lua require('mini.pick').builtin.files()<CR>";
-            desc = "Find files";
+            action = "<cmd>lua require('mini.pick').builtin.files()<cr>";
+            desc = "find files";
           };
           "<leader>fg" = {
-            action = "<cmd>lua require('mini.pick').builtin.grep_live()<CR>";
-            desc = "Live grep";
+            action = "<cmd>lua require('mini.pick').builtin.grep_live()<cr>";
+            desc = "live grep";
           };
           "<leader>fb" = {
-            action = "<cmd>lua require('mini.pick').builtin.buffers()<CR>";
-            desc = "Buffers";
+            action = "<cmd>lua require('mini.pick').builtin.buffers()<cr>";
+            desc = "buffers";
           };
           "<leader>fh" = {
-            action = "<cmd>lua require('mini.pick').builtin.help()<CR>";
-            desc = "Help tags";
+            action = "<cmd>lua require('mini.pick').builtin.help()<cr>";
+            desc = "help tags";
           };
           "<leader>e" = {
-            action = "<cmd>lua require('mini.files').open()<CR>";
-            desc = "File browser";
+            action = "<cmd>lua require('mini.files').open()<cr>";
+            desc = "file browser";
           };
         };
 
         keymaps = [
           {
-            key = "<C-h>";
+            key = "<c-h>";
             mode = ["n"];
-            action = "<C-w>h";
-            desc = "Go to Left Window";
+            action = "<c-w>h";
+            desc = "go to left window";
             silent = true;
           }
           {
-            key = "<C-j>";
+            key = "<c-j>";
             mode = ["n"];
-            action = "<C-w>j";
-            desc = "Go to Lower Window";
+            action = "<c-w>j";
+            desc = "go to lower window";
             silent = true;
           }
           {
-            key = "<C-k>";
+            key = "<c-k>";
             mode = ["n"];
-            action = "<C-w>k";
-            desc = "Go to Upper Window";
+            action = "<c-w>k";
+            desc = "go to upper window";
             silent = true;
           }
           {
-            key = "<C-l>";
+            key = "<c-l>";
             mode = ["n"];
-            action = "<C-w>l";
-            desc = "Go to Right Window";
+            action = "<c-w>l";
+            desc = "go to right window";
             silent = true;
           }
           {
-            key = "<C-Up>";
+            key = "<c-up>";
             mode = ["n"];
-            action = ":resize +2<CR>";
-            desc = "Increase Window Height";
+            action = ":resize +2<cr>";
+            desc = "increase window height";
             silent = true;
           }
           {
-            key = "<C-Down>";
-            action = ":resize -2<CR>";
+            key = "<c-down>";
+            action = ":resize -2<cr>";
             mode = ["n"];
-            desc = "Decrease Window Height";
+            desc = "decrease window height";
             silent = true;
           }
           {
-            key = "<C-Left>";
+            key = "<c-left>";
             mode = ["n"];
-            action = ":vertical resize -2<CR>";
-            desc = "Decrease Window Width";
+            action = ":vertical resize -2<cr>";
+            desc = "decrease window width";
             silent = true;
           }
           {
-            key = "<C-Right>";
+            key = "<c-right>";
             mode = ["n"];
-            action = ":vertical resize +2<CR>";
-            desc = "Increase Window Width";
+            action = ":vertical resize +2<cr>";
+            desc = "increase window width";
             silent = true;
           }
           {
-            key = "<S-h>";
+            key = "<s-h>";
             mode = ["n"];
-            action = ":bprevious<CR>";
-            desc = "Previous Buffer";
+            action = ":bprevious<cr>";
+            desc = "previous buffer";
             silent = true;
           }
           {
-            key = "<S-l>";
+            key = "<s-l>";
             mode = ["n"];
-            action = ":bnext<CR>";
-            desc = "Next Buffer";
+            action = ":bnext<cr>";
+            desc = "next buffer";
             silent = true;
           }
           {
             key = "<leader>bd";
             mode = ["n"];
-            action = ":bdelete<CR>";
-            desc = "Delete Buffer (preserve windows)";
+            action = ":bdelete<cr>";
+            desc = "delete buffer (preserve windows)";
             silent = true;
           }
           {
             key = "<leader>qq";
             mode = ["n"];
-            action = ":qa<CR>";
-            desc = "Quit All";
+            action = ":qa<cr>";
+            desc = "quit all";
             silent = true;
           }
         ];
       };
     };
   };
+  # home.packages = [
+  #   pkgs.nodePackages_latest.vtsls
+  #   pkgs.nodePackages_latest."@vue/language-server"
+  # ];
 }
