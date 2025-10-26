@@ -48,7 +48,7 @@ in {
         languages.css.enable = true;
 
         lsp.servers = {
-          volar.enable = true;
+          vue_ls.enable = true;
 
           ts_ls = {
             enable = true;
