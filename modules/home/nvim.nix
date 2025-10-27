@@ -1,11 +1,6 @@
 {pkgs, ...}: {
   programs.neovim = {
     enable = true;
-    package = pkgs.neovim;
-
-    plugins = with pkgs.vimPlugins; [
-      nvim-treesitter
-    ];
   };
 
   home.packages = with pkgs; [
