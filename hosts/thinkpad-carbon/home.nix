@@ -1,12 +1,16 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
     ../../modules/home/base.nix
     ../../modules/home/fish.nix
     ../../modules/home/wezterm.nix
     ../../modules/home/hyprland.nix
     ../../modules/home/waybar.nix
-    ../../modules/home/nvf.nix
+    # ../../modules/home/nvf.nix
+    ../../modules/home/nvim.nix
     ../../modules/home/tmux.nix
   ];
 

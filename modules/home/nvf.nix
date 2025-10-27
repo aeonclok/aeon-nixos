@@ -31,47 +31,10 @@ in {
 
         theme.enable = false;
 
-        languages.nix = {
-          enable = true;
-          lsp = {
-            enable = true;
-            server = "nixd";
-          };
-          extraDiagnostics.enable = true;
-        };
+        lsp.enable = true;
 
-        lsp = {
-          # Define servers using Neovim 0.11 APIs via NVF
-          enable = true;
-          trouble.enable = true;
-          servers = {
-            vtsls = {
-              filetypes = ["typescript" "javascript" "typescriptreact" "javascriptreact" "vue"];
-              # You can pass arbitrary fields; they'll be forwarded to vim.lsp.config()
-              settings = {
-                vtsls = {
-                  tsserver = {
-                    globalPlugins = [
-                      {
-                        name = "@vue/typescript-plugin";
-                        location = "${pkgs.nodePackages_latest."@vue/language-server"}/lib/node_modules/@vue/language-server";
-                        languages = ["vue"];
-                        configNamespace = "typescript";
-                      }
-                    ];
-                  };
-                };
-              };
-            };
-
-            # vue_ls can be empty if you're on recent versions that don’t need on_init hacks
-            vue_ls = {};
-          };
-        };
-
-        # Turn on Tree-sitter and make sure vue grammar is present
         treesitter = {
-          enable = true; # enables nvim-treesitter in NVF
+          enable = true;
           grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
             vue
             typescript
@@ -82,6 +45,200 @@ in {
           ];
         };
 
+        pluginRC."vue-vtsls" = ''
+          local function vue_ls_path()
+            local exe = vim.fn.exepath('vue-language-server')
+            if exe == "" then return nil end
+            local root = vim.fn.fnamemodify(exe, ':h:h')
+            local p1 = root .. '/lib/node_modules/@vue/language-server'
+            if vim.uv.fs_stat(p1) then return p1 end
+            local p2 = root .. '/lib/node_modules/vue-language-server/node_modules/@vue/language-server'
+            if vim.uv.fs_stat(p2) then return p2 end
+            return nil
+          end
+
+          local vue_language_server_path = vue_ls_path() or '/dev/null'
+          local tsserver_filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' }
+          local vue_plugin = {
+            name = '@vue/typescript-plugin',
+            location = vue_language_server_path,
+            languages = { 'vue' },
+            configNamespace = 'typescript',
+          }
+
+          local vtsls_config = {
+            settings = {
+              vtsls = {
+                tsserver = {
+                  globalPlugins = { vue_plugin },
+                },
+              },
+            },
+            filetypes = tsserver_filetypes,
+          }
+
+          local ts_ls_config = {
+            init_options = { plugins = { vue_plugin } },
+            filetypes = tsserver_filetypes,
+          }
+
+          local vue_ls_config = {
+            on_init = function(client)
+              client.handlers['tsserver/request'] = function(_, result, context)
+                local ts_clients = vim.lsp.get_clients({ bufnr = context.bufnr, name = 'ts_ls' })
+                local vtsls_clients = vim.lsp.get_clients({ bufnr = context.bufnr, name = 'vtsls' })
+                local clients = {}
+                vim.list_extend(clients, ts_clients)
+                vim.list_extend(clients, vtsls_clients)
+                if #clients == 0 then
+                  vim.notify('Could not find `vtsls` or `ts_ls` lsp client, `vue_ls` would not work without it.', vim.log.levels.ERROR)
+                  return
+                end
+                local ts_client = clients[1]
+                local param = unpack(result)
+                local id, command, payload = unpack(param)
+                ts_client:exec_cmd({
+                  title = 'vue_request_forward',
+                  command = 'typescript.tsserverRequest',
+                  arguments = { command, payload },
+                }, { bufnr = context.bufnr }, function(_, r)
+                  local response = r and r.body
+                  local response_data = { { id, response } }
+                  client:notify('tsserver/response', response_data)
+                end)
+              end
+            end,
+          }
+
+          vim.lsp.config('vtsls', vtsls_config)
+          vim.lsp.config('vue_ls', vue_ls_config)
+          vim.lsp.config('ts_ls', ts_ls_config)
+          vim.lsp.enable({ 'vtsls', 'vue_ls' })
+        '';
+        # languages.nix = {
+        #   enable = true;
+        #   lsp = {
+        #     enable = true;
+        #     server = "nixd";
+        #   };
+        #   extraDiagnostics.enable = true;
+        # };
+        # lsp = {
+        #   lspconfig = {
+        #     enable = true;
+        #     sources = {
+        #       vue_ls = ''
+        #         vim.lsp.enable('vue_ls')
+        #         vim.lsp.config('vue_ls', {})
+        #       '';
+        #       eslint = ''
+        #         vim.lsp.enable('eslint')
+        #         vim.lsp.config('eslint', {})
+        #       '';
+        #       ts_ls = ''
+        #         vim.lsp.enable('ts_ls')
+        #         vim.lsp.config('ts_ls', {
+        #           ini:_options = {
+        #             plugins = {
+        #               {
+        #                 name = "@vue/typescript-plugin",
+        #                 location = "${pkgs.vue-language-server}/lib/node_modules/@vue/language-server",
+        #                 languages = {"vue"},
+        #               },
+        #             },
+        #           },
+        #           filetypes = {
+        #             "javascript",
+        #             "typescript",
+        #             "vue",
+        #           },
+        #         })
+        #       '';
+        #     };
+        #   };
+        # };
+        # lsp = {
+        #   # Define servers using Neovim 0.11 APIs via NVF
+        #   enable = true;
+        #   trouble.enable = true;
+        #   servers = {
+        #     vtsls = {
+        #       filetypes = ["typescript" "javascript" "typescriptreact" "javascriptreact" "vue"];
+        #       # You can pass arbitrary fields; they'll be forwarded to vim.lsp.config()
+        #       settings = {
+        #         vtsls = {
+        #           tsserver = {
+        #             globalPlugins = [
+        #               {
+        #                 name = "@vue/typescript-plugin";
+        #                 location = "${pkgs.nodePackages_latest."@vue/language-server"}/lib/node_modules/@vue/language-server";
+        #                 languages = ["vue"];
+        #                 configNamespace = "typescript";
+        #               }
+        #             ];
+        #           };
+        #         };
+        #       };
+        #       # Mute vtsls diagnostics on *.vue (keep it attached for TS features)
+        #       on_init = mkLuaInline ''
+        #         function(client)
+        #           client.handlers['tsserver/request'] = function(_, result, context)
+        #             local vts = vim.lsp.get_clients({ bufnr = context.bufnr, name = 'vtsls' })
+        #             if #vts == 0 then
+        #               vim.notify('No vtsls client found; vue_ls TS features disabled', vim.log.levels.ERROR)
+        #               return
+        #             end
+        #             local ts_client = vts[1]
+        #             local param = unpack(result)
+        #             local id, command, payload = unpack(param)
+        #             ts_client:exec_cmd({
+        #               title = 'vue_request_forward',
+        #               command = 'typescript.tsserverRequest',
+        #               arguments = { command, payload },
+        #             }, { bufnr = context.bufnr }, function(_, r)
+        #               local response = r and r.body
+        #               local response_data = { { id, response } }
+        #               client:notify('tsserver/response', response_data)
+        #             end)
+        #           end
+        #         end
+        #       '';
+        #       on_attach = mkLuaInline ''
+        #         function(client, bufnr)
+        #           if vim.bo[bufnr].filetype == 'vue' then
+        #             client.handlers['textDocument/publishDiagnostics'] = function() end
+        #           end
+        #         end
+        #       '';
+        #     };
+        #
+        #     # vue_ls can be empty if you're on recent versions that don’t need on_init hacks
+        #     vue_ls = {
+        #       filetypes = ["vue"];
+        #       on_attach = mkLuaInline ''
+        #         function(client, bufnr)
+        #           if vim.bo[bufnr].filetype == 'vue' and client.server_capabilities.semanticTokensProvider then
+        #             client.server_capabilities.semanticTokensProvider.full = true
+        #           end
+        #         end
+        #       '';
+        #     };
+        #   };
+        # };
+
+        # Turn on Tree-sitter and make sure vue grammar is present
+        # treesitter = {
+        #   enable = true; # enables nvim-treesitter in NVF
+        #   grammars = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+        #     vue
+        #     typescript
+        #     tsx
+        #     javascript
+        #     html
+        #     css
+        #   ];
+        # };
+        #
         # Tiny Lua stub to actually enable the servers (Neovim 0.11 API)
         # luaConfigRC = ''
         #   vim.lsp.enable({'vtsls','vue_ls'})
@@ -377,10 +534,10 @@ in {
         };
 
         maps.normal = {
-          "<leader>gd" = {
-            action = "<cmd>lua vim.lsp.buf.definition()<cr>";
-            desc = "go to definition";
-          };
+          # "<leader>gd" = {
+          #   action = "<cmd>lua vim.lsp.buf.definition()<cr>";
+          #   desc = "go to definition";
+          # };
           "<leader>ff" = {
             action = "<cmd>lua require('mini.pick').builtin.files()<cr>";
             desc = "find files";
