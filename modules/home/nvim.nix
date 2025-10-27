@@ -4,7 +4,6 @@
   };
 
   home.packages = with pkgs; [
-    nodejs_20
     nodePackages.typescript
     vtsls
     vue-language-server
