@@ -97,7 +97,11 @@
     source = ./nvim;
     recursive = true;
   };
-
+  home.file."./.config/nvim/lua/config/options.lua" = {
+    text = ''
+      vim.env.PATH = vim.env.PATH .. ":${pkgs.nodejs}/bin"
+    '';
+  };
   home.pointerCursor = {
     gtk.enable = true;
     package = pkgs.hackneyed;
