@@ -91,16 +91,24 @@
     unzip
     gnutar
     gzip
+  gnumake pkg-config tree-sitter
+
+ 
+  trash-cli            # provides `trash` command
+  glib                 # provides `gio` command
+  
+
+  imagemagick          # provides `magick` and `convert`
+  ghostscript          # provides `gs`
+  tectonic             # LaTeX renderer (or use texlive if you prefer pdflatex)
+  nodePackages.mermaid-cli  # provides `mmdc`
+
+  
   ];
 
   home.file."./.config/nvim/" = {
     source = ./nvim;
     recursive = true;
-  };
-  home.file."./.config/nvim/lua/config/options.lua" = {
-    text = ''
-      vim.env.PATH = vim.env.PATH .. ":${pkgs.nodejs}/bin"
-    '';
   };
   home.pointerCursor = {
     gtk.enable = true;
