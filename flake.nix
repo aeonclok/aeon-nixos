@@ -6,17 +6,17 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    nvf.url = "github:notashelf/nvf";
+    # nvf.url = "github:notashelf/nvf";
     fsel.url = "github:Mjoyufull/fsel";
-    kickstart-nix-nvim.url = "path:/home/reima/nix/modules/kickstart-nix-nvim/";
+    # kickstart-nix-nvim.url = "path:/home/reima/nix/modules/kickstart-nix-nvim/";
   };
 
   outputs = {
     nixpkgs,
     home-manager,
     fsel,
-    nvf,
-    kickstart-nix-nvim,
+    # nvf,
+    # kickstart-nix-nvim,
     ...
   }: let
     hosts = [
@@ -35,7 +35,7 @@
       {
         nixpkgs = {
           config.allowUnfree = true;
-          overlays = [kickstart-nix-nvim.overlays.default];
+          # overlays = [kickstart-nix-nvim.overlays.default];
         };
       }
       ./hosts/${host}/configuration.nix
@@ -43,30 +43,32 @@
 
       home-manager.nixosModules.home-manager
       {
-        home-manager.extraSpecialArgs = {inherit nvf;};
-        home-manager.sharedModules = [
-          nvf.homeManagerModules.default
-        ];
+        # home-manager.extraSpecialArgs = {inherit nvf;};
+        # home-manager.sharedModules = [
+          # nvf.homeManagerModules.default
+        # ];
         home-manager.useUserPackages = true;
         # home-manager.useGlobalPkgs = true; # toggle if you prefer
         home-manager.users.reima = import ./hosts/${host}/home.nix;
       }
       ({
         pkgs,
-        nvf,
+        # nvf,
         ...
-      }: let
-        nvim-nvf = pkgs.runCommand "nvim-nvf" {buildInputs = [pkgs.makeWrapper];} ''
-          mkdir -p $out/bin
-          makeWrapper ${nvf.packages.${pkgs.stdenv.system}.default}/bin/nvim \
-            $out/bin/nvim-nvf \
-            --set NVIM_APPNAME nvf
-        '';
-      in {
+      }: 
+      # let
+      #   nvim-nvf = pkgs.runCommand "nvim-nvf" {buildInputs = [pkgs.makeWrapper];} ''
+      #     mkdir -p $out/bin
+      #     makeWrapper ${nvf.packages.${pkgs.stdenv.system}.default}/bin/nvim \
+      #       $out/bin/nvim-nvf \
+      #       --set NVIM_APPNAME nvf
+      #   '';
+      # in
+      {
         environment.systemPackages = [
           fsel.packages.${pkgs.stdenv.system}.default
-          pkgs."nvim-pkg"
-          nvim-nvf
+          # pkgs."nvim-pkg"
+          # nvim-nvf
         ];
       })
     ];
@@ -86,7 +88,7 @@
     nixosConfigurations = nixpkgs.lib.genAttrs hosts (host:
       nixpkgs.lib.nixosSystem {
         system = systemFor host;
-        specialArgs = {inherit nvf;};
+        # specialArgs = {inherit nvf;};
         modules = mkModules host;
       });
 

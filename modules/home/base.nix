@@ -6,6 +6,7 @@
   # programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
+    neovim
     kitty
     nerd-fonts.monaspace
     wget
@@ -85,7 +86,17 @@
     zulip
     pnpm
     nodejs
+    curl
+    gcc
+    unzip
+    gnutar
+    gzip
   ];
+
+  home.file."./.config/nvim/" = {
+    source = ./config;
+    recursive = true;
+  };
 
   home.pointerCursor = {
     gtk.enable = true;
