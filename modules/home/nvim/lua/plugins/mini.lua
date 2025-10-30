@@ -6,12 +6,11 @@ return {
     config = function()
       -- Configure the mini.nvim modules you want to use
       require("mini.operators").setup()
-      })
     end,
   },
 
   -- Disable the LazyVim equivalents
   -- { "folke/flash.nvim", enabled = false },
   -- { "echasnovski/mini.surround", enabled = false }, -- If LazyVim already uses mini.surround
-  { "numToStr/Comment.nvim", enabled = false }, -- To disable LazyVim's default comment plugin
+  -- { "numToStr/Comment.nvim", enabled = false }, -- To disable LazyVim's default comment plugin
 }

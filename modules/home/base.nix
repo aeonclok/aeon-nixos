@@ -91,6 +91,7 @@
     unzip
     gnutar
     gzip
+    stylua
   gnumake pkg-config tree-sitter
 
  
