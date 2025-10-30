@@ -91,18 +91,18 @@
     unzip
     gnutar
     gzip
-    stylua
+    stylua rustc cargo
   gnumake pkg-config tree-sitter
 
  
-  trash-cli            # provides `trash` command
-  glib                 # provides `gio` command
+  trash-cli
+  glib    
   
 
-  imagemagick          # provides `magick` and `convert`
-  ghostscript          # provides `gs`
-  tectonic             # LaTeX renderer (or use texlive if you prefer pdflatex)
-  nodePackages.mermaid-cli  # provides `mmdc`
+  imagemagick
+  ghostscript
+  tectonic  
+  nodePackages.mermaid-cli 
 
   
   ];
@@ -136,11 +136,12 @@
   programs.lazygit = {
     enable = true;
   };
-
   programs.git = {
     enable = true;
-    userName = "Reima Kokko";
-    userEmail = "reima.kokko@valolink.fi";
+    settings.user = {
+      name = "Reima Kokko";
+      email = "reima.kokko@valolink.fi";
+    };
   };
 
   programs.firefox = {
