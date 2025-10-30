@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
-  # programs.home-manager.enable = true;
+{ config, pkgs, ... }: {
 
   home.packages = with pkgs; [
     neovim
@@ -91,20 +86,19 @@
     unzip
     gnutar
     gzip
-    stylua rustc cargo
-  gnumake pkg-config tree-sitter
-
- 
-  trash-cli
-  glib    
-  
-
-  imagemagick
-  ghostscript
-  tectonic  
-  nodePackages.mermaid-cli 
-
-  
+    stylua
+    rustc
+    cargo
+    gnumake
+    pkg-config
+    tree-sitter
+    nixfmt-classic
+    trash-cli
+    glib
+    imagemagick
+    ghostscript
+    tectonic
+    nodePackages.mermaid-cli
   ];
 
   home.file."./.config/nvim/" = {
@@ -133,9 +127,7 @@
     };
   };
 
-  programs.lazygit = {
-    enable = true;
-  };
+  programs.lazygit = { enable = true; };
   programs.git = {
     enable = true;
     settings.user = {
@@ -144,9 +136,7 @@
     };
   };
 
-  programs.firefox = {
-    enable = true;
-  };
+  programs.firefox = { enable = true; };
 
   nixpkgs.config.allowUnfree = true;
 
