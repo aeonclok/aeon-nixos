@@ -1,9 +1,5 @@
-{
-  lib,
-  pkgs,
-  ...
-}: let
-  mkLuaInline = lib.generators.mkLuaInline;
+{ lib, pkgs, ... }:
+let mkLuaInline = lib.generators.mkLuaInline;
 in {
   programs.nvf = {
     enable = true;
@@ -284,17 +280,19 @@ in {
               timeout_ms = 1000;
             };
             formatters = {
-              alejandra = {command = "${pkgs.alejandra}/bin/alejandra";};
-              prettier = {command = "${pkgs.nodePackages.prettier}/bin/prettier";};
+              alejandra = { command = "${pkgs.alejandra}/bin/alejandra"; };
+              prettier = {
+                command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              };
             };
             formatters_by_ft = {
-              nix = ["alejandra"];
-              vue = ["prettier"];
-              typescript = ["prettier"];
-              javascript = ["prettier"];
-              html = ["prettier"];
-              css = ["prettier"];
-              json = ["prettier"];
+              nix = [ "alejandra" ];
+              vue = [ "prettier" ];
+              typescript = [ "prettier" ];
+              javascript = [ "prettier" ];
+              html = [ "prettier" ];
+              css = [ "prettier" ];
+              json = [ "prettier" ];
             };
           };
         };
@@ -372,11 +370,11 @@ in {
               }
               {
                 mode = "n";
-                keys = "\"";
+                keys = ''"'';
               }
               {
                 mode = "x";
-                keys = "\"";
+                keys = ''"'';
               }
               {
                 mode = "i";
@@ -431,9 +429,7 @@ in {
         mini.icons.enable = true;
         mini.indentscope.enable = true;
         mini.map.enable = true;
-        mini.notify = {
-          enable = true;
-        };
+        mini.notify = { enable = true; };
         mini.starter.enable = true;
         mini.statusline.enable = true;
         mini.tabline.enable = true;
@@ -563,35 +559,35 @@ in {
         keymaps = [
           {
             key = "<c-h>";
-            mode = ["n"];
+            mode = [ "n" ];
             action = "<c-w>h";
             desc = "go to left window";
             silent = true;
           }
           {
             key = "<c-j>";
-            mode = ["n"];
+            mode = [ "n" ];
             action = "<c-w>j";
             desc = "go to lower window";
             silent = true;
           }
           {
             key = "<c-k>";
-            mode = ["n"];
+            mode = [ "n" ];
             action = "<c-w>k";
             desc = "go to upper window";
             silent = true;
           }
           {
             key = "<c-l>";
-            mode = ["n"];
+            mode = [ "n" ];
             action = "<c-w>l";
             desc = "go to right window";
             silent = true;
           }
           {
             key = "<c-up>";
-            mode = ["n"];
+            mode = [ "n" ];
             action = ":resize +2<cr>";
             desc = "increase window height";
             silent = true;
@@ -599,48 +595,48 @@ in {
           {
             key = "<c-down>";
             action = ":resize -2<cr>";
-            mode = ["n"];
+            mode = [ "n" ];
             desc = "decrease window height";
             silent = true;
           }
           {
             key = "<c-left>";
-            mode = ["n"];
+            mode = [ "n" ];
             action = ":vertical resize -2<cr>";
             desc = "decrease window width";
             silent = true;
           }
           {
             key = "<c-right>";
-            mode = ["n"];
+            mode = [ "n" ];
             action = ":vertical resize +2<cr>";
             desc = "increase window width";
             silent = true;
           }
           {
             key = "<s-h>";
-            mode = ["n"];
+            mode = [ "n" ];
             action = ":bprevious<cr>";
             desc = "previous buffer";
             silent = true;
           }
           {
             key = "<s-l>";
-            mode = ["n"];
+            mode = [ "n" ];
             action = ":bnext<cr>";
             desc = "next buffer";
             silent = true;
           }
           {
             key = "<leader>bd";
-            mode = ["n"];
+            mode = [ "n" ];
             action = ":bdelete<cr>";
             desc = "delete buffer (preserve windows)";
             silent = true;
           }
           {
             key = "<leader>qq";
-            mode = ["n"];
+            mode = [ "n" ];
             action = ":qa<cr>";
             desc = "quit all";
             silent = true;

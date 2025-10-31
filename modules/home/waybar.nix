@@ -1,5 +1,4 @@
-{ config, pkgs, ... }:
-{
+{ config, pkgs, ... }: {
   programs.waybar = {
     enable = true;
 
@@ -18,11 +17,15 @@
         "font-size" = 12;
 
         # Modules
-        modules-left  = [ "hyprland/workspaces" "window" ];
-        modules-center = [ "clock"];
-        modules-right = [ "pulseaudio" "memory" "cpu" "disk" "network" "battery" "tray" ];
+        modules-left = [ "hyprland/workspaces" "window" ];
+        modules-center = [ "clock" ];
+        modules-right =
+          [ "pulseaudio" "memory" "cpu" "disk" "network" "battery" "tray" ];
 
-        "hyprland/workspaces" = { "all-outputs" = true; "format" = "{name}"; };
+        "hyprland/workspaces" = {
+          "all-outputs" = true;
+          "format" = "{name}";
+        };
 
         window.format = "{title}";
         window.max-length = 50;
@@ -30,14 +33,16 @@
         disk = {
           format = "󰋊 {percentage_used}% ";
           interval = 60;
-          on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
+          on-click-right =
+            "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
         };
 
         cpu = {
           format = "  {usage}% ";
           format-alt = "  {avg_frequency} GHz";
           interval = 2;
-          on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
+          on-click-right =
+            "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
         };
 
         memory = {
@@ -53,10 +58,10 @@
         };
 
         network = {
-        #   format-wifi = "  {essid} {signal}%";
-        #   format-ethernet = "󰈁  {ifname}";
-        #   format-disconnected = "󰤭  offline";
-        #   tooltip = true;
+          #   format-wifi = "  {essid} {signal}%";
+          #   format-ethernet = "󰈁  {ifname}";
+          #   format-disconnected = "󰤭  offline";
+          #   tooltip = true;
           format-wifi = "  {signalStrength}%";
           format-ethernet = "󰀂 ";
           tooltip-format = "Connected to {essid} {ifname} via {gwaddr}";
@@ -77,7 +82,10 @@
           tooltip = true;
         };
 
-        tray = { icon-size = 18; spacing = 8; };
+        tray = {
+          icon-size = 18;
+          spacing = 8;
+        };
       };
     };
 

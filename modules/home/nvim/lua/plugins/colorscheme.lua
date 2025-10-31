@@ -42,7 +42,7 @@ return {
           sky = "#a9b665", -- Gruvbox Material (blue) - Methods, functions, operators
 
           sapphire_original = "#7dc4e4", -- hsl(199deg, 66%, 69%) - Alternative to sky for cooler tones
-          sapphire = "#458588", -- Gruvbox Material (dark aqua) - Highlighted operators, accents
+          sapphire = "#7daea3", -- was "#458588" -- Gruvbox Material (dark aqua) - Highlighted operators, accents
 
           blue_original = "#8aadf4", -- hsl(220deg, 83%, 75%) - Methods, Functions, Properties
           blue = "#7daea3", -- Gruvbox Material (blue) - Methods, properties, classes
@@ -54,7 +54,7 @@ return {
           text = "#d4be98", -- Gruvbox Material (fg0) - Primary text
 
           subtext1_original = "#b8c0e0", -- hsl(228deg, 39%, 80%) - Secondary muted text
-          subtext1 = "#458588", -- Gruvbox Material (fg3) - Comments, secondary text
+          subtext1 = "#a89984", -- was "#458588" -- Gruvbox Material (fg3) - Comments, secondary text
 
           subtext0_original = "#a5adcb", -- hsl(227deg, 27%, 72%) - Tertiary muted text
           subtext0 = "#928374", -- Gruvbox Material (fg4) - Even more muted text
@@ -75,7 +75,7 @@ return {
           surface2 = "#504945",
 
           surface1_original = "#494d64", -- hsl(231deg, 16%, 34%) - Darker UI elements
-          surface1 = "#458588", -- Gruvbox Material (bg_current_word) - Background highlights
+          surface1 = "#3c3836", -- was "#458588" -- Gruvbox Material (bg_current_word) - Background highlights
           -- surface1 = "#3c3836",
 
           surface0_original = "#363a4f", -- hsl(230deg, 19%, 26%) - Background highlight
