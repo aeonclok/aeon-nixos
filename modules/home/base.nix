@@ -1,5 +1,12 @@
 { config, pkgs, ... }: {
 
+  gruvbox-palette = import ./gruvbox-palette.nix;
+
+  home.sessionVariables = config.lib.mapAttrs' (name: value: {
+    name = "THEME_${lib.strings.toUpper name}";
+    value = value;
+  }) config.colorScheme;
+
   home.packages = with pkgs; [
     neovim
     kitty

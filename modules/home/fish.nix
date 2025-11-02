@@ -10,6 +10,8 @@
 
       # Use Ctrl-n to accept autosuggestion
       bind \cn accept-autosuggestion
+
+      set -x gruvbox_blue "#0E363E"
     '';
 
     # Show fastfetch as greeting
