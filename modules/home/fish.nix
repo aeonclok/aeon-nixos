@@ -86,6 +86,7 @@
     ];
   };
 
+  imports = [ ./starship.nix ];
   programs.fzf.enable = true;
 }
 
