@@ -10,13 +10,11 @@
 
       # Use Ctrl-n to accept autosuggestion
       bind \cn accept-autosuggestion
-
-      set -x gruvbox_blue "#0E363E"
     '';
 
     # Show fastfetch as greeting
     functions.fish_greeting = ''
-      fastfetch
+      # fastfetch
     '';
 
     # Your functions / aliases
@@ -69,7 +67,7 @@
       }
 
       # Nice Fish integration for fzf (CTRL-R, etc.). Keep the bass fallback above too.
-      # (lib.mkIf (pkgs.fishPlugins ? fzf-fish) {
+      # lib.mkIf (pkgs.fishPlugins ? fzf-fish) {
       #   name = "fzf-fish";
       #   src  = pkgs.fishPlugins.fzf-fish.src;
       # })

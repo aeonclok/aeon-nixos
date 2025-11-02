@@ -109,10 +109,16 @@ in {
     nodePackages.mermaid-cli
   ];
 
-  home.file."./.config/nvim/" = {
-    source = ./nvim;
-    recursive = true;
+  home.file.".config/nvim/" = {
+    source =
+      config.lib.file.mkOutOfStoreSymlink "/home/reima/nix/modules/home/nvim/";
+    force = true;
   };
+
+  # home.file."./.config/nvim/" = {
+  #   source = ./nvim;
+  #   recursive = true;
+  # };
 
   home.pointerCursor = {
     gtk.enable = true;
