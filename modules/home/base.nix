@@ -1,11 +1,12 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }:
 
-  gruvbox-palette = import ./gruvbox-palette.nix;
+let gruvbox-palette = import ./gruvbox-palette.nix;
+in {
 
-  home.sessionVariables = config.lib.mapAttrs' (name: value: {
+  home.sessionVariables = lib.mapAttrs' (name: value: {
     name = "THEME_${lib.strings.toUpper name}";
     value = value;
-  }) config.colorScheme;
+  }) gruvbox-palette;
 
   home.packages = with pkgs; [
     neovim
