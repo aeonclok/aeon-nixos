@@ -94,17 +94,24 @@
         };
       };
 
-      exec-once = [ "hyprlock" ];
+      exec-once = [
+        "hyprlock"
+        "wl-paste --type text --watch cliphist store # Stores only text data"
+        "wl-paste --type image --watch cliphist store # Stores only image data"
+        "wl-clip-persist --clipboard regular"
+      ];
 
       "$mod" = "Alt_L";
       bind = [
-        "$mod, Q, exec, wezterm"
-        "$mod, C, killactive"
-        "$mod, U, togglefloating"
-        "$mod, F, fullscreen"
+        "$mod, q, exec, wezterm"
+        "$mod, c, killactive"
+        "$mod, u, togglefloating"
+        "$mod, f, fullscreen"
         "$mod, RETURN, exec, rofi -show drun"
         "$mod, z, exec, NIXOS_OZONE_WL=0 zulip"
-        "$mod, O, exec, hyprlock"
+        "$mod, o, exec, hyprlock"
+        "$mod, p, exec, hyprpicker -a"
+        "$mod, v, exec, cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy"
 
         # switch focus
         "$mod, left,  movefocus, l"
@@ -133,6 +140,9 @@
         "$mod SHIFT, j, movewindow, d"
         "$mod SHIFT, k, movewindow, u"
         "$mod SHIFT, l, movewindow, r"
+        "$mod SHIFT, a, movecurrentworkspacetomonitor, l"
+        "$mod SHIFT, f, movecurrentworkspacetomonitor, r"
+
       ] ++ (builtins.concatLists (builtins.genList (i:
         let ws = i + 1;
         in [
