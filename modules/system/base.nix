@@ -1,16 +1,9 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
-  imports = [];
+{ config, pkgs, ... }: {
+  imports = [ ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
   networking.networkmanager.enable = true;
   time.timeZone = "Europe/Helsinki";
   i18n.defaultLocale = "en_US.UTF-8";
@@ -44,8 +37,16 @@
     # };
   };
 
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-hyprland
+      xdg-desktop-portal-gtk
+    ];
+  };
+
   programs.hyprland.enable = true;
-  security.pam.services.hyprlock = {};
+  security.pam.services.hyprlock = { };
   services.displayManager.gdm.enable = true;
   services.displayManager.gdm.wayland = true;
   services.displayManager.defaultSession = "hyprland";
@@ -59,13 +60,12 @@
   programs.mosh.enable = true;
   services.tailscale = {
     enable = true;
-    extraUpFlags = [
-      "--ssh"
-    ];
+    extraUpFlags = [ "--ssh" ];
   };
 
   services.openssh = {
-    enable = true; # optional; Tailscale SSH doesn’t require sshd, but many keep it running
+    enable =
+      true; # optional; Tailscale SSH doesn’t require sshd, but many keep it running
     openFirewall = false;
   };
 
@@ -74,7 +74,7 @@
   users.users.reima = {
     isNormalUser = true;
     description = "reima";
-    extraGroups = ["networkmanager" "wheel"];
+    extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.fish;
   };
 }

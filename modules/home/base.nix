@@ -152,9 +152,22 @@ in {
     size = 24;
   };
 
+  xdg.portal.enable = true;
+
+  home.file.".config/xdg-desktop-portal/portals.conf".text = ''
+    [preferred]
+    default=gtk
+    org.freedesktop.impl.portal.FileChooser=gtk
+    org.freedesktop.impl.portal.Settings=gtk
+    org.freedesktop.impl.portal.Screencast=hyprland
+    org.freedesktop.impl.portal.Screenshot=hyprland
+  '';
+
   gtk = {
     enable = true;
 
+    gtk3.extraConfig = { "gtk-use-portal" = 1; };
+    gtk4.extraConfig = { "gtk-use-portal" = 1; };
     font.name = "Inter 10";
     theme = {
       package = pkgs.hackneyed;
