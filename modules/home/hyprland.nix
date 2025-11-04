@@ -103,7 +103,8 @@
         "$mod, U, togglefloating"
         "$mod, F, fullscreen"
         "$mod, RETURN, exec, firefox"
-        "$mod, L, exec, hyprlock"
+        "$mod, z, exec, NIXOS_OZONE_WL=0 zulip"
+        "$mod, O, exec, hyprlock"
 
         # switch focus
         "$mod, left,  movefocus, l"

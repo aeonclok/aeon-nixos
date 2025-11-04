@@ -118,7 +118,7 @@ in {
       defaultFonts = {
         serif = [ "Noto Serif" ];
         sansSerif = [ "Inter" "Noto Sans" "Cantarell" ];
-        monospace = [ "Monaspace Neon" "Monaspace Argon" "DejaVu Sans Mono" ];
+        monospace = [ "Monaspace Neon" ];
         emoji = [ "Noto Color Emoji" ];
       };
     };
@@ -139,11 +139,6 @@ in {
       config.lib.file.mkOutOfStoreSymlink "/home/reima/nix/modules/home/nvim/";
     force = true;
   };
-
-  # home.file."./.config/nvim/" = {
-  #   source = ./nvim;
-  #   recursive = true;
-  # };
 
   home.pointerCursor = {
     gtk.enable = true;
