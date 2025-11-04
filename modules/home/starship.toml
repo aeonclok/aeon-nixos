@@ -1,9 +1,9 @@
 # "$schema" = "https://starship.rs/config-schema.json"
-format = "[](color_bg1)$os$username$hostname[](bg:color_bg2 fg:color_bg1)$directory[](fg:color_bg2 bg:color_bg3)$git_branch$git_status[](fg:color_bg3 bg:color_bg4)$c$cpp$rust$golang$nodejs$php$java$kotlin$haskell$python[](fg:color_bg4 bg:color_bg5)$docker_context$conda$pixi[](fg:color_bg5 bg:color_bg6)$time[ ](fg:color_bg6)$line_break$character"
+format = "[ ](color_bg1)$username$hostname[](bg:color_bg2 fg:color_bg1)$directory[](fg:color_bg2 bg:color_bg3)$git_branch$git_status[](fg:color_bg3 bg:color_bg4)$c$cpp$rust$golang$nodejs$php$java$kotlin$haskell$python[](fg:color_bg4 bg:color_bg5)$docker_context$conda$pixi[](fg:color_bg5 bg:color_bg6)$time[ ](fg:color_bg6)$line_break$character"
 palette = "gruvbox_dark"
 
 [c]
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_bg4)]($style)"
+format = "[[ $symbol( $version) ](fg:color_fg1 bg:color_bg4)]($style)"
 style = "bg:color_bg4"
 symbol = " "
 
@@ -21,13 +21,13 @@ format = "[[ $symbol( $environment) ](fg:#83a598 bg:color_bg5)]($style)"
 style = "bg:color_bg5"
 
 [cpp]
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_bg4)]($style)"
+format = "[[ $symbol( $version) ](fg:color_fg1 bg:color_bg4)]($style)"
 style = "bg:color_bg4"
 symbol = " "
 
 [directory]
 format = "[ $path ]($style)"
-style = "fg:color_fg0 bg:color_bg2"
+style = "fg:color_fg1 bg:color_bg2"
 truncation_length = 3
 truncation_symbol = "…/"
 
@@ -44,7 +44,7 @@ style = "bg:color_bg5"
 symbol = ""
 
 [git_branch]
-format = "[[ $symbol $branch ](fg:color_fg0 bg:color_bg3)]($style)"
+format = "[[ $symbol $branch ](fg:color_fg1 bg:color_bg3)]($style)"
 style = "bg:color_bg3"
 symbol = ""
 
@@ -54,7 +54,7 @@ behind = "⇣"
 conflicted = "✖"
 deleted = "✖"
 diverged = "⇕"
-format = "[[ $all_status$ahead_behind ](fg:color_fg0 bg:color_bg3)]($style)"
+format = "[[ $all_status$ahead_behind ](fg:color_fg1 bg:color_bg3)]($style)"
 modified = "✚"
 renamed = "»"
 staged = "●"
@@ -64,27 +64,27 @@ untracked = "…"
 up_to_date = "✓"
 
 [golang]
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_bg4)]($style)"
+format = "[[ $symbol( $version) ](fg:color_fg1 bg:color_bg4)]($style)"
 style = "bg:color_bg4"
 symbol = ""
 
 [haskell]
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_bg4)]($style)"
+format = "[[ $symbol( $version) ](fg:color_fg1 bg:color_bg4)]($style)"
 style = "bg:color_bg4"
 symbol = ""
 
 [hostname]
 format = "[$hostname ]($style)"
 ssh_only = false
-style = "bg:color_bg1 fg:color_fg0"
+style = "bg:color_bg1 fg:color_fg1"
 
 [java]
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_bg4)]($style)"
+format = "[[ $symbol( $version) ](fg:color_fg1 bg:color_bg4)]($style)"
 style = "bg:color_bg4"
 symbol = ""
 
 [kotlin]
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_bg4)]($style)"
+format = "[[ $symbol( $version) ](fg:color_fg1 bg:color_bg4)]($style)"
 style = "bg:color_bg4"
 symbol = ""
 
@@ -92,13 +92,13 @@ symbol = ""
 disabled = false
 
 [nodejs]
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_bg4)]($style)"
+format = "[[ $symbol( $version) ](fg:color_fg1 bg:color_bg4)]($style)"
 style = "bg:color_bg4"
 symbol = ""
 
 [os]
 disabled = false
-style = "bg:color_bg1 fg:color_fg0"
+style = "bg:color_bg1 fg:color_fg1"
 
 [os.symbols]
 Alpine = ""
@@ -135,44 +135,68 @@ Windows = "󰍲"
 # color_red = "#cc241d"
 # color_bg2 = "#d79921"
 
-color_bg4 = "#d65d0e"
-color_yellow = "#d79921"
-color_bg1 = "#689d6a"
-color_bg2 = "#458588"
-color_bg5 = "#665c54"
-color_bg6 = "#3c3836"
-color_fg0 = "#fbf1c7"
-color_green = "#98971a"
-color_bg3 = "#b16286"
-color_red = "#cc241d"
 
+ color_bg_diff_red = "#402120"
+ color_bg_diff_green = "#34381B"
+ color_bg_diff_blue = "#0E363E"
+ color_bg_statusline1 = "#32302F"
+ color_bg_statusline2 = "#3A3735"
+ color_bg_statusline3 = "#504945"
+ color_bg_current_word = "#3C3836"
+ color_bg_visual_red = "#4C3432"
+ color_bg_visual_green = "#3B4439"
+ color_bg_visual_blue = "#374141"
+ color_bg_visual_yellow = "#4F422E"
+ color_bg_visual_purple = "#443840"
+ color_fg0 = "#D4BE98"
+ color_fg1 = "#DDC7A1"
+ color_red = "#EA6962"
+ color_green = "#A9B665"
+ color_blue = "#7DAEA3"
+ color_yellow = "#D8A657"
+ color_purple = "#D3869B"
+ color_orange = "#E78A4E"
+ color_aqua = "#89B482"
+ color_bg_red = "#EA6962"
+ color_bg_green = "#A9B665"
+ color_bg_yellow = "#D8A657"
+ color_grey0 = "#7C6F64"
+ color_grey1 = "#928374"
+ color_grey2 = "#A89984"
+ color_bg0 = "#1b1b1b"
+ color_bg1 = "#282828"
+ color_bg2 = "#32302F"
+ color_bg3 = "#32302F"
+ color_bg4 = "#45403D"
+ color_bg5 = "#45403D"
+ color_bg6 = "#5A524C"
 [php]
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_bg4)]($style)"
+format = "[[ $symbol( $version) ](fg:color_fg1 bg:color_bg4)]($style)"
 style = "bg:color_bg4"
 symbol = ""
 
 [pixi]
-format = "[[ $symbol( $version)( $environment) ](fg:color_fg0 bg:color_bg5)]($style)"
+format = "[[ $symbol( $version)( $environment) ](fg:color_fg1 bg:color_bg5)]($style)"
 style = "bg:color_bg5"
 
 [python]
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_bg4)]($style)"
+format = "[[ $symbol( $version) ](fg:color_fg1 bg:color_bg4)]($style)"
 style = "bg:color_bg4"
 symbol = ""
 
 [rust]
-format = "[[ $symbol( $version) ](fg:color_fg0 bg:color_bg4)]($style)"
+format = "[[ $symbol( $version) ](fg:color_fg1 bg:color_bg4)]($style)"
 style = "bg:color_bg4"
 symbol = ""
 
 [time]
 disabled = false
-format = "[[  $time ](fg:color_fg0 bg:color_bg6)]($style)"
+format = "[[  $time ](fg:color_fg1 bg:color_bg6)]($style)"
 style = "bg:color_bg6"
 time_format = "%R"
 
 [username]
 format = "[ $user/]($style)"
 show_always = true
-style_root = "bg:color_bg1 fg:color_fg0"
-style_user = "bg:color_bg1 fg:color_fg0"
+style_root = "bg:color_bg1 fg:color_fg1"
+style_user = "bg:color_bg1 fg:color_fg1"
