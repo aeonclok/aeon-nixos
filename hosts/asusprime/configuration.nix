@@ -1,5 +1,5 @@
 { config, pkgs, ... }: {
-  imports = [ ../../modules/system/base.nix ];
+  imports = [ ../../modules/system/fonts.nix ../../modules/system/base.nix ];
   networking.hostName = "asusprime";
   system.stateVersion = "25.05";
 

@@ -9,105 +9,130 @@ in {
   }) gruvbox-palette;
 
   home.packages = with pkgs; [
-    neovim
-    kitty
-    nerd-fonts.monaspace
-    wget
-    fastfetch
-    wl-clipboard
-    cliphist
-    rofi
-    wl-clip-persist
-    hyprpaper
-    hyprcursor
-    ncdu
-    tree
-    fd
-    ripgrep
-    bat
-    eza
-    procs
-    tokei
-    sd
-    choose
-    xan
-    jq
-    yq-go
-    hyperfine
-    just
-    entr
-    tealdeer
-    yazi
-    nnn
-    xplr
-    broot
-    btop
-    gdu
-    duf
-    dust
-    gitui
-    gh
-    gh-dash
-    glow
-    newsboat
-    onefetch
-    foot
-    waybar
-    wofi
-    mako
-    grim
-    slurp
-    swappy
-    grimblast
-    hyprpicker
-    xdg-desktop-portal-hyprland
-    zathura
-    imv
-    mpv
-    ytfzf
-    bandwhich
-    bmon
-    mtr
-    httpie
-    curlie
-    direnv
-    nix-direnv
-    nix-index
-    comma
-    nix-tree
-    nix-du
-    nvd
-    nh
-    nix-output-monitor
-    deadnix
-    statix
-    nixpkgs-fmt
-    pass
-    age
-    rage
-    sops
-    zulip
-    pnpm
-    nodejs
-    curl
-    gcc
-    unzip
-    gnutar
-    gzip
-    stylua
-    rustc
-    cargo
-    gnumake
-    pkg-config
-    tree-sitter
-    nixfmt-classic
-    trash-cli
-    glib
-    imagemagick
-    ghostscript
-    tectonic
-    nodePackages.mermaid-cli
+    lsyncd
+    age # Simple, modern encryption tool
+    bandwhich # Terminal bandwidth utilization viewer
+    bat # `cat` clone with syntax highlighting
+    bmon # Bandwidth monitor and rate estimator
+    broot # Interactive tree viewer and file navigator
+    btop # Resource monitor (CPU, RAM, processes)
+    cargo # Rust package manager
+    choose # Command-line field selector
+    cliphist # Clipboard history manager for Wayland
+    comma # Run software without installing (Nix utility)
+    curl # Command-line HTTP client
+    curlie # `curl` with an easier interface, inspired by HTTPie
+    deadnix # Detect unused Nix code
+    direnv # Load/unload environment variables automatically
+    duf # Disk usage/free utility with nicer UI
+    dust # `du` alternative for visualizing disk usage
+    entr # Run commands when files change
+    eza # Modern replacement for `ls`
+    fastfetch # System info fetcher (like neofetch, but faster)
+    fd # Simple, fast `find` alternative
+    foot # Lightweight Wayland terminal emulator
+    gcc # GNU C compiler
+    gdu # Fast disk usage analyzer written in Go
+    gh # GitHub CLI
+    gh-dash # TUI dashboard for GitHub issues and PRs
+    ghostscript # PostScript and PDF processing tools
+    gitui # TUI Git interface
+    glib # Core GNOME/GTK utility library (required by many tools)
+    glow # Render Markdown in the terminal
+    gnumake # Build automation tool
+    gnutar # Archiving utility (tar)
+    grim # Screenshot utility for Wayland
+    grimblast # Wrapper around grim and slurp for screenshots
+    gzip # File compression tool
+    httpie # User-friendly HTTP client
+    hyperfine # Command-line benchmarking tool
+    hyprcursor # Hyprland cursor management utility
+    hyprpaper # Wallpaper utility for Hyprland
+    hyprpicker # Color picker for Wayland/Hyprland
+    imagemagick # Image manipulation tools
+    imv # Simple image viewer for Wayland/X11
+    jq # Command-line JSON processor
+    just # Command runner (like `make`, but simpler)
+    kitty # GPU-accelerated terminal emulator
+    mako # Notification daemon for Wayland
+    mpv # Media player (audio/video)
+    mtr # Network diagnostic tool (traceroute + ping)
+    ncdu # Disk usage analyzer with ncurses interface
+    neovim # Modern Vim fork, extensible text editor
+    nerd-fonts.monaspace # Nerd Font patched Monaspace font
+    newsboat # RSS/Atom feed reader for the terminal
+    nh # Helper for managing Nix environments/profiles
+    nix-direnv # Integrate Nix with direnv
+    nix-du # Disk usage for Nix store paths
+    nix-index # Search packages by file in nixpkgs
+    nix-output-monitor # Enhanced output viewer for Nix builds
+    nix-tree # Visualize dependencies of Nix derivations
+    nixfmt-classic # Formatter for Nix expressions
+    nixpkgs-fmt # Alternative Nix formatter
+    nnn # Terminal file manager
+    nodePackages.mermaid-cli # Generate diagrams and flowcharts from Markdown
+    nodejs # JavaScript runtime
+    nvd # Compare Nix generations
+    onefetch # Git repository summary in terminal
+    pass # Unix password manager (uses GPG)
+    pkg-config # Manage compile/link flags for libraries
+    pnpm # Fast, disk-efficient Node.js package manager
+    procs # Modern replacement for `ps`
+    rage # Encryption tool compatible with `age`
+    ripgrep # Fast recursive search (like `grep`)
+    rofi # Window/app launcher and dmenu replacement
+    rustc # Rust compiler
+    sd # Fast find-and-replace CLI tool
+    slurp # Select regions of the screen (used with grim)
+    sops # Secrets management via encryption
+    statix # Linter for Nix expressions
+    stylua # Lua code formatter
+    swappy # Screenshot annotation tool
+    tealdeer # Simplified `tldr` command helper
+    tectonic # Modern LaTeX distribution
+    tokei # Count lines of code
+    trash-cli # Move files to trash instead of deleting
+    tree # Directory tree visualizer
+    tree-sitter # Parser generator and syntax highlighting library
+    unzip # Extract `.zip` archives
+    waybar # Customizable status bar for Wayland
+    wget # HTTP/FTP file downloader
+    wl-clip-persist # Persistent clipboard manager for Wayland
+    wl-clipboard # Wayland clipboard utilities (`wl-copy`, `wl-paste`)
+    wofi # App launcher for Wayland
+    xan # (Possibly custom or uncommon package — verify usage)
+    xdg-desktop-portal-hyprland # Portal backend for Hyprland
+    xplr # File explorer for the terminal
+    yazi # Fast TUI file manager inspired by ranger
+    yq-go # YAML processor (like jq for YAML)
+    ytfzf # CLI YouTube search and play tool
+    zathura # Lightweight PDF viewer
+    zulip # Zulip chat client
   ];
+
+  fonts = {
+    fontconfig = {
+      enable = true;
+
+      # (Optional) reinforce defaults at user scope; useful on multi-user machines
+      defaultFonts = {
+        serif = [ "Noto Serif" ];
+        sansSerif = [ "Inter" "Noto Sans" "Cantarell" ];
+        monospace = [ "Monaspace Neon" "Monaspace Argon" "DejaVu Sans Mono" ];
+        emoji = [ "Noto Color Emoji" ];
+      };
+    };
+  };
+
+  qt = {
+    enable = true;
+    platformTheme.name = "gtk"; # keeps Qt apps aligned with GTK font choices
+    style.name = "adwaita"; # or "adwaita-dark"
+  };
+
+  # Optional: freetype fine-tuning (reduces weird boldness on some setups)
+  # home.sessionVariables.FREETYPE_PROPERTIES =
+  #   "truetype:interpreter-version=40 cff:no-stem-darkening=0 autofitter:no-stem-darkening=0";
 
   home.file.".config/nvim/" = {
     source =
@@ -130,6 +155,7 @@ in {
   gtk = {
     enable = true;
 
+    font.name = "Inter 10";
     theme = {
       package = pkgs.hackneyed;
       name = "Hackneyed";
