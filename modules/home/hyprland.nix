@@ -102,7 +102,7 @@
         "$mod, C, killactive"
         "$mod, U, togglefloating"
         "$mod, F, fullscreen"
-        "$mod, RETURN, exec, firefox"
+        "$mod, RETURN, exec, rofi -show drun"
         "$mod, z, exec, NIXOS_OZONE_WL=0 zulip"
         "$mod, O, exec, hyprlock"
 

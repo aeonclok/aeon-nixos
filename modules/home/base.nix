@@ -114,7 +114,6 @@ in {
     fontconfig = {
       enable = true;
 
-      # (Optional) reinforce defaults at user scope; useful on multi-user machines
       defaultFonts = {
         serif = [ "Noto Serif" ];
         sansSerif = [ "Inter" "Noto Sans" "Cantarell" ];
@@ -126,8 +125,8 @@ in {
 
   qt = {
     enable = true;
-    platformTheme.name = "gtk"; # keeps Qt apps aligned with GTK font choices
-    style.name = "adwaita"; # or "adwaita-dark"
+    platformTheme.name = "gtk";
+    style.name = "adwaita";
   };
 
   # Optional: freetype fine-tuning (reduces weird boldness on some setups)
@@ -176,12 +175,21 @@ in {
   };
 
   programs.lazygit = { enable = true; };
+
   programs.git = {
     enable = true;
     settings.user = {
       name = "Reima Kokko";
       email = "reima.kokko@valolink.fi";
     };
+    includes = [{
+      condition = "gitdir:~/valolink/";
+      contents.user = {
+        name = "Reima Kokko";
+        email = "reima.kokko@valolink.fi";
+      };
+      contents.core.sshCommand = "ssh -i ~/.ssh/id_valolink";
+    }];
   };
 
   programs.firefox = { enable = true; };

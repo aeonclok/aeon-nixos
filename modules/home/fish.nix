@@ -19,19 +19,14 @@
 
     # Your functions / aliases
     functions = {
-      debug = "./debug.sh $argv";
+      valolink = "cd ~/valolink/";
 
-      how = ''
-        aider --no-git --message
-        $argv
-      '';
+      debug = "./debug.sh $argv";
 
       aurivpn = ''
         "/mnt/c/Program Files/Mozilla Firefox/firefox.exe" -no-remote -P ProxyOn
         ssh -D 1080 -q -C -N vpn
       '';
-
-      ask = "bash ~/openapicli/ask.sh $argv";
 
       mkcd = ''
         if test (count $argv) -eq 0
