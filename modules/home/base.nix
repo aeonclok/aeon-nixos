@@ -108,7 +108,46 @@ in {
     ytfzf # CLI YouTube search and play tool
     zathura # Lightweight PDF viewer
     zulip # Zulip chat client
+    chromium
   ];
+
+  # Fetch WhatsApp icon into ~/.local/share/icons/whatsapp.png
+  # Replace sha256 with: nix-prefetch-url https://static.whatsapp.net/rsrc.php/v3/yP/r/rYZqPCBaG70.png
+  # home.file.".local/share/icons/whatsapp.png".source = pkgs.fetchurl {
+  #   url = "https://static.whatsapp.net/rsrc.php/v3/yP/r/rYZqPCBaG70.png";
+  #   sha256 = "sha256-REPLACE_ME_WITH_REAL_HASH";
+  # };
+
+  # xdg.desktopEntries.org-protocol = {
+  #   name = "org-protocol";
+  #   exec = "emacsclient -- %u";
+  #   terminal = false;
+  #   type = "Application";
+  #   categories = [ "System" ];
+  #   mimeType = [ "x-scheme-handler/org-protocol" ];
+  # };
+
+  xdg.desktopEntries.whatsapp = {
+    name = "WhatsApp";
+    exec =
+      "${pkgs.chromium}/bin/chromium --disable-features=WaylandWpColorManagerV1 --ozone-platform=wayland --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer --user-data-dir=${config.xdg.dataHome}/whatsapp-chromium --app=https://web.whatsapp.com";
+    terminal = false;
+    # icon = "${config.home.homeDirectory}/.local/share/icons/whatsapp.png";
+    type = "Application";
+    categories = [ "Network" "InstantMessaging" ];
+    mimeType = [ "text/html" "text/xml" ];
+  };
+
+  xdg.desktopEntries.zulip = {
+    name = "Zulip";
+    exec =
+      "${pkgs.chromium}/bin/chromium --ozone-platform=wayland --disable-features=WaylandWpColorManagerV1 --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer --user-data-dir=${config.xdg.dataHome}/whatsapp-chromium --app=https://zulip.valolink.fi";
+    terminal = false;
+    # icon = "${config.home.homeDirectory}/.local/share/icons/whatsapp.png";
+    type = "Application";
+    categories = [ "Network" "InstantMessaging" ];
+    mimeType = [ "text/html" "text/xml" ];
+  };
 
   fonts = {
     fontconfig = {
@@ -125,8 +164,11 @@ in {
 
   qt = {
     enable = true;
-    platformTheme.name = "gtk";
-    style.name = "adwaita";
+    platformTheme.name = "Adwaita-dark";
+    style = {
+      name = "Adwaita-dark";
+      package = pkgs.adwaita-qt;
+    };
   };
 
   # Optional: freetype fine-tuning (reduces weird boldness on some setups)
@@ -146,17 +188,32 @@ in {
     size = 24;
   };
 
-  xdg.portal.enable = true;
+  # programs.dconf.enable = true;
+  dconf = {
+    settings = {
+      "org/gnome/desktop/interface" = {
+        gtk-theme = "Adwaita-dark";
+        color-scheme = "prefer-dark";
+      };
+    };
+  };
 
-  home.file.".config/xdg-desktop-portal/portals.conf".text = ''
-    [preferred]
-    default=gtk
-    org.freedesktop.impl.portal.FileChooser=gtk
-    org.freedesktop.impl.portal.Settings=gtk
-    org.freedesktop.impl.portal.Screencast=hyprland
-    org.freedesktop.impl.portal.Screenshot=hyprland
-  '';
-
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [ xdg-desktop-portal-gtk xdg-desktop-portal-wlr ];
+    configPackages = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-wlr
+    ];
+    config.common.default = "gtk";
+    # Optional, if you want to be explicit about backends:
+    # config.common = {
+    #   "org.freedesktop.impl.portal.FileChooser" = "gtk";
+    #   "org.freedesktop.impl.portal.Settings" = "gtk";
+    #   "org.freedesktop.impl.portal.Screencast" = "hyprland";
+    #   "org.freedesktop.impl.portal.Screenshot" = "hyprland";
+    # };
+  };
   gtk = {
     enable = true;
 
@@ -164,8 +221,8 @@ in {
     gtk4.extraConfig = { "gtk-use-portal" = 1; };
     font.name = "Inter 10";
     theme = {
-      package = pkgs.hackneyed;
-      name = "Hackneyed";
+      name = "Adwaita-dark";
+      package = pkgs.gnome-themes-extra;
     };
 
     iconTheme = {

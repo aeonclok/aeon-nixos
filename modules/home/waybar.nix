@@ -23,7 +23,7 @@
           [ "pulseaudio" "memory" "cpu" "disk" "network" "battery" "tray" ];
 
         "hyprland/workspaces" = {
-          "all-outputs" = true;
+          "all-outputs" = false;
           "format" = "{name}";
         };
 
