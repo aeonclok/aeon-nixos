@@ -46,6 +46,19 @@
   };
 
   programs.hyprland.enable = true;
+  services.pipewire = {
+    enable = true;
+    pulse.enable = true;
+    alsa.enable = true;
+    wireplumber.enable = true;
+  };
+  environment.variables = {
+    MOZ_ENABLE_WAYLAND = "1";
+    XDG_SESSION_TYPE = "wayland";
+    XDG_CURRENT_DESKTOP = "Hyprland";
+    # (optional) GDK_BACKEND = "wayland";
+  };
+  programs.hyprland.xwayland.enable = true;
   security.pam.services.hyprlock = { };
   services.displayManager.gdm.enable = true;
   services.displayManager.gdm.wayland = true;
