@@ -10,6 +10,8 @@ in {
 
   home.packages = with pkgs; [
     lsyncd
+    go
+    calc
     age # Simple, modern encryption tool
     bandwhich # Terminal bandwidth utilization viewer
     bat # `cat` clone with syntax highlighting
