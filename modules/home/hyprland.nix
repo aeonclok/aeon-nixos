@@ -103,6 +103,7 @@
 
       "$mod" = "Alt_L";
       bind = [
+        "$mod, W, exec, wezterm --config font_size=30 start --class bubble-calc /home/reima/bubblecalc/main"
         "$mod SHIFT, s, exec, grimblast --freeze copy area"
         "$mod, q, exec, wezterm"
         "$mod, c, killactive"
@@ -150,6 +151,13 @@
           "$mod, code:1${toString i}, workspace, ${toString ws}"
           "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
         ]) 9));
+
+      windowrulev2 = [
+        "float, class:^(bubble-calc)$"
+        "size 800 900, class:^(bubble-calc)$"
+        "center, class:^(bubble-calc)$"
+        # "pin, class:^(bubble-calc)$" # optional: always on top
+      ];
 
       monitor = [
         "desc:AU Optronics 0x2336,preferred,auto,1.6"
