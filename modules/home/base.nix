@@ -9,6 +9,7 @@ in {
   }) gruvbox-palette;
 
   home.packages = with pkgs; [
+    httrack
     lsyncd
     go
     calc

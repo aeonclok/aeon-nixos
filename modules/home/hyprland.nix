@@ -103,6 +103,7 @@
 
       "$mod" = "Alt_L";
       bind = [
+        "$mod SHIFT, s, exec, grimblast --freeze copy area"
         "$mod, q, exec, wezterm"
         "$mod, c, killactive"
         "$mod, u, togglefloating"
