@@ -9,6 +9,9 @@ in {
   }) gruvbox-palette;
 
   home.packages = with pkgs; [
+    prisma
+    prisma-engines
+    openssl
     httrack
     lsyncd
     go
