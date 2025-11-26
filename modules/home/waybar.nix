@@ -19,8 +19,16 @@
         # Modules
         modules-left = [ "hyprland/workspaces" "window" ];
         modules-center = [ "clock" ];
-        modules-right =
-          [ "pulseaudio" "memory" "cpu" "disk" "network" "battery" "tray" ];
+        modules-right = [
+          "pulseaudio"
+          "memory"
+          "cpu"
+          "disk"
+          "bluetooth"
+          "network"
+          "battery"
+          "tray"
+        ];
 
         "hyprland/workspaces" = {
           "all-outputs" = false;
@@ -55,6 +63,19 @@
         clock = {
           format = "{:%a %d-%m-%Y  %H:%M}";
           tooltip = true;
+        };
+
+        bluetooth = {
+          # tweak to taste; these work out of the box
+          format = "{icon}";
+          format-connected = "{icon} {num_connections}";
+          format-disabled = ""; # shown when rfkilled/off
+          tooltip = true;
+
+          # handy actions
+          on-click = "blueman-manager"; # open GUI
+          on-click-right = "bluetoothctl power on"; # or toggle
+          on-click-middle = "bluetoothctl power off";
         };
 
         network = {
@@ -141,7 +162,7 @@
         color: @base;
       }
 
-      #cpu, #disk, #memory, #window, #clock, #network, #pulseaudio, #battery, #tray {
+      #cpu, #disk, #memory, #window, #clock, #network, #pulseaudio, #battery, #tray, #bluetooth {
         padding: 6px 10px;
         margin: 4px 6px;
         border-radius: 8px;
