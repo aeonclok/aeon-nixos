@@ -1,6 +1,9 @@
 { config, pkgs, ... }: {
   imports = [ ../../modules/system/fonts.nix ../../modules/system/base.nix ];
   networking.hostName = "asusprime";
+  networking.firewall.enable = true;
+  networking.firewall.allowedTCPPorts = [ 3030 ];
+
   system.stateVersion = "25.05";
 
   fileSystems."/boot" = {

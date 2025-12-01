@@ -11,8 +11,8 @@
 ------------------------------------------------------------
 -- Config: file fence markers
 ------------------------------------------------------------
-local START_TAG = "***STARTFILE: "
-local END_TAG = "*** ENDFILE: "
+local START_TAG = "this is "
+local END_TAG = " ends here"
 local M = {}
 
 ------------------------------------------------------------
@@ -124,10 +124,8 @@ local function wrap_with_fences(header, body)
   return table.concat({
     START_TAG,
     header,
-    "\n",
+    ":\n",
     body,
-    END_TAG,
-    header,
     "\n\n",
   })
 end
