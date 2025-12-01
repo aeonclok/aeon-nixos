@@ -23,19 +23,10 @@
   services.xserver.xkb = {
     layout = "fi";
     options = "caps:escape";
-    # extraLayouts.fi_noesc = {
-    #   description = "fi, no esc, tab>esc";
-    #   languages = ["fi"];
-    #   symbolsFile = pkgs.writeText "fi_tabesc" ''
-    #     default partial alphanumeric_keys
-    #     xkb_symbols "basic" {
-    #       include "fi(winkeys)"
-    #       key <ESC> { [ NoSymbol ] };
-    #       key <TAB> { type="ONE_LEVEL", [ Escape ] };
-    #     };
-    #   '';
-    # };
   };
+
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
 
   xdg.portal = {
     enable = true;
@@ -44,6 +35,8 @@
       xdg-desktop-portal-gtk
     ];
   };
+
+  programs.wshowkeys.enable = true;
 
   programs.hyprland.enable = true;
   services.pipewire = {
