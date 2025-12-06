@@ -116,6 +116,8 @@ in {
     zathura # Lightweight PDF viewer
     zulip # Zulip chat client
     chromium
+    rclone
+    fuse3
   ];
 
   # Fetch WhatsApp icon into ~/.local/share/icons/whatsapp.png
@@ -133,6 +135,66 @@ in {
   #   categories = [ "System" ];
   #   mimeType = [ "x-scheme-handler/org-protocol" ];
   # };
+
+  systemd.user.services."rclone-gdrive" = {
+    Unit = {
+      Description = "Rclone Mount for Google Drive";
+      After = [ "network-online.target" ];
+      Wants = [ "network-online.target" ];
+    };
+
+    Service = {
+      ExecStart = ''
+        ${pkgs.rclone}/bin/rclone mount gdrive: ${config.home.homeDirectory}/cloud/drive \
+          --vfs-cache-mode=full \
+          --vfs-cache-max-size=15G \
+          --vfs-cache-max-age=8h \
+          --dir-cache-time=72h \
+          --poll-interval=5m \
+          --buffer-size=64M \
+          --umask=022 \
+      '';
+
+      ExecStop = ''
+        ${pkgs.fuse3}/bin/fusermount3 -u ${config.home.homeDirectory}/cloud/drive || true
+      '';
+
+      Restart = "on-failure";
+      Type = "notify";
+    };
+
+    Install = { WantedBy = [ "default.target" ]; };
+  };
+
+  systemd.user.services."rclone-dropbox" = {
+    Unit = {
+      Description = "Rclone Mount for Dropbox";
+      After = [ "network-online.target" ];
+      Wants = [ "network-online.target" ];
+    };
+
+    Service = {
+      ExecStart = ''
+        ${pkgs.rclone}/bin/rclone mount dropbox: ${config.home.homeDirectory}/cloud/dropbox \
+          --vfs-cache-mode=full \
+          --vfs-cache-max-size=15G \
+          --vfs-cache-max-age=8h \
+          --dir-cache-time=72h \
+          --poll-interval=5m \
+          --buffer-size=64M \
+          --umask=022 \
+      '';
+
+      ExecStop = ''
+        ${pkgs.fuse3}/bin/fusermount3 -u ${config.home.homeDirectory}/cloud/dropbox || true
+      '';
+
+      Restart = "on-failure";
+      Type = "notify";
+    };
+
+    Install = { WantedBy = [ "default.target" ]; };
+  };
 
   xdg.desktopEntries.whatsapp = {
     name = "WhatsApp";
