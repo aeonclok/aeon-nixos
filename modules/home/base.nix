@@ -136,6 +136,11 @@ in {
   #   mimeType = [ "x-scheme-handler/org-protocol" ];
   # };
 
+  services.udiskie = {
+    enable = true;
+    tray = "auto";
+  };
+
   systemd.user.services."rclone-gdrive" = {
     Unit = {
       Description = "Rclone Mount for Google Drive";

@@ -45,7 +45,13 @@
     alsa.enable = true;
     wireplumber.enable = true;
   };
+
   programs.thunar.enable = true;
+
+  services.udisks2.enable = true;
+
+  services.gvfs.enable = true;
+
   environment.variables = {
     MOZ_ENABLE_WAYLAND = "1";
     XDG_SESSION_TYPE = "wayland";
