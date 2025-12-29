@@ -9,12 +9,12 @@
       mainBar = {
         layer = "top";
         position = "top";
-        height = 32;
-        margin = "0 0 6 0";
+        # height = 32;
+        # margin = "0 0 6 0";
 
         # Use your Nerd Font
-        "font-family" = "MonaspiceNe Nerd Font";
-        "font-size" = 12;
+        # "font-family" = "MonaspiceNe Nerd Font";
+        # "font-size" = 12;
 
         # Modules
         modules-left = [ "hyprland/workspaces" "window" ];
@@ -67,9 +67,9 @@
 
         bluetooth = {
           # tweak to taste; these work out of the box
-          format = "{icon}";
-          format-connected = "{icon} {num_connections}";
-          format-disabled = ""; # shown when rfkilled/off
+          format = "󰂯";
+          format-connected = "󰂯 {num_connections}";
+          format-disabled = "󰂲"; # shown when rfkilled/off
           tooltip = true;
 
           # handy actions
@@ -83,17 +83,18 @@
           #   format-ethernet = "󰈁  {ifname}";
           #   format-disconnected = "󰤭  offline";
           #   tooltip = true;
-          format-wifi = "  {signalStrength}%";
+          format-wifi = "󰖩  {signalStrength}%";
           format-ethernet = "󰀂 ";
           tooltip-format = "Connected to {essid} {ifname} via {gwaddr}";
           format-linked = "{ifname} (No IP)";
           format-disconnected = "󰖪 ";
+          on-click-right = "networkmanager_dmenu";
         };
 
         pulseaudio = {
           format = "{icon} {volume}%";
           format-muted = "󰝟  muted";
-          "format-icons" = { default = [ "" "" "" ]; };
+          "format-icons" = { default = [ "󰕿" "󰖀" "󰕾" ]; };
           # tooltip = false;
         };
 
@@ -111,70 +112,70 @@
     };
 
     # CSS theme using your palette
-    style = ''
-      /* === Your palette === */
-      @define-color base      #1d2021;
-      @define-color mantle    #141414;
-      @define-color crust     #141414;
-      @define-color surface0  #32302f;
-      @define-color surface1  #458588;
-      @define-color surface2  #504945;
-      @define-color overlay0  #665c54;
-      @define-color overlay1  #7c6f64;
-      @define-color overlay2  #928374;
-      @define-color subtext0  #928374;
-      @define-color subtext1  #458588;
-      @define-color text      #d4be98;
-      @define-color rosewater #ddc7a1;
-      @define-color flamingo  #ea6962;
-      @define-color red       #c14a4a;
-      @define-color peach     #d3869b;
-      @define-color yellow    #d4be98;
-      @define-color green     #a9b665;
-      @define-color teal      #89b482;
-      @define-color blue      #7daea3;
-      @define-color mauve     #e78a4e;
-      @define-color sapphire  #458588;
-
-      * {
-        font-family: "MonaspiceNe Nerd Font";
-        font-size: 12px;
-      }
-
-      window#waybar {
-        background: @base;
-        color: @text;
-        border: 0px solid transparent;
-      }
-
-      #workspaces button {
-        color: @subtext0;
-        background: transparent;
-        padding: 0 8px;
-        border-radius: 6px;
-      }
-      #workspaces button.active {
-        background: @surface0;
-        color: @text;
-      }
-      #workspaces button:hover {
-        background: @surface1;
-        color: @base;
-      }
-
-      #cpu, #disk, #memory, #window, #clock, #network, #pulseaudio, #battery, #tray, #bluetooth {
-        padding: 6px 10px;
-        margin: 4px 6px;
-        border-radius: 8px;
-        background: @surface0;
-        color: @text;
-      }
-
-      #clock { background: @surface1; color: @base; }
-      #network.disconnected { background: @overlay0; color: @rosewater; }
-      #battery.critical { background: @red; color: @base; }
-      #pulseaudio.muted { background: @overlay0; color: @overlay2; }
-    '';
+    # style = ''
+    #   /* === Your palette === */
+    #   @define-color base      #1d2021;
+    #   @define-color mantle    #141414;
+    #   @define-color crust     #141414;
+    #   @define-color surface0  #32302f;
+    #   @define-color surface1  #458588;
+    #   @define-color surface2  #504945;
+    #   @define-color overlay0  #665c54;
+    #   @define-color overlay1  #7c6f64;
+    #   @define-color overlay2  #928374;
+    #   @define-color subtext0  #928374;
+    #   @define-color subtext1  #458588;
+    #   @define-color text      #d4be98;
+    #   @define-color rosewater #ddc7a1;
+    #   @define-color flamingo  #ea6962;
+    #   @define-color red       #c14a4a;
+    #   @define-color peach     #d3869b;
+    #   @define-color yellow    #d4be98;
+    #   @define-color green     #a9b665;
+    #   @define-color teal      #89b482;
+    #   @define-color blue      #7daea3;
+    #   @define-color mauve     #e78a4e;
+    #   @define-color sapphire  #458588;
+    #
+    #   * {
+    #     font-family: "MonaspiceNe Nerd Font";
+    #     font-size: 12px;
+    #   }
+    #
+    #   window#waybar {
+    #     background: @base;
+    #     color: @text;
+    #     border: 0px solid transparent;
+    #   }
+    #
+    #   #workspaces button {
+    #     color: @subtext0;
+    #     background: transparent;
+    #     padding: 0 8px;
+    #     border-radius: 6px;
+    #   }
+    #   #workspaces button.active {
+    #     background: @surface0;
+    #     color: @text;
+    #   }
+    #   #workspaces button:hover {
+    #     background: @surface1;
+    #     color: @base;
+    #   }
+    #
+    #   #cpu, #disk, #memory, #window, #clock, #network, #pulseaudio, #battery, #tray, #bluetooth {
+    #     padding: 6px 10px;
+    #     margin: 4px 6px;
+    #     border-radius: 8px;
+    #     background: @surface0;
+    #     color: @text;
+    #   }
+    #
+    #   #clock { background: @surface1; color: @base; }
+    #   #network.disconnected { background: @overlay0; color: @rosewater; }
+    #   #battery.critical { background: @red; color: @base; }
+    #   #pulseaudio.muted { background: @overlay0; color: @overlay2; }
+    # '';
   };
 }
 

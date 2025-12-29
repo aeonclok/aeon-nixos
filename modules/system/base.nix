@@ -5,6 +5,7 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   networking.networkmanager.enable = true;
+  networking.networkmanager.wifi.powersave = false;
   time.timeZone = "Europe/Helsinki";
   i18n.defaultLocale = "en_US.UTF-8";
 
@@ -89,5 +90,19 @@
     description = "reima";
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.fish;
+  };
+
+  stylix.enable = true;
+  stylix.polarity = "dark";
+  stylix.base16Scheme =
+    "${pkgs.base16-schemes}/share/themes/gruvbox-dark-soft.yaml";
+  stylix.fonts = {
+    monospace = {
+      package = pkgs.nerd-fonts.monaspace;
+      name = "MonaspiceNe Nerd Font";
+    };
+    serif = config.stylix.fonts.monospace;
+    # sansSerif = config.stylix.fonts.monospace;
+    emoji = config.stylix.fonts.monospace;
   };
 }

@@ -64,6 +64,7 @@ in {
     mako # Notification daemon for Wayland
     mpv # Media player (audio/video)
     mtr # Network diagnostic tool (traceroute + ping)
+    networkmanager_dmenu
     ncdu # Disk usage analyzer with ncurses interface
     neovim # Modern Vim fork, extensible text editor
     nerd-fonts.monaspace # Nerd Font patched Monaspace font
@@ -228,19 +229,19 @@ in {
       enable = true;
 
       defaultFonts = {
-        serif = [ "Noto Serif" ];
-        sansSerif = [ "Inter" "Noto Sans" "Cantarell" ];
-        monospace = [ "Monaspace Neon" ];
-        emoji = [ "Noto Color Emoji" ];
+        # serif = [ "Noto Serif" ];
+        # sansSerif = [ "Inter" "Noto Sans" "Cantarell" ];
+        # monospace = [ "Monaspace Neon" ];
+        # emoji = [ "Noto Color Emoji" ];
       };
     };
   };
 
   qt = {
     enable = true;
-    platformTheme.name = "Adwaita-dark";
+    # platformTheme.name = "Adwaita-dark";
     style = {
-      name = "Adwaita-dark";
+      # name = "Adwaita-dark";
       package = pkgs.adwaita-qt;
     };
   };
@@ -266,8 +267,8 @@ in {
   dconf = {
     settings = {
       "org/gnome/desktop/interface" = {
-        gtk-theme = "Adwaita-dark";
-        color-scheme = "prefer-dark";
+        # gtk-theme = "Adwaita-dark";
+        # color-scheme = "prefer-dark";
       };
     };
   };
@@ -293,10 +294,10 @@ in {
 
     gtk3.extraConfig = { "gtk-use-portal" = 1; };
     gtk4.extraConfig = { "gtk-use-portal" = 1; };
-    font.name = "Inter 10";
+    # font.name = "Inter 10";
     theme = {
-      name = "Adwaita-dark";
-      package = pkgs.gnome-themes-extra;
+      # name = "Adwaita-dark";
+      # package = pkgs.gnome-themes-extra;
     };
 
     iconTheme = {

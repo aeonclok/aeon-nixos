@@ -9,9 +9,13 @@
     # nvf.url = "github:notashelf/nvf";
     fsel.url = "github:Mjoyufull/fsel";
     # kickstart-nix-nvim.url = "path:/home/reima/nix/modules/kickstart-nix-nvim/";
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, home-manager, fsel, ... }:
+  outputs = { nixpkgs, stylix, home-manager, fsel, ... }:
     let
       hosts = [ "thinkpad-carbon" "thinkpad" "thinkcentre" "asusprime" ];
 
@@ -21,6 +25,7 @@
         nixpkgs.lib.attrByPath [ host ] defaultSystem systemsByHost;
 
       mkModules = host: [
+        stylix.nixosModules.stylix
         {
           nixpkgs = {
             config.allowUnfree = true;
@@ -36,6 +41,7 @@
           # home-manager.sharedModules = [
           # nvf.homeManagerModules.default
           # ];
+          home-manager.backupFileExtension = "backup";
           home-manager.useUserPackages = true;
           # home-manager.useGlobalPkgs = true; # toggle if you prefer
           home-manager.users.reima = import ./hosts/${host}/home.nix;

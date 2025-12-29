@@ -30,10 +30,10 @@
       allowBitmaps = false;
 
       defaultFonts = {
-        serif = [ "Noto Serif" ];
-        sansSerif = [ "Inter" "Noto Sans" "Cantarell" ];
-        monospace = [ "Monaspace Neon" "Monaspace Argon" "DejaVu Sans Mono" ];
-        emoji = [ "Noto Color Emoji" ];
+        # serif = [ "Noto Serif" ];
+        # sansSerif = [ "Inter" "Noto Sans" "Cantarell" ];
+        # monospace = [ "Monaspace Neon" "Monaspace Argon" "DejaVu Sans Mono" ];
+        # emoji = [ "Noto Color Emoji" ];
       };
     };
   };
