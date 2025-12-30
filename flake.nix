@@ -13,9 +13,12 @@
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    astal.url = "github:aylur/astal";
+    ags.url = "github:aylur/ags";
   };
 
-  outputs = { nixpkgs, stylix, home-manager, fsel, ... }:
+  outputs = { nixpkgs, stylix, home-manager, fsel, ... }@inputs:
     let
       hosts = [ "thinkpad-carbon" "thinkpad" "thinkcentre" "asusprime" ];
 
@@ -37,11 +40,12 @@
 
         home-manager.nixosModules.home-manager
         {
-          # home-manager.extraSpecialArgs = {inherit nvf;};
-          # home-manager.sharedModules = [
-          # nvf.homeManagerModules.default
-          # ];
           home-manager.backupFileExtension = "backup";
+          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.sharedModules = [
+            # nvf.homeManagerModules.default
+            inputs.ags.homeManagerModules.default
+          ];
           home-manager.useUserPackages = true;
           # home-manager.useGlobalPkgs = true; # toggle if you prefer
           home-manager.users.reima = import ./hosts/${host}/home.nix;

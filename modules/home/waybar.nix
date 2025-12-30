@@ -28,6 +28,7 @@
           "network"
           "battery"
           "tray"
+          "backlight/slider"
         ];
 
         "hyprland/workspaces" = {
@@ -37,6 +38,12 @@
 
         window.format = "{title}";
         window.max-length = 50;
+
+        "backglight/slider" = {
+          min = 20;
+          max = 100;
+          orientation = "horizontal";
+        };
 
         disk = {
           format = "󰋊 {percentage_used}% ";

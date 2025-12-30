@@ -102,6 +102,25 @@
       ];
 
       "$mod" = "Alt_L";
+
+      bindel = [
+        ", XF86AudioRaiseVolume, exec, pamixer -i 5"
+        ", XF86AudioLowerVolume, exec, pamixer -d 5"
+        ", XF86MonBrightnessUp, exec, brightnessctl set +5%"
+        ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+      ];
+
+      bindl = [
+        ", XF86AudioMute, exec, pamixer -t"
+        ", XF86AudioMicMute, exec, pamixer --default-source -t"
+        ", XF86AudioPlay, exec, playerctl play-pause"
+        ", XF86AudioNext, exec, playerctl next"
+        ", XF86AudioPrev, exec, playerctl previous"
+        ''
+          , XF86Keyboard, exec, bash -c "brightnessctl -d *::kbd_backlight set $(( ($(brightnessctl -d *::kbd_backlight get) + 1) % 3 ))"
+        ''
+      ];
+
       bind = [
         "$mod, W, exec, wezterm --config font_size=30 start --class bubble-calc /home/reima/nix/modules/home/bubblecalc/main"
         "$mod SHIFT, s, exec, grimblast --freeze copy area"

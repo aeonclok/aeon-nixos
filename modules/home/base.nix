@@ -1,7 +1,20 @@
-{ config, pkgs, lib, ... }:
+{ inputs, config, pkgs, lib, ... }:
 
 let gruvbox-palette = import ./gruvbox-palette.nix;
 in {
+
+  programs.ags = {
+    enable = true;
+
+    # symlink to ~/.config/ags
+    configDir = null;
+
+    # additional packages and executables to add to gjs's runtime
+    extraPackages = with pkgs; [
+      inputs.astal.packages.${pkgs.system}.battery
+      fzf
+    ];
+  };
 
   home.sessionVariables = lib.mapAttrs' (name: value: {
     name = "THEME_${lib.strings.toUpper name}";
@@ -9,6 +22,9 @@ in {
   }) gruvbox-palette;
 
   home.packages = with pkgs; [
+    brightnessctl
+    pamixer # volume control
+    playerctl # media keys
     bluetui
     prisma-engines
     prisma
