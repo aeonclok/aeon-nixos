@@ -1,4 +1,6 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+let modulePadding = "0 10px";
+in {
   programs.waybar = {
     enable = true;
 
@@ -9,8 +11,7 @@
       mainBar = {
         layer = "top";
         position = "top";
-        # height = 32;
-        # margin = "0 0 6 0";
+        margin = "2 2 2 2";
 
         # Use your Nerd Font
         # "font-family" = "MonaspiceNe Nerd Font";
@@ -33,7 +34,12 @@
 
         "hyprland/workspaces" = {
           "all-outputs" = false;
+          # "format" = "{name}: {icon}";
           "format" = "{name}";
+          "format-icons" = {
+            "active" = "";
+            "default" = "";
+          };
         };
 
         window.format = "{title}";
@@ -46,14 +52,14 @@
         };
 
         disk = {
-          format = "󰋊 {percentage_used}% ";
+          format = "󰋊 {percentage_used}%";
           interval = 60;
           on-click-right =
             "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
         };
 
         cpu = {
-          format = "  {usage}% ";
+          format = "  {usage}%";
           format-alt = "  {avg_frequency} GHz";
           interval = 2;
           on-click-right =
@@ -61,15 +67,16 @@
         };
 
         memory = {
-          format = "󰟜 {}% ";
+          format = "󰟜 {}%";
           format-alt = "󰟜 {used} GiB"; # 
           interval = 2;
           # on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
         };
 
         clock = {
-          format = "{:%a %d-%m-%Y  %H:%M}";
+          format = "{:%H:%M:%S  %A, %d.%m }";
           tooltip = true;
+          interval = 1;
         };
 
         bluetooth = {
@@ -118,8 +125,95 @@
       };
     };
 
-    # CSS theme using your palette
-    # style = ''
+    style = ''
+      * {
+        border: none;
+        border-radius: 3px;
+      }
+
+      window#waybar {
+        background: alpha(@base00, 0.800000);
+      }
+
+      .modules-left #workspaces button.focused,
+      .modules-right label, .modules-left #workspaces button.active {
+        border-bottom: 3px solid transparent;
+        background: alpha(@base01, 0.800000);
+      }
+
+      .modules-right label {
+        background: alpha(@base01, 0.800000);
+        margin-left: 4px;
+        padding-right: 18px;
+      }
+
+      #wireplumber,
+      #pulseaudio,
+      #sndio {
+        padding: ${modulePadding};
+      }
+      #wireplumber.muted,
+      #pulseaudio.muted,
+      #sndio.muted {
+        padding: ${modulePadding};
+      }
+      #upower,
+      #battery {
+        padding: ${modulePadding};
+      }
+      #upower.charging,
+      #battery.Charging {
+        padding: ${modulePadding};
+      }
+      #network {
+        padding: ${modulePadding};
+      }
+      #network.disconnected {
+        padding: ${modulePadding};
+      }
+      #user {
+        padding: ${modulePadding};
+      }
+      #clock {
+        padding: ${modulePadding};
+      }
+      #backlight {
+        padding: ${modulePadding};
+      }
+      #cpu {
+        padding: ${modulePadding};
+      }
+      #disk {
+        padding: ${modulePadding};
+      }
+      #idle_inhibitor {
+        padding: ${modulePadding};
+      }
+      #temperature {
+        padding: ${modulePadding};
+      }
+      #mpd {
+        padding: ${modulePadding};
+      }
+      #language {
+        padding: ${modulePadding};
+      }
+      #keyboard-state {
+        padding: ${modulePadding};
+      }
+      #memory {
+        padding: ${modulePadding};
+      }
+      #window {
+        padding: ${modulePadding};
+      }
+      #bluetooth {
+        padding: ${modulePadding};
+      }
+      #bluetooth.disabled {
+        padding: ${modulePadding};
+      }
+    '';
     #   /* === Your palette === */
     #   @define-color base      #1d2021;
     #   @define-color mantle    #141414;

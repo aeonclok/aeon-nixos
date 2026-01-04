@@ -123,6 +123,8 @@
 
       bind = [
         "$mod, W, exec, wezterm --config font_size=30 start --class bubble-calc /home/reima/nix/modules/home/bubblecalc/main"
+        "$mod SHIFT, W, exec, systemctl --user restart waybar"
+        "$mod SHIFT CTRL, W, exec, bash /home/reima/nix/modules/home/waybar-dev.sh"
         "$mod SHIFT, s, exec, grimblast --freeze copy area"
         "$mod, q, exec, wezterm"
         "$mod, c, killactive"
