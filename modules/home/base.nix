@@ -135,6 +135,7 @@ in {
     chromium
     rclone
     fuse3
+    (pkgs.callPackage ./autodarts.nix { })
   ];
 
   # Fetch WhatsApp icon into ~/.local/share/icons/whatsapp.png
