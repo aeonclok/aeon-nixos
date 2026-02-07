@@ -1,56 +1,56 @@
 { config, pkgs, lib, ... }: {
-  services.hyprpaper = {
-    enable = true;
-    settings = {
-      ipc = "on";
-      splash = false;
-      # splash_offset = 2.0;
-      preload = [ "/home/reima/nix/background.jpg" ];
-      wallpaper = [ ",/home/reima/nix/background.jpg" ];
-    };
-  };
+  # services.hyprpaper = {
+  #   enable = true;
+  #   settings = {
+  #     ipc = "on";
+  #     splash = false;
+  #     # splash_offset = 2.0;
+  #     preload = [ "/home/reima/nix/background.jpg" ];
+  #     wallpaper = [ "/home/reima/nix/background.jpg" ];
+  #   };
+  # };
 
   programs.hyprlock = {
     enable = true;
 
-    # settings = {
-    #   general = { grace = 0; };
-    #
-    #   background = [{
-    #     monitor = "";
-    #     path = "screenshot";
-    #     blur_passes = 2;
-    #     blur_size = 7;
-    #     noise = 2.0e-2;
-    #   }];
-    #
-    #   input-field = [{
-    #     monitor = "";
-    #     size = "300, 40";
-    #     position = "0, -100";
-    #     rounding = 0;
-    #     outline_thickness = 1;
-    #
-    #     inner_color = "rgba(0,0,0,0.5)";
-    #     outer_color = "rgba(255,255,255,0.15)";
-    #     font_color = "rgba(255,255,255,0.9)";
-    #     placeholder_text = "<type password>";
-    #     hide_on_empty = false;
-    #     fade_on_empty = false;
-    #     fade_timeout = 0;
-    #
-    #     font_family = "MonaspiceNe NFM";
-    #     font_size = 12;
-    #   }];
-    #
-    #   label = [{
-    #     monitor = "";
-    #     text = "$TIME";
-    #     font_family = "MonaspiceNe NFM";
-    #     font_size = 12;
-    #     position = "0, 80";
-    #   }];
-    # };
+    settings = {
+      general = { grace = 0; };
+
+      background = [{
+        monitor = "";
+        path = "screenshot";
+        blur_passes = 2;
+        blur_size = 7;
+        noise = 2.0e-2;
+      }];
+
+      input-field = [{
+        monitor = "";
+        size = "300, 40";
+        position = "0, -100";
+        rounding = 0;
+        outline_thickness = 1;
+
+        inner_color = "rgba(0,0,0,0.5)";
+        outer_color = "rgba(255,255,255,0.15)";
+        font_color = "rgba(255,255,255,0.9)";
+        placeholder_text = "<type password>";
+        hide_on_empty = false;
+        fade_on_empty = false;
+        fade_timeout = 0;
+
+        font_family = "MonaspiceNe NFM";
+        font_size = 12;
+      }];
+
+      label = [{
+        monitor = "";
+        text = "$TIME";
+        font_family = "MonaspiceNe NFM";
+        font_size = 12;
+        position = "0, 80";
+      }];
+    };
   };
 
   services.hypridle = {
@@ -173,12 +173,12 @@
           "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
         ]) 9));
 
-      windowrulev2 = [
-        "float, class:^(bubble-calc)$"
-        "size 800 900, class:^(bubble-calc)$"
-        "center, class:^(bubble-calc)$"
-        # "pin, class:^(bubble-calc)$" # optional: always on top
-      ];
+      # windowrule = [
+      #   "float, class:^(bubble-calc)$"
+      #   "size 800 900, class:^(bubble-calc)$"
+      #   "center, class:^(bubble-calc)$"
+      #   # "pin, class:^(bubble-calc)$" # optional: always on top
+      # ];
 
       monitor = [
         "desc:AU Optronics 0x2336,preferred,auto,1.6"

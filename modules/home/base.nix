@@ -1,7 +1,15 @@
-{ inputs, config, pkgs, lib, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
-let gruvbox-palette = import ./gruvbox-palette.nix;
-in {
+let
+  gruvbox-palette = import ./gruvbox-palette.nix;
+in
+{
 
   programs.ags = {
     enable = true;
@@ -91,7 +99,7 @@ in {
     nix-index # Search packages by file in nixpkgs
     nix-output-monitor # Enhanced output viewer for Nix builds
     nix-tree # Visualize dependencies of Nix derivations
-    nixfmt-classic # Formatter for Nix expressions
+    nixfmt # Formatter for Nix expressions
     nixpkgs-fmt # Alternative Nix formatter
     nnn # Terminal file manager
     nodePackages.mermaid-cli # Generate diagrams and flowcharts from Markdown
@@ -138,6 +146,8 @@ in {
     (pkgs.callPackage ./autodarts.nix { })
   ];
 
+  stylix.targets.hyprlock.enable = false;
+  stylix.targets.firefox.profileNames = [ "reima" ];
   # Fetch WhatsApp icon into ~/.local/share/icons/whatsapp.png
   # Replace sha256 with: nix-prefetch-url https://static.whatsapp.net/rsrc.php/v3/yP/r/rYZqPCBaG70.png
   # home.file.".local/share/icons/whatsapp.png".source = pkgs.fetchurl {
@@ -186,7 +196,9 @@ in {
       Type = "notify";
     };
 
-    Install = { WantedBy = [ "default.target" ]; };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
   };
 
   systemd.user.services."rclone-dropbox" = {
@@ -216,29 +228,41 @@ in {
       Type = "notify";
     };
 
-    Install = { WantedBy = [ "default.target" ]; };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
   };
 
   xdg.desktopEntries.whatsapp = {
     name = "WhatsApp";
-    exec =
-      "${pkgs.chromium}/bin/chromium --disable-features=WaylandWpColorManagerV1 --ozone-platform=wayland --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer --user-data-dir=${config.xdg.dataHome}/whatsapp-chromium --app=https://web.whatsapp.com";
+    exec = "${pkgs.chromium}/bin/chromium --disable-features=WaylandWpColorManagerV1 --ozone-platform=wayland --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer --user-data-dir=${config.xdg.dataHome}/whatsapp-chromium --app=https://web.whatsapp.com";
     terminal = false;
     # icon = "${config.home.homeDirectory}/.local/share/icons/whatsapp.png";
     type = "Application";
-    categories = [ "Network" "InstantMessaging" ];
-    mimeType = [ "text/html" "text/xml" ];
+    categories = [
+      "Network"
+      "InstantMessaging"
+    ];
+    mimeType = [
+      "text/html"
+      "text/xml"
+    ];
   };
 
   xdg.desktopEntries.zulip = {
     name = "Zulip";
-    exec =
-      "${pkgs.chromium}/bin/chromium --ozone-platform=wayland --disable-features=WaylandWpColorManagerV1 --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer --user-data-dir=${config.xdg.dataHome}/whatsapp-chromium --app=https://zulip.valolink.fi";
+    exec = "${pkgs.chromium}/bin/chromium --ozone-platform=wayland --disable-features=WaylandWpColorManagerV1 --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer --user-data-dir=${config.xdg.dataHome}/whatsapp-chromium --app=https://zulip.valolink.fi";
     terminal = false;
     # icon = "${config.home.homeDirectory}/.local/share/icons/whatsapp.png";
     type = "Application";
-    categories = [ "Network" "InstantMessaging" ];
-    mimeType = [ "text/html" "text/xml" ];
+    categories = [
+      "Network"
+      "InstantMessaging"
+    ];
+    mimeType = [
+      "text/html"
+      "text/xml"
+    ];
   };
 
   fonts = {
@@ -268,17 +292,16 @@ in {
   #   "truetype:interpreter-version=40 cff:no-stem-darkening=0 autofitter:no-stem-darkening=0";
 
   home.file.".config/nvim/" = {
-    source =
-      config.lib.file.mkOutOfStoreSymlink "/home/reima/nix/modules/home/nvim/";
+    source = config.lib.file.mkOutOfStoreSymlink "/home/reima/nix/modules/home/nvim/";
     force = true;
   };
 
-  home.pointerCursor = {
-    gtk.enable = true;
-    package = pkgs.hackneyed;
-    name = "Hackneyed";
-    size = 24;
-  };
+  # home.pointerCursor = {
+  #   gtk.enable = true;
+  #   package = pkgs.hackneyed;
+  #   name = "Hackneyed";
+  #   size = 24;
+  # };
 
   # programs.dconf.enable = true;
   dconf = {
@@ -292,7 +315,10 @@ in {
 
   xdg.portal = {
     enable = true;
-    extraPortals = with pkgs; [ xdg-desktop-portal-gtk xdg-desktop-portal-wlr ];
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-wlr
+    ];
     configPackages = with pkgs; [
       xdg-desktop-portal-gtk
       xdg-desktop-portal-wlr
@@ -306,24 +332,39 @@ in {
     #   "org.freedesktop.impl.portal.Screenshot" = "hyprland";
     # };
   };
+  home.pointerCursor = {
+    gtk.enable = true;
+    # Adwaita is part of the gnome-themes-extra package usually
+    package = pkgs.adwaita-icon-theme;
+    name = "Adwaita";
+    size = 24;
+  };
+
   gtk = {
     enable = true;
 
-    gtk3.extraConfig = { "gtk-use-portal" = 1; };
-    gtk4.extraConfig = { "gtk-use-portal" = 1; };
-    # font.name = "Inter 10";
-    theme = {
-      # name = "Adwaita-dark";
-      # package = pkgs.gnome-themes-extra;
+    gtk3.extraConfig = {
+      "gtk-use-portal" = 1;
+    };
+    gtk4.extraConfig = {
+      "gtk-use-portal" = 1;
     };
 
+    # Using standard Adwaita ensures binaries are cached
+    # theme = {
+    #   name = "adw-gtk3-dark"; # Modern GTK3 theme that matches GNOME 40+
+    #   package = pkgs.adw-gtk3;
+    # };
+
     iconTheme = {
-      package = pkgs.hackneyed;
-      name = "Hackneyed";
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
     };
   };
 
-  programs.lazygit = { enable = true; };
+  programs.lazygit = {
+    enable = true;
+  };
 
   programs.git = {
     enable = true;
@@ -331,17 +372,21 @@ in {
       name = "Reima Kokko";
       email = "reima.kokko@valolink.fi";
     };
-    includes = [{
-      condition = "gitdir:~/valolink/";
-      contents.user = {
-        name = "Reima Kokko";
-        email = "reima.kokko@valolink.fi";
-      };
-      contents.core.sshCommand = "ssh -i ~/.ssh/id_valolink";
-    }];
+    includes = [
+      {
+        condition = "gitdir:~/valolink/";
+        contents.user = {
+          name = "Reima Kokko";
+          email = "reima.kokko@valolink.fi";
+        };
+        contents.core.sshCommand = "ssh -i ~/.ssh/id_valolink";
+      }
+    ];
   };
 
-  programs.firefox = { enable = true; };
+  programs.firefox = {
+    enable = true;
+  };
 
   nixpkgs.config.allowUnfree = true;
 

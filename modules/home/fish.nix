@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }: {
   programs.fish = {
     enable = true;
-
+    generateCompletions = false;
     # Runs for interactive shells (good place for keybindings & PATH additions)
     interactiveShellInit = ''
       # Your interactive block

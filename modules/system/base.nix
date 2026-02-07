@@ -1,9 +1,13 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   imports = [ ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.powersave = false;
   time.timeZone = "Europe/Helsinki";
@@ -78,8 +82,7 @@
   };
 
   services.openssh = {
-    enable =
-      true; # optional; Tailscale SSH doesn’t require sshd, but many keep it running
+    enable = true; # optional; Tailscale SSH doesn’t require sshd, but many keep it running
     openFirewall = false;
   };
 
@@ -88,14 +91,17 @@
   users.users.reima = {
     isNormalUser = true;
     description = "reima";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
     shell = pkgs.fish;
   };
 
   stylix.enable = true;
   stylix.polarity = "dark";
-  stylix.base16Scheme =
-    "${pkgs.base16-schemes}/share/themes/gruvbox-dark-soft.yaml";
+  stylix.image = ./background.jpg;
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
   stylix.fonts = {
     monospace = {
       package = pkgs.nerd-fonts.monaspace;
