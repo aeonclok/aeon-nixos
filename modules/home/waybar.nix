@@ -7,6 +7,7 @@ in {
     systemd.enable = true;
 
     # Waybar JSON settings (module layout & behavior)
+    # https://man.archlinux.org/man/extra/waybar/waybar-clock.5.en
     settings = {
       mainBar = {
         layer = "top";
@@ -74,8 +75,11 @@ in {
         };
 
         clock = {
-          format = "{:%H:%M:%S  %A, %d.%m }";
+          format = "{:%A %d.%m, %H:%M:%S}";
           tooltip = true;
+          tooltip-format = ''
+            Viikko {:%V}
+            {calendar}'';
           interval = 1;
         };
 
