@@ -291,6 +291,11 @@ in
   # home.sessionVariables.FREETYPE_PROPERTIES =
   #   "truetype:interpreter-version=40 cff:no-stem-darkening=0 autofitter:no-stem-darkening=0";
 
+  home.file.".config/niri/config.kdl" = {
+    source = config.lib.file.mkOutOfStoreSymlink "/home/reima/nix/modules/home/niriconf.kdl";
+    force = true;
+  };
+
   home.file.".config/nvim/" = {
     source = config.lib.file.mkOutOfStoreSymlink "/home/reima/nix/modules/home/nvim/";
     force = true;

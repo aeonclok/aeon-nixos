@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
-let modulePadding = "0 10px";
-in {
+let
+  modulePadding = "0 10px";
+in
+{
   programs.waybar = {
     enable = true;
 
@@ -19,7 +21,12 @@ in {
         # "font-size" = 12;
 
         # Modules
-        modules-left = [ "hyprland/workspaces" "window" ];
+        modules-left = [
+          "niri/workspaces"
+          "niri/window"
+          "hyprland/workspaces"
+          "window"
+        ];
         modules-center = [ "clock" ];
         modules-right = [
           "pulseaudio"
@@ -33,6 +40,23 @@ in {
           "backlight/slider"
         ];
 
+        # Configure the Niri Workspaces module
+        "niri/workspaces" = {
+          format = "{icon}";
+          "format-icons" = {
+            active = "";
+            default = "";
+          };
+        };
+
+        # Configure the Niri Window Title module
+        "niri/window" = {
+          format = "{}";
+          "rewrite" = {
+            "(.*) - Mozilla Firefox" = "🌎 $1";
+            "(.*) - zsh" = "> [$1]";
+          };
+        };
         "hyprland/workspaces" = {
           "all-outputs" = false;
           # "format" = "{name}: {icon}";
@@ -55,16 +79,14 @@ in {
         disk = {
           format = "󰋊 {percentage_used}%";
           interval = 60;
-          on-click-right =
-            "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
+          on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
         };
 
         cpu = {
           format = "  {usage}%";
           format-alt = "  {avg_frequency} GHz";
           interval = 2;
-          on-click-right =
-            "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
+          on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
         };
 
         memory = {
@@ -112,13 +134,25 @@ in {
         pulseaudio = {
           format = "{icon} {volume}%";
           format-muted = "󰝟  muted";
-          "format-icons" = { default = [ "󰕿" "󰖀" "󰕾" ]; };
+          "format-icons" = {
+            default = [
+              "󰕿"
+              "󰖀"
+              "󰕾"
+            ];
+          };
           # tooltip = false;
         };
 
         battery = {
           format = "{icon} {capacity}%";
-          "format-icons" = [ "󰁺" "󰁼" "󰁿" "󰂂" "󰁹" ];
+          "format-icons" = [
+            "󰁺"
+            "󰁼"
+            "󰁿"
+            "󰂂"
+            "󰁹"
+          ];
           tooltip = true;
         };
 
@@ -283,4 +317,3 @@ in {
     # '';
   };
 }
-

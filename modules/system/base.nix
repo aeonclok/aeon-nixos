@@ -37,12 +37,15 @@
     enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-hyprland
+      xdg-desktop-portal-gnome
       xdg-desktop-portal-gtk
     ];
+    config.common.default = [ "gtk" ];
   };
 
   programs.wshowkeys.enable = true;
 
+  programs.niri.enable = true;
   programs.hyprland.enable = true;
   services.pipewire = {
     enable = true;
@@ -60,18 +63,18 @@
   environment.variables = {
     MOZ_ENABLE_WAYLAND = "1";
     XDG_SESSION_TYPE = "wayland";
-    XDG_CURRENT_DESKTOP = "Hyprland";
+    # XDG_CURRENT_DESKTOP = "Hyprland";
     # (optional) GDK_BACKEND = "wayland";
   };
   programs.hyprland.xwayland.enable = true;
   security.pam.services.hyprlock = { };
   services.displayManager.gdm.enable = true;
   services.displayManager.gdm.wayland = true;
-  services.displayManager.defaultSession = "hyprland";
-  services.displayManager.autoLogin = {
-    enable = true;
-    user = "reima";
-  };
+  # services.displayManager.defaultSession = "hyprland";
+  # services.displayManager.autoLogin = {
+  #   enable = true;
+  #   user = "reima";
+  # };
 
   console.keyMap = "fi";
 
