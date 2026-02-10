@@ -6,6 +6,14 @@
 
   system.stateVersion = "25.05";
 
+  swapDevices = [{
+    device = "/var/lib/swapfile";
+    size = 16 * 1024;
+  }];
+  boot.initrd.systemd.enable = true;
+  boot.kernelParams = [ "mem_sleep_default=deep" ];
+  powerManagement.enable = true;
+
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/0CF1-8E41";
     fsType = "vfat";

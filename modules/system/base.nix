@@ -41,9 +41,15 @@
       xdg-desktop-portal-gtk
     ];
     config.common.default = [ "gtk" ];
+    config.niri.default = [
+      "gnome"
+      "gtk"
+    ];
   };
 
   programs.wshowkeys.enable = true;
+
+  environment.sessionVariables.MOZ_ENABLE_WAYLAND = "1";
 
   programs.niri.enable = true;
   programs.hyprland.enable = true;
@@ -66,6 +72,7 @@
     # XDG_CURRENT_DESKTOP = "Hyprland";
     # (optional) GDK_BACKEND = "wayland";
   };
+
   programs.hyprland.xwayland.enable = true;
   security.pam.services.hyprlock = { };
   services.displayManager.gdm.enable = true;

@@ -24,10 +24,19 @@ in
     ];
   };
 
-  home.sessionVariables = lib.mapAttrs' (name: value: {
+  home.sessionVariables = {
+    # 1. Add your manual variables here
+    MOZ_ENABLE_WAYLAND = "1";
+    XDG_CURRENT_DESKTOP = "niri";
+    XDG_SESSION_TYPE = "wayland";
+    NIXOS_OZONE_WL = "1"; # Useful for Chromium/Electron apps
+
+  }
+  // (lib.mapAttrs' (name: value: {
+    # 2. This part merges in your Gruvbox palette
     name = "THEME_${lib.strings.toUpper name}";
     value = value;
-  }) gruvbox-palette;
+  }) gruvbox-palette);
 
   home.packages = with pkgs; [
     brightnessctl
@@ -134,6 +143,7 @@ in
     wofi # App launcher for Wayland
     xan # (Possibly custom or uncommon package — verify usage)
     xdg-desktop-portal-hyprland # Portal backend for Hyprland
+    xdg-desktop-portal-gnome # Portal backend for Hyprland
     xplr # File explorer for the terminal
     yazi # Fast TUI file manager inspired by ranger
     yq-go # YAML processor (like jq for YAML)
@@ -320,15 +330,28 @@ in
 
   xdg.portal = {
     enable = true;
+    xdgOpenUsePortal = true;
     extraPortals = with pkgs; [
+      xdg-desktop-portal-gnome
       xdg-desktop-portal-gtk
-      xdg-desktop-portal-wlr
     ];
     configPackages = with pkgs; [
+      xdg-desktop-portal-gnome
       xdg-desktop-portal-gtk
-      xdg-desktop-portal-wlr
     ];
-    config.common.default = "gtk";
+    config = {
+      # This creates ~/.config/xdg-desktop-portal/niri-portals.conf
+      niri = {
+        default = [
+          "gnome"
+          "gtk"
+        ];
+        "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
+      };
+      # Fallback for other sessions
+      common.default = [ "gtk" ];
+    };
     # Optional, if you want to be explicit about backends:
     # config.common = {
     #   "org.freedesktop.impl.portal.FileChooser" = "gtk";
