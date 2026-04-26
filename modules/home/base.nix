@@ -111,7 +111,6 @@ in
     nixfmt # Formatter for Nix expressions
     nixpkgs-fmt # Alternative Nix formatter
     nnn # Terminal file manager
-    nodePackages.mermaid-cli # Generate diagrams and flowcharts from Markdown
     nodejs # JavaScript runtime
     nvd # Compare Nix generations
     onefetch # Git repository summary in terminal
@@ -189,13 +188,17 @@ in
     Service = {
       ExecStart = ''
         ${pkgs.rclone}/bin/rclone mount gdrive: ${config.home.homeDirectory}/cloud/drive \
-          --vfs-cache-mode=full \
-          --vfs-cache-max-size=15G \
-          --vfs-cache-max-age=8h \
-          --dir-cache-time=72h \
-          --poll-interval=5m \
-          --buffer-size=64M \
-          --umask=022 \
+          --vfs-cache-mode full \
+          --vfs-cache-max-size 15G \
+          --vfs-cache-max-age 8h \
+          --dir-cache-time 72h \
+          --poll-interval 5m \
+          --attr-timeout 1h \
+          --vfs-read-ahead 128M \
+          --buffer-size 64M \
+          --async-read=true \
+          --fast-list \
+          --umask 022
       '';
 
       ExecStop = ''
@@ -211,37 +214,35 @@ in
     };
   };
 
-  systemd.user.services."rclone-dropbox" = {
-    Unit = {
-      Description = "Rclone Mount for Dropbox";
-      After = [ "network-online.target" ];
-      Wants = [ "network-online.target" ];
-    };
-
-    Service = {
-      ExecStart = ''
-        ${pkgs.rclone}/bin/rclone mount dropbox: ${config.home.homeDirectory}/cloud/dropbox \
-          --vfs-cache-mode=full \
-          --vfs-cache-max-size=15G \
-          --vfs-cache-max-age=8h \
-          --dir-cache-time=72h \
-          --poll-interval=5m \
-          --buffer-size=64M \
-          --umask=022 \
-      '';
-
-      ExecStop = ''
-        ${pkgs.fuse3}/bin/fusermount3 -u ${config.home.homeDirectory}/cloud/dropbox || true
-      '';
-
-      Restart = "on-failure";
-      Type = "notify";
-    };
-
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
-  };
+  # systemd.user.services."rclone-dropbox" = {
+  #   Unit = {
+  #     Description = "Rclone Mount for Dropbox";
+  #     After = [ "network-online.target" ];
+  #     Wants = [ "network-online.target" ];
+  #   };
+  #
+  #   Service = {
+  #     ExecStart = ''
+  #       ${pkgs.rclone}/bin/rclone mount dropbox: ${config.home.homeDirectory}/cloud/dbox \
+  #         --dropbox-shared-folders \
+  #         --allow-other \
+  #         --vfs-cache-mode=full \
+  #         --vfs-cache-max-size=15G \
+  #         --umask=022 \
+  #     '';
+  #
+  #     ExecStop = ''
+  #       ${pkgs.fuse3}/bin/fusermount3 -u ${config.home.homeDirectory}/cloud/dropbox || true
+  #     '';
+  #
+  #     Restart = "on-failure";
+  #     Type = "simple";
+  #   };
+  #
+  #   Install = {
+  #     WantedBy = [ "default.target" ];
+  #   };
+  # };
 
   xdg.desktopEntries.whatsapp = {
     name = "WhatsApp";

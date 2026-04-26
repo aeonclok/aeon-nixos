@@ -1,8 +1,11 @@
-{ pkgs, ... }: {
-  programs.neovim = { enable = true; };
+{ pkgs, ... }:
+{
+  programs.neovim = {
+    enable = true;
+  };
 
   home.packages = with pkgs; [
-    nodePackages.typescript
+    typescript
     vtsls
     vue-language-server
   ];
