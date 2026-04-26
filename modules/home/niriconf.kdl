@@ -359,6 +359,20 @@ window-rule {
     clip-to-geometry true
 }
 
+window-rule {
+    // Matches the key display window
+    match app-id="showmethekey-gtk"
+    
+    // Makes it float instead of tile
+    open-floating true
+}
+
+window-rule {
+    // Matches the settings/configuration menu
+    match app-id="one.alynx.showmethekey"
+    open-floating true
+}
+
 binds {
     // Keys consist of modifiers separated by + signs, followed by an XKB key name
     // in the end. To find an XKB name for a particular key, you may use a program
@@ -423,8 +437,8 @@ binds {
     // Mod+Up    { focus-window-up; }
     Mod+Right { focus-column-right; }
     Mod+H     { focus-column-left; }
-    // Mod+J     { focus-window-down; }
-    // Mod+K     { focus-window-up; }
+    Mod+U     { focus-window-down; }
+    Mod+I     { focus-window-up; }
     Mod+L     { focus-column-right; }
 
     Mod+Shift+Left  { move-column-left; }
@@ -432,8 +446,8 @@ binds {
     // Mod+Shift+Up    { move-window-up; }
     Mod+Shift+Right { move-column-right; }
     Mod+Shift+H     { move-column-left; }
-    // Mod+Shift+J     { move-window-down; }
-    // Mod+Shift+K     { move-window-up; }
+    Mod+Shift+U     { move-window-down; }
+    Mod+Shift+I     { move-window-up; }
     Mod+Shift+L     { move-column-right; }
 
     // Alternative commands that move across workspaces when reaching
@@ -453,8 +467,8 @@ binds {
     // Mod+Ctrl+Up    { focus-monitor-up; }
     Mod+Ctrl+Right { focus-monitor-right; }
     Mod+Ctrl+H     { focus-monitor-left; }
-    // Mod+Ctrl+J     { focus-monitor-down; }
-    // Mod+Ctrl+K     { focus-monitor-up; }
+    Mod+Ctrl+U     { focus-monitor-down; }
+    Mod+Ctrl+I     { focus-monitor-up; }
     Mod+Ctrl+L     { focus-monitor-right; }
 
     Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
