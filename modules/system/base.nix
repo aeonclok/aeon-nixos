@@ -17,8 +17,10 @@
     # 94.237.113.119 ykiveneet.fi
     # 212.147.236.211 rainset.fi
     # 212.147.236.211 www.rainset.fi
-    94.237.39.7 kuumalahde.fi
-    94.237.39.7 www.kuumalahde.fi
+    # 89.167.14.205 operaria.fi
+    # 89.167.14.205 www.operaria.fi
+    # 94.237.39.7 kuumalahde.fi
+    # 94.237.39.7 www.kuumalahde.fi
   '';
   time.timeZone = "Europe/Helsinki";
   i18n.defaultLocale = "en_US.UTF-8";
