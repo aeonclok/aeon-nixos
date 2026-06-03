@@ -39,6 +39,7 @@ in
   }) gruvbox-palette);
 
   home.packages = with pkgs; [
+    claude-code
     brightnessctl
     pamixer # volume control
     playerctl # media keys
