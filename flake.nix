@@ -92,6 +92,10 @@
           home-manager.sharedModules = [
             # nvf.homeManagerModules.default
             inputs.ags.homeManagerModules.default # Enables AGS configuration inside home.nix
+            # Home Manager runs its own nixpkgs instance (useGlobalPkgs is off), so
+            # the NixOS-level overlays don't propagate. Re-apply the claude-code-nix
+            # overlay here so home.packages sees the fresh claude-code build.
+            { nixpkgs.overlays = [ inputs.claude-code-nix.overlays.default ]; }
           ];
 
           # Installs packages to /etc/profiles instead of ~/.nix-profile. Usually cleaner.
