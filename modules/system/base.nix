@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   imports = [ ];
   boot.loader.systemd-boot.enable = true;
@@ -10,17 +10,31 @@
   ];
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.powersave = false;
-  networking.extraHosts = ''
-    # 94.237.113.119 soutuveneet.fi
-    # 94.237.113.119 www.soutuveneet.fi
-    # 94.237.113.119 www.ykiveneet.fi
-    # 94.237.113.119 ykiveneet.fi
-    # 212.147.236.211 rainset.fi
-    # 212.147.236.211 www.rainset.fi
-    # 89.167.14.205 operaria.fi
-    # 89.167.14.205 www.operaria.fi
-    # 94.237.39.7 kuumalahde.fi
-    # 94.237.39.7 www.kuumalahde.fi
+  # /etc/hosts is a symlink to /etc/hosts.local — edit that file directly
+  # (sudoedit /etc/hosts.local) and changes take effect on save without a rebuild.
+  environment.etc.hosts = lib.mkForce {
+    source = "/etc/hosts.local";
+    mode = "symlink";
+  };
+  system.activationScripts.hostsLocalSeed.text = ''
+    if [ ! -e /etc/hosts.local ]; then
+      cat > /etc/hosts.local <<'EOF'
+    127.0.0.1 localhost
+    ::1 localhost
+    127.0.0.2 ${config.networking.hostName}
+
+    # --- user overrides below; edit freely, no rebuild needed ---
+
+    # 94.237.113.119 soutuveneet.fi www.soutuveneet.fi
+    # 94.237.113.119 ykiveneet.fi www.ykiveneet.fi
+    # 212.147.236.211 rainset.fi www.rainset.fi
+    # 89.167.14.205 operaria.fi www.operaria.fi
+    # 94.237.39.7 kuumalahde.fi www.kuumalahde.fi
+
+    89.167.14.205 valolink.fi www.valolink.fi staging.valolink.fi
+    EOF
+      chmod 0644 /etc/hosts.local
+    fi
   '';
   time.timeZone = "Europe/Helsinki";
   i18n.defaultLocale = "en_US.UTF-8";

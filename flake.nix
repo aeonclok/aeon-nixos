@@ -24,6 +24,13 @@
     # Astal and AGS are tools for building custom desktop widgets/bars.
     astal.url = "github:aylur/astal";
     ags.url = "github:aylur/ags";
+
+    # Community flake that packages the latest Claude Code CLI (fresher than nixpkgs).
+    # Bump with `nix flake update claude-code-nix`.
+    claude-code-nix = {
+      url = "github:sadjow/claude-code-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # Outputs are the actual configurations this flake produces based on the inputs.
@@ -63,7 +70,10 @@
         {
           nixpkgs = {
             config.allowUnfree = true; # Allow proprietary software (like NVIDIA drivers, Spotify, etc.)
-            # overlays = [kickstart-nix-nvim.overlays.default];
+            overlays = [
+              # Overrides pkgs.claude-code with the sadjow/claude-code-nix build.
+              inputs.claude-code-nix.overlays.default
+            ];
           };
         }
 
