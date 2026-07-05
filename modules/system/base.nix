@@ -110,11 +110,7 @@
 
   services.openssh = {
     enable = true; # optional; Tailscale SSH doesn’t require sshd, but many keep it running
-    openFirewall = false;
-    settings = {
-      PasswordAuthentication = false;
-      KbdInteractiveAuthentication = false;
-    };
+    openFirewall = false; # reachable only over tailscale, so password auth stays acceptable
   };
 
   # Required so the Home Manager-installed swaylock can authenticate unlocks.
