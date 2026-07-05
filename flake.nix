@@ -13,7 +13,8 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # A custom fuzzy selector tool you are pulling directly from GitHub.
-    fsel.url = "github:Mjoyufull/fsel";
+    # Temporarily disabled: upstream rustc 1.94.0 ICE while compiling toml_datetime 0.7.5.
+    # fsel.url = "github:Mjoyufull/fsel";
 
     # Stylix handles system-wide theming (colors, fonts, wallpapers).
     stylix = {
@@ -40,7 +41,6 @@
       nixpkgs,
       stylix,
       home-manager,
-      fsel,
       ...
     }@inputs:
     let
@@ -107,22 +107,25 @@
         }
 
         # 5. An inline module to add specific flake packages into the system environment.
-        (
-          {
-            pkgs,
-            ...
-          }:
-          {
-            environment.systemPackages = [
-              # Grabs the 'default' package from your 'fsel' flake input and installs it.
-              fsel.packages.${pkgs.stdenv.system}.default
-            ];
-          }
-        )
+        # (
+        #   {
+        #     pkgs,
+        #     ...
+        #   }:
+        #   {
+        #     environment.systemPackages = [
+        #       # Grabs the 'default' package from your 'fsel' flake input and installs it.
+        #       fsel.packages.${pkgs.stdenv.hostPlatform.system}.default
+        #     ];
+        #   }
+        # )
       ];
 
       # This creates standalone Home Manager configurations (e.g., if you wanted to run
       # `home-manager switch --flake .#reima@thinkpad` without doing a full NixOS rebuild).
+      # It must mirror what the integrated setup provides: `inputs` via specialArgs, the
+      # ags and stylix HM modules, the claude-code overlay, and the shared stylix theme
+      # (which the NixOS stylix module would otherwise propagate into HM).
       mkHomeEntries = builtins.listToAttrs (
         map (host: {
           name = "reima@${host}";
@@ -131,7 +134,14 @@
               system = systemFor host;
               config.allowUnfree = true;
             };
-            modules = [ ./hosts/${host}/home.nix ];
+            extraSpecialArgs = { inherit inputs; };
+            modules = [
+              inputs.ags.homeManagerModules.default
+              stylix.homeModules.stylix
+              ./modules/stylix.nix
+              { nixpkgs.overlays = [ inputs.claude-code-nix.overlays.default ]; }
+              ./hosts/${host}/home.nix
+            ];
           };
         }) hosts
       );

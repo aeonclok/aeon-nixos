@@ -334,6 +334,14 @@ window-rule {
     draw-border-with-background false
 }
 
+// Open bubblecalc (launched as `wezterm start --class bubblecalc`) as a floating window.
+window-rule {
+    match app-id=r#"^bubblecalc$"#
+    open-floating true
+    default-column-width { fixed 720; }
+    default-window-height { fixed 480; }
+}
+
 // Open the Firefox picture-in-picture player as floating by default.
 window-rule {
     // This app-id regular expression will work for both:
@@ -432,6 +440,7 @@ binds {
     Mod+D repeat=false { close-window; }
     Mod+Q hotkey-overlay-title="Open a Terminal: wezterm" { spawn "wezterm"; }
     Mod+Return hotkey-overlay-title="Open a rofi" { spawn-sh "rofi -show drun"; }
+    Mod+B hotkey-overlay-title="Open bubblecalc" { spawn "wezterm" "--config" "font_size=16" "start" "--class" "bubblecalc" "--" "bubblecalc"; }
     // Mod+SHIFT+S hotkey-overlay-title="Grimblast freeze area screenshot" { spawn-sh "grimblast --freeze copy area"; }
     Mod+SHIFT+S { screenshot; }
     

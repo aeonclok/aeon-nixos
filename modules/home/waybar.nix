@@ -24,7 +24,6 @@ in
         modules-left = [
           "niri/workspaces"
           "niri/window"
-          "hyprland/workspaces"
           "window"
         ];
         modules-center = [ "clock" ];
@@ -57,15 +56,6 @@ in
             "(.*) - zsh" = "> [$1]";
           };
         };
-        "hyprland/workspaces" = {
-          "all-outputs" = false;
-          # "format" = "{name}: {icon}";
-          "format" = "{name}";
-          "format-icons" = {
-            "active" = "";
-            "default" = "";
-          };
-        };
 
         window.format = "{title}";
         window.max-length = 50;
@@ -79,14 +69,14 @@ in
         disk = {
           format = "󰋊 {percentage_used}%";
           interval = 60;
-          on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
+          # on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
         };
 
         cpu = {
           format = "  {usage}%";
           format-alt = "  {avg_frequency} GHz";
           interval = 2;
-          on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
+          # on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
         };
 
         memory = {

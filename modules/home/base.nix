@@ -8,6 +8,7 @@
 
 let
   gruvbox-palette = import ./gruvbox-palette.nix;
+  bubblecalc = pkgs.callPackage ./bubblecalc.nix { };
 in
 {
 
@@ -19,7 +20,7 @@ in
 
     # additional packages and executables to add to gjs's runtime
     extraPackages = with pkgs; [
-      inputs.astal.packages.${pkgs.system}.battery
+      inputs.astal.packages.${pkgs.stdenv.hostPlatform.system}.battery
       fzf
     ];
   };
@@ -39,6 +40,8 @@ in
   }) gruvbox-palette);
 
   home.packages = with pkgs; [
+    zip
+    php
     claude-code
     brightnessctl
     pamixer # volume control
@@ -64,7 +67,6 @@ in
     curl # Command-line HTTP client
     curlie # `curl` with an easier interface, inspired by HTTPie
     deadnix # Detect unused Nix code
-    direnv # Load/unload environment variables automatically
     duf # Disk usage/free utility with nicer UI
     dust # `du` alternative for visualizing disk usage
     entr # Run commands when files change
@@ -87,9 +89,6 @@ in
     gzip # File compression tool
     httpie # User-friendly HTTP client
     hyperfine # Command-line benchmarking tool
-    hyprcursor # Hyprland cursor management utility
-    hyprpaper # Wallpaper utility for Hyprland
-    hyprpicker # Color picker for Wayland/Hyprland
     imagemagick # Image manipulation tools
     imv # Simple image viewer for Wayland/X11
     jq # Command-line JSON processor
@@ -104,7 +103,6 @@ in
     nerd-fonts.monaspace # Nerd Font patched Monaspace font
     newsboat # RSS/Atom feed reader for the terminal
     nh # Helper for managing Nix environments/profiles
-    nix-direnv # Integrate Nix with direnv
     nix-du # Disk usage for Nix store paths
     nix-index # Search packages by file in nixpkgs
     nix-output-monitor # Enhanced output viewer for Nix builds
@@ -142,8 +140,7 @@ in
     wl-clipboard # Wayland clipboard utilities (`wl-copy`, `wl-paste`)
     wofi # App launcher for Wayland
     xan # (Possibly custom or uncommon package — verify usage)
-    xdg-desktop-portal-hyprland # Portal backend for Hyprland
-    xdg-desktop-portal-gnome # Portal backend for Hyprland
+    xdg-desktop-portal-gnome # Portal backend
     xplr # File explorer for the terminal
     yazi # Fast TUI file manager inspired by ranger
     yq-go # YAML processor (like jq for YAML)
@@ -154,9 +151,9 @@ in
     rclone
     fuse3
     (pkgs.callPackage ./autodarts.nix { })
+    bubblecalc
   ];
 
-  stylix.targets.hyprlock.enable = false;
   stylix.targets.firefox.profileNames = [ "reima" ];
   # Fetch WhatsApp icon into ~/.local/share/icons/whatsapp.png
   # Replace sha256 with: nix-prefetch-url https://static.whatsapp.net/rsrc.php/v3/yP/r/rYZqPCBaG70.png
@@ -177,6 +174,25 @@ in
   services.udiskie = {
     enable = true;
     tray = "auto";
+  };
+
+  # Screen locking: swaylock is what the niri Super+Alt+L bind spawns, and
+  # swayidle guarantees the session is locked before suspend/hibernate
+  # (lid close on thinkpad-carbon) plus after 10 minutes idle.
+  # Needs security.pam.services.swaylock on the NixOS side.
+  programs.swaylock.enable = true;
+  services.swayidle = {
+    enable = true;
+    events = {
+      before-sleep = "${pkgs.swaylock}/bin/swaylock -f";
+      lock = "${pkgs.swaylock}/bin/swaylock -f";
+    };
+    timeouts = [
+      {
+        timeout = 600;
+        command = "${pkgs.swaylock}/bin/swaylock -f";
+      }
+    ];
   };
 
   systemd.user.services."rclone-gdrive" = {
@@ -274,6 +290,19 @@ in
     mimeType = [
       "text/html"
       "text/xml"
+    ];
+  };
+
+  # TUI calculator launched in a wezterm window so it shows up in `rofi -show drun`.
+  xdg.desktopEntries.bubblecalc = {
+    name = "bubblecalc";
+    comment = "TUI calculator";
+    exec = "${pkgs.wezterm}/bin/wezterm --config font_size=16 start --class bubblecalc -- ${bubblecalc}/bin/bubblecalc";
+    terminal = false;
+    type = "Application";
+    categories = [
+      "Utility"
+      "Calculator"
     ];
   };
 
@@ -379,6 +408,9 @@ in
     gtk4.extraConfig = {
       "gtk-use-portal" = 1;
     };
+    # HM 26.05 changes the default to null; pin the legacy behavior we already
+    # run (gtk4 inherits the stylix-managed gtk theme) to silence the warning.
+    gtk4.theme = config.gtk.theme;
 
     # Using standard Adwaita ensures binaries are cached
     # theme = {
@@ -390,6 +422,14 @@ in
       package = pkgs.adwaita-icon-theme;
       name = "Adwaita";
     };
+  };
+
+  # direnv with the fish hook actually wired up (the bare packages in
+  # home.packages never installed a shell hook). nix-direnv caches dev shells
+  # so `use flake` .envrcs don't re-evaluate on every cd.
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
   };
 
   programs.lazygit = {
@@ -416,9 +456,13 @@ in
 
   programs.firefox = {
     enable = true;
+    configPath = "${config.xdg.configHome}/mozilla/firefox";
   };
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-39.8.10"
+  ];
 
   xdg.configFile."fastfetch/config.jsonc".text = ''
     {

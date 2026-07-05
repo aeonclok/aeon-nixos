@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }:
 {
-  imports = [ ];
+  imports = [ ../stylix.nix ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -62,7 +62,6 @@
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
-      xdg-desktop-portal-hyprland
       xdg-desktop-portal-gnome
       xdg-desktop-portal-gtk
     ];
@@ -78,7 +77,6 @@
   environment.sessionVariables.MOZ_ENABLE_WAYLAND = "1";
 
   programs.niri.enable = true;
-  programs.hyprland.enable = true;
   services.pipewire = {
     enable = true;
     pulse.enable = true;
@@ -95,32 +93,32 @@
   environment.variables = {
     MOZ_ENABLE_WAYLAND = "1";
     XDG_SESSION_TYPE = "wayland";
-    # XDG_CURRENT_DESKTOP = "Hyprland";
-    # (optional) GDK_BACKEND = "wayland";
   };
 
-  programs.hyprland.xwayland.enable = true;
-  security.pam.services.hyprlock = { };
   services.displayManager.gdm.enable = true;
-  services.displayManager.gdm.wayland = true;
-  # services.displayManager.defaultSession = "hyprland";
-  # services.displayManager.autoLogin = {
-  #   enable = true;
-  #   user = "reima";
-  # };
 
   console.keyMap = "fi";
 
   programs.mosh.enable = true;
   services.tailscale = {
     enable = true;
+    # NOTE: extraUpFlags only take effect via the autoconnect service (authKeyFile).
+    # Since `tailscale up` was run manually, Tailscale SSH must be enabled per
+    # machine with: sudo tailscale set --ssh
     extraUpFlags = [ "--ssh" ];
   };
 
   services.openssh = {
     enable = true; # optional; Tailscale SSH doesn’t require sshd, but many keep it running
     openFirewall = false;
+    settings = {
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+    };
   };
+
+  # Required so the Home Manager-installed swaylock can authenticate unlocks.
+  security.pam.services.swaylock = { };
 
   programs.fish.enable = true;
 
@@ -134,17 +132,4 @@
     shell = pkgs.fish;
   };
 
-  stylix.enable = true;
-  stylix.polarity = "dark";
-  stylix.image = ./background.jpg;
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
-  stylix.fonts = {
-    monospace = {
-      package = pkgs.nerd-fonts.monaspace;
-      name = "MonaspiceNe Nerd Font";
-    };
-    serif = config.stylix.fonts.monospace;
-    # sansSerif = config.stylix.fonts.monospace;
-    emoji = config.stylix.fonts.monospace;
-  };
 }
