@@ -45,6 +45,7 @@ in
     claude-code
     brightnessctl
     pamixer # volume control
+    pavucontrol # audio device/output switcher GUI
     playerctl # media keys
     bluetui
     prisma-engines

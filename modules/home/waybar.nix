@@ -28,6 +28,7 @@ in
         ];
         modules-center = [ "clock" ];
         modules-right = [
+          "idle_inhibitor"
           "pulseaudio"
           "memory"
           "cpu"
@@ -38,6 +39,17 @@ in
           "tray"
           "backlight/slider"
         ];
+
+        # Click to block swayidle's auto-lock (e.g. while watching video).
+        idle_inhibitor = {
+          format = "{icon}";
+          "format-icons" = {
+            activated = "󰅶";
+            deactivated = "󰾪";
+          };
+          tooltip-format-activated = "Idle inhibited";
+          tooltip-format-deactivated = "Idle allowed";
+        };
 
         # Configure the Niri Workspaces module
         "niri/workspaces" = {
@@ -131,6 +143,8 @@ in
               "󰕾"
             ];
           };
+          on-click = "pavucontrol";
+          scroll-step = 5;
           # tooltip = false;
         };
 
@@ -216,6 +230,9 @@ in
       }
       #idle_inhibitor {
         padding: ${modulePadding};
+      }
+      #idle_inhibitor.activated {
+        color: @base09;
       }
       #temperature {
         padding: ${modulePadding};
