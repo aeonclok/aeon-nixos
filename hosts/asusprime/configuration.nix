@@ -3,6 +3,7 @@
   imports = [
     ../../modules/system/fonts.nix
     ../../modules/system/base.nix
+    ../../modules/system/syncthing.nix
   ];
   networking.hostName = "asusprime";
   networking.firewall.enable = true;

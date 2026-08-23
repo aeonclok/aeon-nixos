@@ -26,7 +26,7 @@ let
       ip = "100.64.177.71";
     };
     asusprime = {
-      id = "REPLACE-ASUSPRIME";
+      id = "3AS2CON-QZOE6A4-PFATJPX-K3WINAE-LESFZM3-GJOSVML-MWQSOYW-OMX7AAH";
       ip = "100.88.114.20";
     };
   };
