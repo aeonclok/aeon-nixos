@@ -20,6 +20,16 @@
     ];
   };
 
+  # Rootless podman for project dev shells (e.g. ~/valolink/odysseus).
+  virtualisation.containers.enable = true;
+  virtualisation.podman = {
+    enable = true;
+    # `docker` CLI alias + docker.sock compatibility for tools that expect Docker.
+    dockerCompat = true;
+    # Compose containers resolve each other by service name (odysseus -> chromadb).
+    defaultNetwork.settings.dns_enabled = true;
+  };
+
   # 2. Local LLM Background Service
   services.ollama = {
     enable = true;
