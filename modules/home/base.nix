@@ -204,6 +204,10 @@ in
     };
 
     Service = {
+      # rclone won't create the mountpoint itself, so ensure it exists first
+      # (a fresh machine won't have ~/cloud/drive yet).
+      ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p ${config.home.homeDirectory}/cloud/drive";
+
       ExecStart = ''
         ${pkgs.rclone}/bin/rclone mount gdrive: ${config.home.homeDirectory}/cloud/drive \
           --vfs-cache-mode full \
@@ -214,10 +218,16 @@ in
           --attr-timeout 1h \
           --vfs-read-ahead 128M \
           --buffer-size 64M \
-          --async-read=true \
-          --fast-list \
+          --rc \
           --umask 022
       '';
+
+      # Pre-warm the VFS directory cache in the background as soon as the mount
+      # is ready. Without this, the *first* GTK/portal file-save dialog stalls
+      # while rclone fetches the Drive listing on demand; warming it up front
+      # means that first dialog is already fast. Backgrounded (&) so it never
+      # blocks startup; needs the --rc flag above.
+      ExecStartPost = "${pkgs.bash}/bin/bash -c 'sleep 2 && ${pkgs.rclone}/bin/rclone rc vfs/refresh recursive=true &'";
 
       ExecStop = ''
         ${pkgs.fuse3}/bin/fusermount3 -u ${config.home.homeDirectory}/cloud/drive || true
