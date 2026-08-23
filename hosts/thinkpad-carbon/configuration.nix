@@ -29,17 +29,16 @@
   # (via boot.extraModprobeConfig), which is what unlocks writes to
   # /proc/acpi/ibm/fan. Requires a reboot (or module reload) after first switch.
   #
-  # The legacy tpacpi thermal sensor (/proc/acpi/ibm/thermal) only exposes one
-  # live reading here — the rest are -128/0 dead slots — so the curve is driven
-  # off the coretemp CPU package sensor instead. The query points at the stable
-  # platform path (bare hwmonN numbers shuffle across boots); indices = [ 0 ]
-  # selects temp1_input (Package id 0).
+  # The tpacpi thermal interface (/proc/acpi/ibm/thermal) exposes 8 slots but
+  # only index 0 is a live reading here (the CPU) — the rest are -128/0 dead
+  # slots — so we point thinkfan at just that index. (A coretemp hwmon sensor
+  # was flaky: thinkfan followed the /device symlink into a dead-end path.)
   services.thinkfan = {
     enable = true;
     sensors = [
       {
-        type = "hwmon";
-        query = "/sys/devices/platform/coretemp.0/hwmon";
+        type = "tpacpi";
+        query = "/proc/acpi/ibm/thermal";
         indices = [ 0 ];
       }
     ];

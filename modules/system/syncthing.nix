@@ -22,7 +22,7 @@ let
   # tailnet because the retired X1 still holds the `thinkpad-carbon` name.
   hosts = {
     thinkpad-carbon = {
-      id = "REPLACE-CARBON";
+      id = "UIGOSZL-3I4CKTJ-5WGCFX6-RULXXVS-NRY2TQ6-5PMS27J-VHOOHMA-KCVSXQC";
       ip = "100.64.177.71";
     };
     asusprime = {
@@ -38,6 +38,12 @@ in
     enable = true;
     user = "reima";
     group = "users";
+    # We run as reima (needed for write access to ~/valolink), so the state
+    # dirs must live somewhere reima owns: the module only auto-creates
+    # /var/lib/syncthing for its own default `syncthing` user.
+    configDir = "/home/reima/.config/syncthing";
+    dataDir = "/home/reima/.local/share/syncthing";
+    databaseDir = "/home/reima/.local/share/syncthing";
     # nix is the source of truth — the GUI can't add/remove devices or folders.
     overrideDevices = true;
     overrideFolders = true;
@@ -67,6 +73,13 @@ in
       };
     };
   };
+
+  # Pre-create the state dirs owned by reima (syncthing self-creates only the
+  # leaf, and only where it has write access — guarantee the parents exist).
+  systemd.tmpfiles.rules = [
+    "d /home/reima/.config/syncthing 0700 reima users - -"
+    "d /home/reima/.local/share/syncthing 0700 reima users - -"
+  ];
 
   # Syncthing's sync port, opened only on the Tailscale interface (never public).
   networking.firewall.interfaces."tailscale0" = {
