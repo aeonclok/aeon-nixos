@@ -9,6 +9,7 @@
 let
   gruvbox-palette = import ./gruvbox-palette.nix;
   bubblecalc = pkgs.callPackage ./bubblecalc.nix { };
+  bubbletodo = pkgs.callPackage ./bubbletodo.nix { };
 in
 {
 
@@ -86,7 +87,8 @@ in
     gnumake # Build automation tool
     gnutar # Archiving utility (tar)
     grim # Screenshot utility for Wayland
-    grimblast # Wrapper around grim and slurp for screenshots
+    # grimblast removed: it's a Hyprland-contrib tool that pulls in Hyprland
+    # (currently broken to build in nixpkgs), and Niri does screenshots natively.
     gzip # File compression tool
     httpie # User-friendly HTTP client
     hyperfine # Command-line benchmarking tool
@@ -153,6 +155,7 @@ in
     fuse3
     (pkgs.callPackage ./autodarts.nix { })
     bubblecalc
+    bubbletodo
   ];
 
   stylix.targets.firefox.profileNames = [ "reima" ];
@@ -317,6 +320,18 @@ in
     ];
   };
 
+  # Quick-todo TUI launched in a wezterm window so it shows up in `rofi -show drun`.
+  xdg.desktopEntries.bubbletodo = {
+    name = "bubbletodo";
+    comment = "Add a quick todo";
+    exec = "${pkgs.wezterm}/bin/wezterm --config font_size=16 start --class bubbletodo -- ${bubbletodo}/bin/bubbletodo";
+    terminal = false;
+    type = "Application";
+    categories = [
+      "Utility"
+    ];
+  };
+
   fonts = {
     fontconfig = {
       enable = true;
@@ -419,9 +434,8 @@ in
     gtk4.extraConfig = {
       "gtk-use-portal" = 1;
     };
-    # HM 26.05 changes the default to null; pin the legacy behavior we already
-    # run (gtk4 inherits the stylix-managed gtk theme) to silence the warning.
-    gtk4.theme = config.gtk.theme;
+    # gtk4.theme is now set by Stylix's gtk module; don't redefine it here or
+    # the two collide (`defined multiple times`).
 
     # Using standard Adwaita ensures binaries are cached
     # theme = {
