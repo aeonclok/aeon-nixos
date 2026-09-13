@@ -95,6 +95,19 @@
     XDG_SESSION_TYPE = "wayland";
   };
 
+  # Claude Code managed settings (system-wide, highest precedence, all hosts).
+  # Kept in /etc rather than ~/.claude/settings.json so that file stays writable
+  # for Claude Code's own edits (theme, model, ...). Empty strings hide the
+  # "Co-Authored-By: Claude" / "Generated with Claude Code" attribution;
+  # sessionUrl = false drops the "Claude-Session:" trailer and PR link.
+  environment.etc."claude-code/managed-settings.json".text = builtins.toJSON {
+    attribution = {
+      commit = "";
+      pr = "";
+      sessionUrl = false;
+    };
+  };
+
   services.displayManager.gdm.enable = true;
 
   console.keyMap = "fi";
