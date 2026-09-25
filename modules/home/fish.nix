@@ -1,4 +1,10 @@
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   programs.fish = {
     enable = true;
     generateCompletions = false;
@@ -21,6 +27,9 @@
     functions = {
       valolink = "cd ~/valolink/";
 
+      major = "~/valolink/majorlink/bin/agent";
+      baremajor = "~/valolink/majorlink/bin/bare-agent";
+
       debug = "./debug.sh $argv";
 
       aurivpn = ''
@@ -35,6 +44,26 @@
         end
         mkdir -p $argv[1]
         cd $argv[1]
+      '';
+
+      # The Accesslink admin page's "Copy for majorlink" button puts
+      # "accesslink <host> <key>" on the clipboard; this saves it into
+      # ~/valolink/majorlink/.env through bin/accesslink-key, which checks the
+      # key against the site first.
+      alkey = ''
+        set -l clip (wl-paste --no-newline 2>/dev/null | string trim)
+        if not string match -qr '^accesslink [a-z0-9.-]+ [A-Za-z0-9]{20,}$' -- "$clip"
+          echo "Clipboard does not hold an Accesslink key. Use the Copy for majorlink button on the site's Accesslink page first."
+          return 1
+        end
+        set -l parts (string split ' ' -- "$clip")
+        set -l host $parts[2]
+        if ~/valolink/majorlink/bin/accesslink-key $host $parts[3] >/dev/null
+          echo "api key for host $host accesslink added to valolink/.env"
+        else
+          echo "The site $host refused the key or did not answer; nothing saved."
+          return 1
+        end
       '';
     };
 
@@ -84,4 +113,3 @@
   imports = [ ./starship.nix ];
   programs.fzf.enable = true;
 }
-

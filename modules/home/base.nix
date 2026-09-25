@@ -44,6 +44,7 @@ in
     zip
     php
     claude-code
+    opencode
     brightnessctl
     pamixer # volume control
     pavucontrol # audio device/output switcher GUI
@@ -115,6 +116,7 @@ in
     nnn # Terminal file manager
     nodejs # JavaScript runtime
     nvd # Compare Nix generations
+    obs-studio # Screen recording and live streaming
     onefetch # Git repository summary in terminal
     pass # Unix password manager (uses GPG)
     pkg-config # Manage compile/link flags for libraries
@@ -474,7 +476,7 @@ in
           name = "Reima Kokko";
           email = "reima.kokko@valolink.fi";
         };
-        contents.core.sshCommand = "ssh -i ~/.ssh/id_valolink";
+        contents.core.sshCommand = "ssh -i ~/.ssh/reima-github";
       }
     ];
   };
