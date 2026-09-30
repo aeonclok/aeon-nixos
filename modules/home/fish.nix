@@ -51,7 +51,7 @@
       # ~/valolink/majorlink/.env through bin/accesslink-key, which checks the
       # key against the site first.
       alkey = ''
-        set -l clip (wl-paste --no-newline 2>/dev/null | string trim)
+        set -l clip (clip-paste 2>/dev/null | string trim)
         if not string match -qr '^accesslink [a-z0-9.-]+ [A-Za-z0-9]{20,}$' -- "$clip"
           echo "Clipboard does not hold an Accesslink key. Use the Copy for majorlink button on the site's Accesslink page first."
           return 1
