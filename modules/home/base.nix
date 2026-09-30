@@ -93,11 +93,13 @@ in
     gzip # File compression tool
     httpie # User-friendly HTTP client
     hyperfine # Command-line benchmarking tool
+    hyprpicker # Wayland color picker with zoom lens (Mod+P in niri)
     imagemagick # Image manipulation tools
     imv # Simple image viewer for Wayland/X11
     jq # Command-line JSON processor
     just # Command runner (like `make`, but simpler)
     kitty # GPU-accelerated terminal emulator
+    libnotify # `notify-send`, used by hyprpicker --notify
     mako # Notification daemon for Wayland
     mpv # Media player (audio/video)
     mtr # Network diagnostic tool (traceroute + ping)

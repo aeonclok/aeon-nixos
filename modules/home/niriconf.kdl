@@ -452,6 +452,7 @@ binds {
     Mod+T hotkey-overlay-title="Add a quick todo" { spawn "wezterm" "--config" "font_size=16" "start" "--class" "bubbletodo" "--" "bubbletodo"; }
     // Mod+SHIFT+S hotkey-overlay-title="Grimblast freeze area screenshot" { spawn-sh "grimblast --freeze copy area"; }
     Mod+SHIFT+S { screenshot; }
+    Mod+P hotkey-overlay-title="Pick a color: hyprpicker" { spawn "hyprpicker" "--autocopy" "--notify" "--lowercase-hex"; }
     
     Mod+Left  { focus-column-left; }
     // Mod+Down  { focus-window-down; }
