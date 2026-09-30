@@ -70,6 +70,9 @@
     # This runs for *all* shells (login + interactive).
     # Keep your NVM + FZF bash sourcing via `bass` exactly as you had it.
     shellInit = ''
+      # `nh os switch` without a path: this repo, config picked by hostname.
+      set -gx NH_FLAKE $HOME/nix
+
       # --- NVM setup ---
       set -gx NVM_DIR $HOME/.nvm
       if test -s $NVM_DIR/nvm.sh
