@@ -139,6 +139,11 @@
       "wheel"
     ];
     shell = pkgs.fish;
+    # Lets a machine I'm SSH'd into read this machine's clipboard (clip-pull,
+    # tmux prefix+P in modules/home/tmux.nix) and nothing else.
+    openssh.authorizedKeys.keys = [
+      ''restrict,command="/etc/profiles/per-user/reima/bin/clip-local" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINk2bb3PTxjf9QWOe9sGyOfXM+v5SYRXs4ppFb4MQte7 clip-pull@asusprime''
+    ];
   };
 
 }
