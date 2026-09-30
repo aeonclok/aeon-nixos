@@ -92,6 +92,25 @@
     ];
   };
 
+  # The backup above ran successfully once (2026-08-22) and then failed every
+  # day until 2026-09-02 with `lookup oauth2.googleapis.com: no such host`: the
+  # Persistent=true timer fires the moment the laptop wakes, before DNS is up.
+  # network-online.target alone does not fix it — on resume that target is
+  # already (stale) reached — so the retry is what actually recovers the run.
+  systemd.services.restic-backups-home = {
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+    serviceConfig = {
+      Restart = "on-failure";
+      RestartSec = "2min";
+    };
+    # Bound the retries so a genuinely broken repo/token does not loop forever.
+    unitConfig = {
+      StartLimitIntervalSec = "1h";
+      StartLimitBurst = 5;
+    };
+  };
+
   boot.initrd.systemd.enable = true;
 
   # MemTest86+ entry in the systemd-boot menu — rerun occasionally to see
