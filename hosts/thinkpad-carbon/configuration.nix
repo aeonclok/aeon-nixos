@@ -3,7 +3,6 @@
   imports = [
     ../../modules/system/base.nix
     ../../modules/system/syncthing.nix
-    ./maintenance.nix
   ];
 
   networking.hostName = "thinkpad-carbon";
