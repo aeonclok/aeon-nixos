@@ -15,6 +15,10 @@
     };
     serif = config.stylix.fonts.monospace;
     # sansSerif = config.stylix.fonts.monospace;
-    emoji = config.stylix.fonts.monospace;
+    # Monaspice has no emoji glyphs; use a real color emoji font.
+    emoji = {
+      package = pkgs.noto-fonts-color-emoji;
+      name = "Noto Color Emoji";
+    };
   };
 }

@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+_:
 let
   modulePadding = "0 10px";
 in
@@ -24,7 +24,6 @@ in
         modules-left = [
           "niri/workspaces"
           "niri/window"
-          "window"
         ];
         modules-center = [ "clock" ];
         modules-right = [
@@ -69,10 +68,7 @@ in
           };
         };
 
-        window.format = "{title}";
-        window.max-length = 50;
-
-        "backglight/slider" = {
+        "backlight/slider" = {
           min = 20;
           max = 100;
           orientation = "horizontal";

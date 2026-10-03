@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+_: {
   # home.packages = with pkgs; [ pkgs.starship ];
 
   programs.starship = {

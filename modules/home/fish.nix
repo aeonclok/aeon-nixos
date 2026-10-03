@@ -1,7 +1,5 @@
 {
-  config,
   pkgs,
-  lib,
   ...
 }:
 {
@@ -31,11 +29,6 @@
       baremajor = "~/valolink/majorlink/bin/bare-agent";
 
       debug = "./debug.sh $argv";
-
-      aurivpn = ''
-        "/mnt/c/Program Files/Mozilla Firefox/firefox.exe" -no-remote -P ProxyOn
-        ssh -D 1080 -q -C -N vpn
-      '';
 
       mkcd = ''
         if test (count $argv) -eq 0
@@ -70,9 +63,6 @@
     # This runs for *all* shells (login + interactive).
     # Keep your NVM + FZF bash sourcing via `bass` exactly as you had it.
     shellInit = ''
-      # `nh os switch` without a path: this repo, config picked by hostname.
-      set -gx NH_FLAKE $HOME/nix
-
       # --- NVM setup ---
       set -gx NVM_DIR $HOME/.nvm
       if test -s $NVM_DIR/nvm.sh

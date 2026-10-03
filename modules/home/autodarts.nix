@@ -2,7 +2,7 @@
 
 pkgs.stdenv.mkDerivation rec {
   pname = "autodarts-desktop";
-  version = "0.27.0"; # UPDATE THIS to the version you are downloading
+  version = "1.5.0"; # keep in sync with the .deb URL below
 
   src = pkgs.fetchurl {
     # UPDATE THIS URL

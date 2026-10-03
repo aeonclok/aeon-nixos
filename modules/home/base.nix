@@ -1,5 +1,4 @@
 {
-  inputs,
   config,
   pkgs,
   lib,
@@ -13,31 +12,17 @@ let
 in
 {
 
-  programs.ags = {
-    enable = true;
-
-    # symlink to ~/.config/ags
-    configDir = null;
-
-    # additional packages and executables to add to gjs's runtime
-    extraPackages = with pkgs; [
-      inputs.astal.packages.${pkgs.stdenv.hostPlatform.system}.battery
-      fzf
-    ];
-  };
-
   home.sessionVariables = {
-    # 1. Add your manual variables here
-    MOZ_ENABLE_WAYLAND = "1";
-    XDG_CURRENT_DESKTOP = "niri";
-    XDG_SESSION_TYPE = "wayland";
+    # 1. Add your manual variables here. XDG_CURRENT_DESKTOP / XDG_SESSION_TYPE
+    # come from GDM's niri session, so they aren't forced here (that leaked
+    # them into SSH/TTY shells too).
     NIXOS_OZONE_WL = "1"; # Useful for Chromium/Electron apps
 
   }
   // (lib.mapAttrs' (name: value: {
     # 2. This part merges in your Gruvbox palette
     name = "THEME_${lib.strings.toUpper name}";
-    value = value;
+    inherit value;
   }) gruvbox-palette);
 
   home.packages = with pkgs; [
@@ -108,7 +93,6 @@ in
     neovim # Modern Vim fork, extensible text editor
     nerd-fonts.monaspace # Nerd Font patched Monaspace font
     newsboat # RSS/Atom feed reader for the terminal
-    nh # Helper for managing Nix environments/profiles
     nix-du # Disk usage for Nix store paths
     nix-index # Search packages by file in nixpkgs
     nix-output-monitor # Enhanced output viewer for Nix builds
@@ -147,7 +131,6 @@ in
     wl-clipboard # Wayland clipboard utilities (`wl-copy`, `wl-paste`)
     wofi # App launcher for Wayland
     xan # (Possibly custom or uncommon package — verify usage)
-    xdg-desktop-portal-gnome # Portal backend
     xplr # File explorer for the terminal
     yazi # Fast TUI file manager inspired by ranger
     yq-go # YAML processor (like jq for YAML)
@@ -297,7 +280,7 @@ in
 
   xdg.desktopEntries.zulip = {
     name = "Zulip";
-    exec = "${pkgs.chromium}/bin/chromium --ozone-platform=wayland --disable-features=WaylandWpColorManagerV1 --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer --user-data-dir=${config.xdg.dataHome}/whatsapp-chromium --app=https://zulip.valolink.fi";
+    exec = "${pkgs.chromium}/bin/chromium --ozone-platform=wayland --disable-features=WaylandWpColorManagerV1 --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer --user-data-dir=${config.xdg.dataHome}/zulip-chromium --app=https://zulip.valolink.fi";
     terminal = false;
     # icon = "${config.home.homeDirectory}/.local/share/icons/whatsapp.png";
     type = "Application";
@@ -487,11 +470,6 @@ in
     enable = true;
     configPath = "${config.xdg.configHome}/mozilla/firefox";
   };
-
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-39.8.10"
-  ];
 
   xdg.configFile."fastfetch/config.jsonc".text = ''
     {

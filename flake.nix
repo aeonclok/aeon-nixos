@@ -12,19 +12,11 @@
     # preventing duplicate packages and saving disk space.
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    # A custom fuzzy selector tool you are pulling directly from GitHub.
-    # Temporarily disabled: upstream rustc 1.94.0 ICE while compiling toml_datetime 0.7.5.
-    # fsel.url = "github:Mjoyufull/fsel";
-
     # Stylix handles system-wide theming (colors, fonts, wallpapers).
     stylix = {
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs"; # Again, keeping nixpkgs in sync.
     };
-
-    # Astal and AGS are tools for building custom desktop widgets/bars.
-    astal.url = "github:aylur/astal";
-    ags.url = "github:aylur/ags";
 
     # Community flake that packages the latest Claude Code CLI (fresher than nixpkgs).
     # Bump with `nix flake update claude-code-nix`.
@@ -60,6 +52,17 @@
       # falling back to 'defaultSystem' if not explicitly defined in 'systemsByHost'.
       systemFor = host: nixpkgs.lib.attrByPath [ host ] defaultSystem systemsByHost;
 
+      # The one nixpkgs configuration, shared by the NixOS builds (and through
+      # useGlobalPkgs their Home Manager) and the standalone HM entries.
+      nixpkgsConfig = {
+        allowUnfree = true; # Allow proprietary software (like NVIDIA drivers, Spotify, etc.)
+        permittedInsecurePackages = [
+          "electron-39.8.10"
+        ];
+      };
+      # Overrides pkgs.claude-code with the sadjow/claude-code-nix build.
+      overlays = [ inputs.claude-code-nix.overlays.default ];
+
       # A helper function that bundles all the necessary NixOS modules for a specific host.
       # This keeps your output block clean instead of repeating this for every machine.
       mkModules = host: [
@@ -69,11 +72,8 @@
         # 2. Configure standard Nixpkgs settings
         {
           nixpkgs = {
-            config.allowUnfree = true; # Allow proprietary software (like NVIDIA drivers, Spotify, etc.)
-            overlays = [
-              # Overrides pkgs.claude-code with the sadjow/claude-code-nix build.
-              inputs.claude-code-nix.overlays.default
-            ];
+            config = nixpkgsConfig;
+            inherit overlays;
           };
         }
 
@@ -86,45 +86,24 @@
         home-manager.nixosModules.home-manager
         {
           home-manager.backupFileExtension = "backup"; # Backs up existing dotfiles instead of failing if they conflict.
-          home-manager.extraSpecialArgs = { inherit inputs; }; # Passes your flake inputs (like ags/astal) into Home Manager.
+          home-manager.extraSpecialArgs = { inherit inputs; }; # Passes your flake inputs into Home Manager.
 
-          # Modules available to all Home Manager configurations.
-          home-manager.sharedModules = [
-            # nvf.homeManagerModules.default
-            inputs.ags.homeManagerModules.default # Enables AGS configuration inside home.nix
-            # Home Manager runs its own nixpkgs instance (useGlobalPkgs is off), so
-            # the NixOS-level overlays don't propagate. Re-apply the claude-code-nix
-            # overlay here so home.packages sees the fresh claude-code build.
-            { nixpkgs.overlays = [ inputs.claude-code-nix.overlays.default ]; }
-          ];
+          # Home Manager uses the system's pkgs (config + overlays above) instead
+          # of evaluating its own nixpkgs instance.
+          home-manager.useGlobalPkgs = true;
 
           # Installs packages to /etc/profiles instead of ~/.nix-profile. Usually cleaner.
           home-manager.useUserPackages = true;
-          # home-manager.useGlobalPkgs = true; # toggle if you prefer
 
           # Import the specific user configuration for this machine.
           home-manager.users.reima = import ./hosts/${host}/home.nix;
         }
-
-        # 5. An inline module to add specific flake packages into the system environment.
-        # (
-        #   {
-        #     pkgs,
-        #     ...
-        #   }:
-        #   {
-        #     environment.systemPackages = [
-        #       # Grabs the 'default' package from your 'fsel' flake input and installs it.
-        #       fsel.packages.${pkgs.stdenv.hostPlatform.system}.default
-        #     ];
-        #   }
-        # )
       ];
 
       # This creates standalone Home Manager configurations (e.g., if you wanted to run
       # `home-manager switch --flake .#reima@thinkpad` without doing a full NixOS rebuild).
       # It must mirror what the integrated setup provides: `inputs` via specialArgs, the
-      # ags and stylix HM modules, the claude-code overlay, and the shared stylix theme
+      # stylix HM module, the shared nixpkgs config + overlays, and the shared stylix theme
       # (which the NixOS stylix module would otherwise propagate into HM).
       mkHomeEntries = builtins.listToAttrs (
         map (host: {
@@ -132,14 +111,13 @@
           value = home-manager.lib.homeManagerConfiguration {
             pkgs = import nixpkgs {
               system = systemFor host;
-              config.allowUnfree = true;
+              config = nixpkgsConfig;
+              inherit overlays;
             };
             extraSpecialArgs = { inherit inputs; };
             modules = [
-              inputs.ags.homeManagerModules.default
               stylix.homeModules.stylix
               ./modules/stylix.nix
-              { nixpkgs.overlays = [ inputs.claude-code-nix.overlays.default ]; }
               ./hosts/${host}/home.nix
             ];
           };
@@ -156,7 +134,6 @@
         host:
         nixpkgs.lib.nixosSystem {
           system = systemFor host;
-          # specialArgs = {inherit nvf;};
           modules = mkModules host;
         }
       );

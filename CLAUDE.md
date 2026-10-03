@@ -17,8 +17,8 @@ sudo nixos-rebuild switch --flake .#$(hostname)
 Or via `nh` (already installed):
 
 ```sh
-nh os switch .            # build + switch using current hostname
-nh os boot .              # stage for next boot
+nh os switch               # build + switch; NH_FLAKE (programs.nh.flake) points at this repo
+nh os boot                 # stage for next boot
 ```
 
 Standalone Home Manager (without full rebuild) — outputs are exposed as `reima@<host>`:
@@ -34,29 +34,30 @@ nix flake update
 nix flake lock --update-input nixpkgs   # update a single input
 ```
 
-Format Nix code: `nixfmt` (primary) or `nixpkgs-fmt`. Lint: `statix`, `deadnix`.
+Format Nix code: `nixfmt` (primary) or `nixpkgs-fmt`. Lint: `statix` (config in `statix.toml`; `repeated_keys` is disabled on purpose), `deadnix` (skip the generated `hardware-configuration.nix` files).
 
 ## Architecture
 
 `flake.nix` is the orchestrator. It defines:
 
 - `hosts` — the list of machine names. Adding a host requires both an entry here and a `hosts/<host>/` directory containing `configuration.nix`, `hardware-configuration.nix`, and `home.nix`.
-- `mkModules host` — builds the module list for `nixosSystem`. It wires Stylix, allowUnfree, the host's two system files, and Home Manager (integrated into the NixOS build, with `inputs.ags`'s HM module in `sharedModules`).
+- `mkModules host` — builds the module list for `nixosSystem`. It wires Stylix, the shared `nixpkgsConfig` (allowUnfree, permittedInsecurePackages) + `overlays` (claude-code-nix), the host's two system files, and Home Manager (integrated into the NixOS build with `useGlobalPkgs = true`, so HM uses the system pkgs; don't set `nixpkgs.*` inside HM modules).
 - `mkHomeEntries` — also exposes each host's `home.nix` as a standalone `homeConfigurations."reima@<host>"` so you can iterate on user config without a full system rebuild.
 
 Home Manager is **integrated** (`home-manager.nixosModules.home-manager`), so `nixos-rebuild switch` updates the user environment too. `home-manager.useUserPackages = true` installs to `/etc/profiles`.
 
 ### Layout
 
-- `hosts/<host>/configuration.nix` — typically just imports `modules/system/base.nix`, sets hostname and `stateVersion`. `asusprime` is the outlier (Intel GPU + Ollama + swap + custom EFI mount).
-- `hosts/<host>/home.nix` — imports `modules/home/base.nix` + a few feature modules (`fish`, `wezterm`, `waybar`, `tmux`). Currently all four hosts import the same set.
-- `modules/system/base.nix` — the real system config: locale (en_US with fi_FI regional), keyboard (fi, caps→escape), pipewire, bluetooth, networkmanager, openssh (key-only, firewall closed), tailscale, GDM+Wayland, Niri as the sole compositor, the `reima` user (fish shell, wheel+networkmanager), and Claude Code managed settings at `/etc/claude-code/managed-settings.json` (disables commit/PR attribution and the session-URL trailer on every host; `~/.claude/settings.json` is deliberately left unmanaged so Claude Code can still write to it). Note: `tailscale.extraUpFlags = [ "--ssh" ]` is only applied by the autoconnect service (needs `authKeyFile`); since `tailscale up` was run manually, Tailscale SSH must be enabled per machine with `sudo tailscale set --ssh`.
+- `hosts/<host>/configuration.nix` — typically just imports `modules/system/base.nix`, sets hostname and `stateVersion`. `asusprime` is the outlier (Intel GPU + Ollama + podman + swapfile).
+- `hosts/<host>/home.nix` — imports `modules/home/base.nix` + a few feature modules (`fish`, `wezterm`, `waybar`, `tmux`). All four hosts import the same set; thinkpad-carbon also imports `mail.nix`.
+- `modules/system/base.nix` — the real system config: locale (en_US with fi_FI regional), keyboard (fi, caps→escape), pipewire, bluetooth, networkmanager, openssh (key-only, firewall closed), tailscale, GDM+Wayland, nh (weekly `nh clean`, keeps 5 generations / 7 days) + weekly `nix.optimise`, Niri as the sole compositor, the `reima` user (fish shell, wheel+networkmanager), and Claude Code managed settings at `/etc/claude-code/managed-settings.json` (disables commit/PR attribution and the session-URL trailer on every host; `~/.claude/settings.json` is deliberately left unmanaged so Claude Code can still write to it). Note: `tailscale.extraUpFlags = [ "--ssh" ]` is only applied by the autoconnect service (needs `authKeyFile`); since `tailscale up` was run manually, Tailscale SSH must be enabled per machine with `sudo tailscale set --ssh`.
+- `modules/system/fonts.nix` — system fonts (Noto incl. color emoji, Inter, Monaspace) + fontconfig, imported by `base.nix` on every host. `modules/system/syncthing.nix` — Syncthing over Tailscale, imported by thinkpad-carbon and asusprime only.
 - `modules/stylix.nix` — shared Stylix theme settings (`gruvbox-dark-hard`, Monaspice Nerd Font), imported by both `modules/system/base.nix` and the standalone HM entries in `flake.nix` (the option names are identical in the NixOS and HM stylix modules).
-- `modules/home/base.nix` — the largest file. User packages, ags/astal widgets, rclone gdrive mount as a user systemd service, xdg desktop entries for WhatsApp/Zulip (Chromium PWAs), GTK/Qt theming, fastfetch config, git identity. Inputs available: `inputs.astal`, `inputs.ags`.
+- `modules/home/base.nix` — the largest file. User packages, rclone gdrive mount as a user systemd service, xdg desktop entries for WhatsApp/Zulip (Chromium PWAs), GTK/Qt theming, fastfetch config, git identity.
 - `modules/home/{fish,waybar,wezterm,tmux,nvim,starship,autodarts}.nix` — feature modules, opt-in per host.
 - `modules/home/bubblecalc/` — Go sources for a small TUI calculator, packaged by `modules/home/bubblecalc.nix` (`buildGoModule`) and installed via `base.nix`.
 
-Hyprland was removed; Niri is now the only compositor. Some commented-out Hyprland references remain in `modules/home/base.nix` but are inert.
+Hyprland was removed; Niri is now the only compositor. (`modules/home/waybar-dev.sh` is a leftover from the Hyprland binds.)
 
 ### Live-edit symlinks (important)
 
@@ -73,11 +74,10 @@ Stylix is the single source of truth for colors and fonts. Base16 scheme is `gru
 
 ### Flake inputs of note
 
-- `fsel` (github:Mjoyufull/fsel) — currently **disabled** (input and its inline install module are commented out in `flake.nix`) due to an upstream rustc 1.94.0 ICE building `toml_datetime`. Re-enable both blocks together once upstream builds again.
-- `stylix`, `claude-code-nix` — follow the flake's `nixpkgs` to avoid duplicates. `astal` and `ags` do **not** set `follows` and lock their own nixpkgs revisions.
+- `stylix`, `claude-code-nix` — follow the flake's `nixpkgs` to avoid duplicates.
 
 ## Conventions
 
 - The user's primary email in commits is `reima.kokko@valolink.fi`. A conditional `gitdir:~/valolink/` include in `programs.git` keeps the same identity and switches to `~/.ssh/id_valolink` for that tree.
-- `allowUnfree = true` is set both at the flake level and in `base.nix`.
+- `allowUnfree` and other nixpkgs config live only in `nixpkgsConfig` in `flake.nix` (shared by NixOS, integrated HM, and the standalone HM entries).
 - `stateVersion` is `25.05` on all hosts — don't bump without intent.

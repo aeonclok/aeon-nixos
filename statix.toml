@@ -1,0 +1,3 @@
+# Modules here are grouped by topic (e.g. pipewire next to niri), so merging
+# every `services.*` / `programs.*` line into one block would hurt more than help.
+disabled = [ "repeated_keys" ]

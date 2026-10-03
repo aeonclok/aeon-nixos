@@ -1,6 +1,9 @@
 { config, pkgs, lib, ... }:
 {
-  imports = [ ../stylix.nix ];
+  imports = [
+    ../stylix.nix
+    ./fonts.nix
+  ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -8,6 +11,19 @@
     "nix-command"
     "flakes"
   ];
+  # Hard-link identical store files (weekly timer).
+  nix.optimise.automatic = true;
+
+  # nh, with NH_FLAKE pointing at this repo so `nh os switch` needs no path,
+  # and a weekly `nh clean` keeping the last 5 generations / 7 days.
+  programs.nh = {
+    enable = true;
+    flake = "/home/reima/nix";
+    clean = {
+      enable = true;
+      extraArgs = "--keep 5 --keep-since 7d";
+    };
+  };
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.powersave = false;
   # /etc/hosts is a symlink to /etc/hosts.local — edit that file directly
@@ -89,11 +105,6 @@
   services.udisks2.enable = true;
 
   services.gvfs.enable = true;
-
-  environment.variables = {
-    MOZ_ENABLE_WAYLAND = "1";
-    XDG_SESSION_TYPE = "wayland";
-  };
 
   # Claude Code managed settings (system-wide, highest precedence, all hosts).
   # Kept in /etc rather than ~/.claude/settings.json so that file stays writable

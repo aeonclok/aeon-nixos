@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   # Make fonts available systemwide
   fonts = {
     fontDir.enable = true;
