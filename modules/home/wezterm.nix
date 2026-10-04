@@ -121,6 +121,10 @@ _: {
         harfbuzz_features = { "calt","liga","dlig","ss01","ss02","ss03","ss04","ss05","ss06","ss07","ss08" },
       })
       config.font_size = 12
+      -- Under fractional scaling (thinkpad-carbon eDP-1 at 1.25) wezterm resizes
+      -- its own window to keep rows/cols after the DPI change, leaving it short
+      -- in the niri column. Let the compositor own the size.
+      config.adjust_window_size_when_changing_font_size = false
 
       config.font_rules = {
         {
