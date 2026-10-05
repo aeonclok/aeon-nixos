@@ -307,6 +307,76 @@ in
     ];
   };
 
+  # nvim in its own wezterm window, as a file handler. xdg-open's generic
+  # fallback (used under niri) ignores Terminal=true, so nvim.desktop can't
+  # open files from GUI apps or aerc.
+  xdg.desktopEntries.nvim-wezterm = {
+    name = "Neovim (WezTerm)";
+    exec = "${pkgs.wezterm}/bin/wezterm start -- nvim %F";
+    terminal = false;
+    noDisplay = true;
+    type = "Application";
+    categories = [
+      "Utility"
+      "TextEditor"
+    ];
+  };
+
+  # Default apps: text-like files in nvim, web/images/pdf/video in Firefox.
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications =
+      lib.genAttrs [
+        "text/plain"
+        "text/markdown"
+        "text/x-markdown"
+        "text/csv"
+        "text/x-log"
+        "text/x-patch"
+        "text/x-diff"
+        "text/css"
+        "text/javascript"
+        "text/x-csrc"
+        "text/x-chdr"
+        "text/x-c++src"
+        "text/x-python"
+        "text/x-go"
+        "text/rust"
+        "text/x-lua"
+        "text/x-nix"
+        "text/x-shellscript"
+        "application/x-shellscript"
+        "application/json"
+        "application/toml"
+        "application/yaml"
+        "application/x-yaml"
+        "application/xml"
+        "text/xml"
+      ] (_: "nvim-wezterm.desktop")
+      // lib.genAttrs [
+        "text/html"
+        "application/xhtml+xml"
+        "x-scheme-handler/http"
+        "x-scheme-handler/https"
+        "application/pdf"
+        "image/png"
+        "image/jpeg"
+        "image/gif"
+        "image/webp"
+        "image/avif"
+        "image/svg+xml"
+        "image/bmp"
+        "video/mp4"
+        "video/webm"
+      ] (_: "firefox.desktop")
+      // {
+        "x-scheme-handler/claude-cli" = "claude-code-url-handler.desktop";
+      };
+  };
+  # Apps sometimes rewrite mimeapps.list; let HM replace it rather than
+  # fail on a leftover .backup.
+  xdg.configFile."mimeapps.list".force = true;
+
   # Quick-todo TUI launched in a wezterm window so it shows up in `rofi -show drun`.
   xdg.desktopEntries.bubbletodo = {
     name = "bubbletodo";
