@@ -3,6 +3,7 @@
   imports = [
     ../../modules/system/base.nix
     ../../modules/system/syncthing.nix
+    ../../modules/system/notepad-8fx.nix # the mixer as a microphone interface: USB routing, a mono mic input
   ];
   networking.hostName = "asusprime";
   networking.firewall.enable = true;

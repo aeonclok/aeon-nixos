@@ -11,6 +11,7 @@
     ../../modules/home/majorlink-sessions.nix # weekly check of work sessions waiting for Majorlink (asusprime only)
     ../../modules/home/majorlink-voice.nix # speech to text for Majorlink on the Arc card (asusprime only)
     ../../modules/home/majorlink-mail.nix # pairs Majorlink's mail drafts with what was sent (asusprime only)
+    ../../modules/home/easyeffects.nix # voice effects for the Notepad mic, Mod+A on/off (asusprime only)
   ];
 
   home = {
