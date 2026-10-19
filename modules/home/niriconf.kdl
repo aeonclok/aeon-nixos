@@ -350,6 +350,14 @@ window-rule {
     default-window-height { fixed 480; }
 }
 
+// bubblekeys (Mod+?): the keybind cheat sheet, floating, wide enough for three columns.
+window-rule {
+    match app-id=r#"^bubblekeys$"#
+    open-floating true
+    default-column-width { fixed 1880; }
+    default-window-height { fixed 1000; }
+}
+
 // Open the Firefox picture-in-picture player as floating by default.
 window-rule {
     // This app-id regular expression will work for both:
@@ -405,12 +413,15 @@ binds {
 
     // Mod-Shift-/, which is usually the same as Mod-?,
     // shows a list of important hotkeys.
-    Mod+Shift+Slash { show-hotkey-overlay; }
+    // Mod+? on the Finnish layout (? is Shift and the + key): bubblekeys, every bind
+    // grouped and filterable (modules/home/bubblekeys); the same key closes it. In foot
+    // (foot.nix): footclient opens at once; plain foot if the server is not up.
+    Mod+Shift+Plus hotkey-overlay-title="Shortcuts" { spawn-sh "pkill -x bubblekeys || footclient -N -a bubblekeys -o colors-dark.alpha=0.92 -o 'main.font=MonaspiceNe NFM:size=13' bubblekeys || foot -a bubblekeys -o colors-dark.alpha=0.92 -o 'main.font=MonaspiceNe NFM:size=13' bubblekeys"; }
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     // Mod+T hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
     // Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
-    Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
+    Super+Alt+L hotkey-overlay-title="Lock screen" { spawn "swaylock"; }
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
@@ -425,7 +436,7 @@ binds {
     XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
     XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
     XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
-    XF86Keyboard         allow-when-locked=true { spawn-sh "brightnessctl -d *::kbd_backlight set $(( ($(brightnessctl -d *::kbd_backlight get) + 1) % 3 ))"; }
+    XF86Keyboard         allow-when-locked=true hotkey-overlay-title="Keyboard light" { spawn-sh "brightnessctl -d *::kbd_backlight set $(( ($(brightnessctl -d *::kbd_backlight get) + 1) % 3 ))"; }
 
     // Example media keys mapping using playerctl.
     // This will work with any MPRIS-enabled media player.
@@ -445,14 +456,26 @@ binds {
     // or do a four-finger swipe up on a touchpad.
     Mod+O repeat=false { toggle-overview; }
 
-    Mod+D repeat=false { close-window; }
-    Mod+Q hotkey-overlay-title="Open a Terminal: wezterm" { spawn "wezterm"; }
-    Mod+Return hotkey-overlay-title="Open a rofi" { spawn-sh "rofi -show drun"; }
-    Mod+B hotkey-overlay-title="Open bubblecalc" { spawn "wezterm" "--config" "font_size=16" "start" "--class" "bubblecalc" "--" "bubblecalc"; }
-    Mod+T hotkey-overlay-title="Add a quick todo" { spawn "wezterm" "--config" "font_size=16" "start" "--class" "bubbletodo" "--" "bubbletodo"; }
+    Mod+D repeat=false hotkey-overlay-title="Close window" { close-window; }
+    Mod+Q hotkey-overlay-title="Terminal" { spawn "wezterm"; }
+    Mod+Return hotkey-overlay-title="Launcher" { spawn-sh "rofi -show drun"; }
+    Mod+B hotkey-overlay-title="Calculator" { spawn "wezterm" "--config" "font_size=16" "start" "--class" "bubblecalc" "--" "bubblecalc"; }
+    Mod+T hotkey-overlay-title="Quick todo" { spawn "wezterm" "--config" "font_size=16" "start" "--class" "bubbletodo" "--" "bubbletodo"; }
     // Mod+SHIFT+S hotkey-overlay-title="Grimblast freeze area screenshot" { spawn-sh "grimblast --freeze copy area"; }
-    Mod+SHIFT+S { screenshot; }
-    Mod+P hotkey-overlay-title="Pick a color: hyprpicker" { spawn "hyprpicker" "--autocopy" "--notify" "--lowercase-hex"; }
+    Mod+SHIFT+S hotkey-overlay-title="Screenshot" { screenshot; }
+    Mod+P hotkey-overlay-title="Color picker" { spawn "hyprpicker" "--autocopy" "--notify" "--lowercase-hex"; }
+    Mod+N hotkey-overlay-title="Clear notifications" { spawn "makoctl" "dismiss" "--all"; }
+    Mod+Shift+N hotkey-overlay-title="Restore notification" { spawn "makoctl" "restore"; }
+    // Majorlink (asusprime): speak a thought, press again when done; or type one.
+    // The dictation keys stop the same way: press again.
+    Mod+Space repeat=false hotkey-overlay-title="Majorlink: speak" { spawn "/home/reima/valolink/majorlink/bin/voice"; }
+    Mod+Shift+Space repeat=false hotkey-overlay-title="Majorlink: type" { spawn "/home/reima/valolink/majorlink/bin/voice" "--typed"; }
+    // Dictation: the same recording, typed into the focused window after "[sanelu] ", or onto the clipboard.
+    Mod+Ctrl+Space repeat=false hotkey-overlay-title="Dictate to window" { spawn "/home/reima/valolink/majorlink/bin/voice" "--dictate"; }
+    Mod+Alt+Space repeat=false hotkey-overlay-title="Dictate to clipboard" { spawn "/home/reima/valolink/majorlink/bin/voice" "--clip"; }
+    Mod+BackSpace repeat=false hotkey-overlay-title="Majorlink: cancel" { spawn "/home/reima/valolink/majorlink/bin/voice" "--cancel"; }
+    Mod+Ctrl+Shift+Space repeat=false hotkey-overlay-title="Dictation auto-stop on/off" { spawn "/home/reima/valolink/majorlink/bin/voice" "--toggle-autostop"; }
+    Mod+A repeat=false hotkey-overlay-title="Mic effects on/off" { spawn "mic-effects-toggle"; }
     
     Mod+Left  { focus-column-left; }
     // Mod+Down  { focus-window-down; }
@@ -644,8 +667,8 @@ binds {
 
     // Move the focused window between the floating and the tiling layout.
     // Mod+V       { toggle-window-floating; }
-    Mod+V { spawn "sh" "-c" "cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy"; }
-    Mod+Shift+C { spawn "sh" "-c" "wl-paste -t text/plain | wl-copy"; }
+    Mod+V hotkey-overlay-title="Clipboard history" { spawn "sh" "-c" "cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy"; }
+    Mod+Shift+C hotkey-overlay-title="Clipboard to plain text" { spawn "sh" "-c" "wl-paste -t text/plain | wl-copy"; }
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
 
     // Toggle tabbed column display mode.

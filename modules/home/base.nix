@@ -9,6 +9,7 @@ let
   gruvbox-palette = import ./gruvbox-palette.nix;
   bubblecalc = pkgs.callPackage ./bubblecalc.nix { };
   bubbletodo = pkgs.callPackage ./bubbletodo.nix { };
+  bubblekeys = pkgs.callPackage ./bubblekeys.nix { };
 in
 {
 
@@ -143,6 +144,7 @@ in
     (pkgs.callPackage ./autodarts.nix { })
     bubblecalc
     bubbletodo
+    bubblekeys
   ];
 
   stylix.targets.firefox.profileNames = [ "reima" ];
