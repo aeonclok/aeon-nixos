@@ -6,6 +6,8 @@
     ../../modules/home/wezterm.nix
     ../../modules/home/waybar.nix
     ../../modules/home/tmux.nix
+    ../../modules/home/mail.nix
+    ../../modules/home/laya-mail.nix # mail triage model + automatic triage (asusprime only)
   ];
 
   home = {
