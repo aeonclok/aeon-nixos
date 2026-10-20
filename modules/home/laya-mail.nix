@@ -31,7 +31,7 @@ in
   };
 
   # After every successful sync, triage new mail: rules first, the model for the rest; tags go to Gmail
-  # on the next sync. If the model server is down, mail that needs it stays untriaged for a later run.
+  # on the next sync. Drafts are left alone: Majorlink's drafts come down from Gmail untriaged. If the model server is down, mail that needs it stays untriaged for a later run.
   systemd.user.services.lieer-valolink.Unit.OnSuccess = [ "mail-triage.service" ];
   systemd.user.services.mail-triage = {
     Unit.Description = "Triage new mail after a lieer sync";
@@ -42,7 +42,7 @@ in
         "PATH=${pkgs.notmuch}/bin:${pkgs.coreutils}/bin"
       ];
       ExecStartPre = "${pkgs.coreutils}/bin/date '+=== %%F %%T triage start ==='";
-      ExecStart = "${pkgs.python3}/bin/python3 %h/.local/share/laya/mail/triage.py --apply --summary --query 'not tag:triaged and date:7d..'";
+      ExecStart = "${pkgs.python3}/bin/python3 %h/.local/share/laya/mail/triage.py --apply --summary --query 'not tag:triaged and not tag:draft and date:7d..'";
       StandardOutput = "append:%h/.local/state/mail-triage.log";
       StandardError = "append:%h/.local/state/mail-triage.log";
     };
