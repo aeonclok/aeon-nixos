@@ -11,8 +11,8 @@
   # when the triage fails, since the rules do not depend on it. In "tila:
   # harjoitus" it only says what it would do. Its tag changes reach Gmail on the
   # next lieer sync; every change is logged and a batch can be undone.
-  systemd.user.services.mail-triage.Unit.OnSuccess = [ "majorlink-mail-cleanup.service" ];
-  systemd.user.services.mail-triage.Unit.OnFailure = [ "majorlink-mail-cleanup.service" ];
+  systemd.user.services.mail-triage.Unit.OnSuccess = [ "majorlink-mail-cleanup.service" "majorlink-mail-attention.service" ];
+  systemd.user.services.mail-triage.Unit.OnFailure = [ "majorlink-mail-cleanup.service" "majorlink-mail-attention.service" ];
   systemd.user.services.majorlink-mail-cleanup = {
     Unit.Description = "Majorlink: mail cleanup by his rules";
     Service = {
@@ -23,6 +23,23 @@
         "PATH=${pkgs.notmuch}/bin:${pkgs.libnotify}/bin"
       ];
       ExecStart = "${pkgs.nodejs}/bin/node --experimental-strip-types --no-warnings bin/mail-cleanup.ts run";
+    };
+  };
+  # Speaking up (majorlink bin/mail-attention.ts, MAJORLINK.md §2.5): every new
+  # mail read and sorted heti / pian / myöhemmin by his rules
+  # (~/.config/majorlink/attention-rules); heti gets the Gmail label Kiireellinen.
+  # Nothing is shown outside his working hours; held notices come out at the
+  # first run after they start (lieer runs every 5 minutes).
+  systemd.user.services.majorlink-mail-attention = {
+    Unit.Description = "Majorlink: read new mail and tell him what cannot wait";
+    Service = {
+      Type = "oneshot";
+      WorkingDirectory = "%h/valolink/majorlink";
+      Environment = [
+        "NOTMUCH_CONFIG=%h/.config/notmuch/default/config"
+        "PATH=${pkgs.notmuch}/bin:${pkgs.libnotify}/bin"
+      ];
+      ExecStart = "${pkgs.nodejs}/bin/node --experimental-strip-types --no-warnings bin/mail-attention.ts run";
     };
   };
   systemd.user.services.majorlink-mail-pairs = {
