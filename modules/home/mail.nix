@@ -21,6 +21,8 @@ in
   # TUI mail/calendar trial (2026-07): Herald vs aerc+notmuch, side by side.
   home.packages = [
     (import ./herald.nix { inherit pkgs; })
+    # notmuch.nvim trial (nvim/lua/plugins/notmuch.lua) renders HTML mail with w3m
+    pkgs.w3m
   ];
 
   # Pipeline: lieer syncs Gmail (API, keeps labels as tags) into the maildir
