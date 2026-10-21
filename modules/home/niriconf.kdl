@@ -107,14 +107,16 @@ output "eDP-1" {
     position x=0 y=0
 }
 
-output "DP-1" {
-    position x=-0 y=360
+// asusprime, left to right: AOC, ASUS, Dell. Matched by model, not by
+// connector, so swapping cables keeps the order.
+output "PNP(AOC) Q24P2W1 UFTQ4HA000235" {
+    position x=0 y=0
 }
-output "DP-2" {
-    position x=1920 y=0
+output "ASUSTek COMPUTER INC VG27AQ5A W3LMQS035299" {
+    position x=2560 y=0
 }
-output "DP-4" {
-    position x=4480 y=0
+output "Dell Inc. DELL U2412M 0FFXD33P2J1S" {
+    position x=5120 y=0
 }
 
 // Settings that influence how windows are positioned and sized.
