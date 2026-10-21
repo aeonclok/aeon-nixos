@@ -1,5 +1,6 @@
 { pkgs, ... }:
 let
+  P = import ./terminal-palette.nix;
   # Experiment: render an HTML part with w3m + sixel images in its own wezterm
   # window (aerc's embedded terminal drops sixel). Network is allowed, so
   # remote images — tracking pixels included — get loaded. Runs w3m directly
@@ -28,8 +29,130 @@ in
   # Pipeline: lieer syncs Gmail (API, keeps labels as tags) into the maildir
   # and feeds notmuch directly; aerc reads the notmuch database; sending goes
   # back out through the Gmail API via `gmi send`.
+  # aerc's colours come from the shared terminal palette (as wezterm and foot),
+  # not from stylix, whose styleset is all beige and grey.
+  stylix.targets.aerc.enable = false;
+
   programs.aerc = {
     enable = true;
+    # Styling objects are documented in aerc-stylesets(7). The msglist rows set
+    # no foreground of their own, so the per-column [user] styles show through
+    # (sender, date and flags in the columns below); flagged rows are coloured whole.
+    extraConfig.ui.styleset-name = "palette";
+    stylesets.palette = {
+      global = {
+        "*.default" = true;
+        "*.normal" = true;
+
+        "default.fg" = P.text;
+        "error.fg" = P.flamingo;
+        "warning.fg" = P.mauve;
+        "success.fg" = P.teal;
+
+        "title.fg" = P.blue;
+        "title.bold" = true;
+        "header.fg" = P.blue;
+        "header.bold" = true;
+        # Header block above a message in the viewer
+        "realname.fg" = P.blue;
+        "email.fg" = P.lavender;
+        "subject.fg" = P.rosewater;
+        "subject.bold" = true;
+        "date.fg" = P.lavender;
+
+        "statusline_default.fg" = P.text;
+        "statusline_default.bg" = P.surface1;
+        "statusline_error.fg" = P.flamingo;
+        "statusline_error.bold" = true;
+        "statusline_success.fg" = P.teal;
+        "statusline_success.bold" = true;
+
+        "tab.fg" = P.lavender;
+        "tab.selected.fg" = P.blue;
+        "tab.selected.bg" = P.surface1;
+        "tab.selected.bold" = true;
+        "border.fg" = P.surface2;
+        "spinner.fg" = P.blue;
+
+        "dirlist_default.fg" = P.text;
+        "dirlist_unread.fg" = P.teal;
+        "dirlist_unread.bold" = true;
+        "dirlist_*.selected.fg" = P.blue;
+        "dirlist_*.selected.bg" = P.surface1;
+        "dirlist_*.selected.bold" = true;
+
+        # Rows would inherit default.fg, which beats the column styles.
+        "msglist_*.fg" = "default";
+        "msglist_unread.bold" = true;
+        "msglist_flagged.fg" = P.mauve;
+        "msglist_flagged.bold" = true;
+        "msglist_deleted.dim" = true;
+        "msglist_marked.bg" = P.surface2;
+        "msglist_marked.bold" = true;
+        "msglist_result.fg" = P.teal;
+        "msglist_result.bold" = true;
+        "msglist_thread_context.fg" = P.lavender;
+        "msglist_pill.bg" = P.surface2;
+        # aerc's built-in selected style is white on blue; keep the column
+        # colours on the selected row and only lift its background.
+        "msglist_*.selected.fg" = "default";
+        "msglist_*.selected.bg" = P.surface1;
+        "msglist_*.selected.bold" = true;
+
+        "part_filename.fg" = P.text;
+        "part_mimetype.fg" = P.lavender;
+        "part_*.selected.fg" = P.blue;
+        "part_*.selected.bg" = P.surface1;
+        "part_*.selected.bold" = true;
+
+        "completion_default.bg" = P.surface0;
+        "completion_description.fg" = P.lavender;
+        "completion_*.selected.fg" = P.blue;
+        "completion_*.selected.bg" = P.surface1;
+        "completion_*.selected.bold" = true;
+        "completion_pill.bg" = P.surface2;
+
+        "selector_focused.fg" = P.blue;
+        "selector_focused.bg" = P.surface1;
+        "selector_focused.bold" = true;
+        "keyhint_key.fg" = P.blue;
+        "keyhint_desc.fg" = P.lavender;
+      };
+      # Message bodies, through the colorize filter
+      viewer = {
+        "*.default" = true;
+        "*.normal" = true;
+        "url.fg" = P.blue;
+        "url.underline" = true;
+        "header.fg" = P.blue;
+        "header.bold" = true;
+        "signature.fg" = P.lavender;
+        "signature.dim" = true;
+        "quote_1.fg" = P.teal;
+        "quote_2.fg" = P.blue;
+        "quote_3.fg" = P.pink;
+        "quote_*.fg" = P.lavender;
+        "diff_meta.bold" = true;
+        "diff_chunk.fg" = P.teal;
+        "diff_chunk_func.fg" = P.teal;
+        "diff_chunk_func.bold" = true;
+        "diff_add.fg" = P.green;
+        "diff_del.fg" = P.flamingo;
+      };
+      # Same as notmuch.nvim's list: read mail has a grey date and blue sender,
+      # unread mail an aqua date and pink sender (and the row is bold).
+      user = {
+        "sender.fg" = P.blue;
+        "sender_unread.fg" = P.pink;
+        "date.fg" = P.lavender;
+        "date_unread.fg" = P.teal;
+        "flags.fg" = P.teal;
+      };
+    };
+    # aerc's default message list columns, with the [user] styles applied.
+    extraConfig.ui.column-flags = ''{{.Style (.Flags | join "") "flags"}}'';
+    extraConfig.ui.column-name = ''{{$n := index (.From | names) 0}}{{if .IsUnread}}{{.Style $n "sender_unread"}}{{else}}{{.Style $n "sender"}}{{end}}'';
+    extraConfig.ui.column-date = ''{{$d := .DateAutoFormat .Date.Local}}{{if .IsUnread}}{{.Style $d "date_unread"}}{{else}}{{.Style $d "date"}}{{end}}'';
     # accounts.conf is a read-only store symlink; it holds no secrets (auth
     # lives in lieer's credentials file), so skip aerc's permission check.
     extraConfig.general.unsafe-accounts-conf = true;
