@@ -18,13 +18,53 @@ let
         -o display_image=true -o auto_image=true -sixel "$1"
       rm -f "$1"' _ "$f"
   '';
+  # Sending for notmuch.nvim (nvim/lua/plugins/notmuch.lua), which writes
+  # headers raw: non-ASCII ones (a Finnish subject, a name) unencoded, empty
+  # ones like `Cc: ` kept, no Date or Message-ID. This re-sets every header so
+  # Python's email package encodes it, drops the empty ones, adds the missing
+  # two and hands the mail to `gmi send` as aerc does. Extra arguments go to
+  # gmi, e.g. `-d -v` for a dry run.
+  notmuch-gmi-send = pkgs.writers.writePython3Bin "notmuch-gmi-send" { flakeIgnore = [ "E501" ]; } ''
+    import email.policy
+    import subprocess
+    import sys
+    from email import message_from_bytes
+    from email.utils import formatdate, make_msgid
+    from pathlib import Path
+
+    msg = message_from_bytes(sys.stdin.buffer.read(), policy=email.policy.default)
+
+    headers = []
+    for name, value in msg.raw_items():
+        # Raw UTF-8 header bytes arrive surrogate-escaped
+        value = value.encode("ascii", "surrogateescape").decode("utf-8", "replace")
+        value = " ".join(value.split())
+        if value:
+            headers.append((name, value))
+    for name in {name for name, _ in msg.raw_items()}:
+        del msg[name]
+    for name, value in headers:
+        msg[name] = value
+
+    if "Date" not in msg:
+        msg["Date"] = formatdate(localtime=True)
+    if "Message-ID" not in msg:
+        msg["Message-ID"] = make_msgid(domain=msg["From"].addresses[0].domain)
+
+    maildir = str(Path.home() / "Maildir" / "valolink")
+    gmi = ["${pkgs.lieer}/bin/gmi", "send", "-t", "--quiet", "-C", maildir]
+    out = msg.as_bytes(policy=email.policy.SMTP)
+    sys.exit(subprocess.run(gmi + sys.argv[1:], input=out).returncode)
+  '';
 in
 {
   # TUI mail/calendar trial (2026-07): Herald vs aerc+notmuch, side by side.
   home.packages = [
     (import ./herald.nix { inherit pkgs; })
-    # notmuch.nvim trial (nvim/lua/plugins/notmuch.lua) renders HTML mail with w3m
+    # notmuch.nvim (nvim/lua/plugins/notmuch.lua) renders HTML mail with w3m
+    # and sends through notmuch-gmi-send
     pkgs.w3m
+    notmuch-gmi-send
   ];
 
   # Pipeline: lieer syncs Gmail (API, keeps labels as tags) into the maildir

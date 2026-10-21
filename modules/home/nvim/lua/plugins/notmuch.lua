@@ -1,6 +1,5 @@
--- notmuch.nvim, on trial as an aerc replacement: reads the same notmuch database
--- that lieer fills (modules/home/mail.nix). Sending is not set up yet: the plugin
--- always runs `msmtp -t`, which would need a shim handing the mail to `gmi send -t`.
+-- notmuch.nvim, in use next to aerc: reads the same notmuch database that lieer
+-- fills (modules/home/mail.nix) and sends through Gmail like aerc does.
 
 -- The saved searches aerc shows as folders, read from its queries.conf so the two
 -- stay the same; listed in aerc's folders-sort order.
@@ -58,6 +57,31 @@ return {
       end
     end
     require("notmuch").setup(opts)
+
+    -- Sending: the plugin only knows `msmtp -t`; its send function is replaced
+    -- by notmuch-gmi-send (mail.nix), which tidies the headers and hands the mail
+    -- to `gmi send`. The plugin still asks for confirmation and keeps the draft.
+    require("notmuch.send").sendmail = function(filename, send_opts)
+      send_opts = send_opts or {}
+      vim.notify("Sending…")
+      vim.system({ "notmuch-gmi-send" }, { stdin = vim.fn.readblob(filename), text = true }, function(res)
+        vim.schedule(function()
+          if res.code == 0 then
+            vim.notify("Mail sent")
+            if send_opts.on_success then
+              send_opts.on_success()
+            end
+          else
+            local err = vim.trim(res.stderr or "")
+            vim.notify(("Sending failed (exit %d)%s"):format(res.code, err ~= "" and (":\n" .. err) or ""), vim.log.levels.ERROR)
+            if send_opts.on_failure then
+              send_opts.on_failure(res.code)
+            end
+          end
+        end)
+      end)
+      return true
+    end
 
     -- Colours from the terminal palette (modules/home/terminal-palette.nix), as
     -- in aerc: read mail has a grey date and blue sender; unread mail is bold
