@@ -39,14 +39,17 @@ in
           "backlight/slider"
         ];
 
-        # Click to block swayidle's auto-lock (e.g. while watching video).
+        # Click to block swayidle's auto-lock and monitors-off (e.g. while
+        # watching video). Switches itself off after a workday, so it can't
+        # stay on for days by accident.
         idle_inhibitor = {
+          timeout = 480; # minutes
           format = "{icon}";
           "format-icons" = {
             activated = "󰅶";
             deactivated = "󰾪";
           };
-          tooltip-format-activated = "Idle inhibited";
+          tooltip-format-activated = "Idle inhibited (off by itself after 8 h)";
           tooltip-format-deactivated = "Idle allowed";
         };
 

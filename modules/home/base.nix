@@ -171,7 +171,8 @@ in
 
   # Screen locking: swaylock is what the niri Super+Alt+L bind spawns, and
   # swayidle guarantees the session is locked before suspend/hibernate
-  # (lid close on thinkpad-carbon) plus after 10 minutes idle.
+  # (lid close on thinkpad-carbon) plus after 10 minutes idle; monitors go
+  # off at 15 minutes.
   # Needs security.pam.services.swaylock on the NixOS side.
   programs.swaylock.enable = true;
   services.swayidle = {
@@ -184,6 +185,13 @@ in
       {
         timeout = 600;
         command = "${pkgs.swaylock}/bin/swaylock -f";
+      }
+      # Monitors off 5 minutes after the lock: a lit lock screen around the
+      # clock had heat-stressed the AOC panel. Input wakes them again.
+      {
+        timeout = 900;
+        command = "${pkgs.niri}/bin/niri msg action power-off-monitors";
+        resumeCommand = "${pkgs.niri}/bin/niri msg action power-on-monitors";
       }
     ];
   };

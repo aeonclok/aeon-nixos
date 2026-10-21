@@ -52,5 +52,8 @@
   boot.initrd.systemd.enable = true;
   boot.kernelParams = [ "mem_sleep_default=deep" ];
   powerManagement.enable = true;
+  # Never suspend on its own: GDM's login screen otherwise does after ~15 min
+  # idle (after a reboot or logout), taking Tailscale SSH, Ollama and Laya with it.
+  services.displayManager.gdm.autoSuspend = false;
   # /boot comes from hardware-configuration.nix, systemd-boot from base.nix.
 }
