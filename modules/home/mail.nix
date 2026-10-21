@@ -1,6 +1,7 @@
 { pkgs, ... }:
 let
   P = import ./terminal-palette.nix;
+  cap-log = import ./cap-log.nix { inherit pkgs; };
   # Experiment: render an HTML part with w3m + sixel images in its own wezterm
   # window (aerc's embedded terminal drops sixel). Network is allowed, so
   # remote images — tracking pixels included — get loaded. Runs w3m directly
@@ -250,7 +251,10 @@ in
   systemd.user.services.lieer-valolink.Service = {
     StandardOutput = "append:%h/.local/state/lieer-valolink.log";
     StandardError = "append:%h/.local/state/lieer-valolink.log";
-    ExecStartPre = "${pkgs.coreutils}/bin/date '+=== %%F %%T sync start ==='";
+    ExecStartPre = [
+      "${cap-log} %h/.local/state/lieer-valolink.log"
+      "${pkgs.coreutils}/bin/date '+=== %%F %%T sync start ==='"
+    ];
     ExecStopPost = "${pkgs.coreutils}/bin/date '+=== %%F %%T sync end ==='";
   };
 
@@ -294,7 +298,7 @@ in
       ];
       sync = {
         enable = true;
-        frequency = "*:0/5"; # sync every 5 minutes
+        frequency = "minutely"; # each sync takes 1-3 s
       };
     };
   };

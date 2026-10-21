@@ -3,6 +3,7 @@
 # (real customer mail, never in git); see ~/.local/share/laya/HANDOFF.md.
 { pkgs, lib, ... }:
 let
+  cap-log = import ./cap-log.nix { inherit pkgs; };
   # Waybar: robot icon, red with "off" when the model server does not answer; the number is mail from
   # the last 7 days that triage has not reached yet (normally none).
   status = pkgs.writeShellScript "laya-mail-status" ''
@@ -41,7 +42,10 @@ in
         "NOTMUCH_CONFIG=%h/.config/notmuch/default/config"
         "PATH=${pkgs.notmuch}/bin:${pkgs.coreutils}/bin"
       ];
-      ExecStartPre = "${pkgs.coreutils}/bin/date '+=== %%F %%T triage start ==='";
+      ExecStartPre = [
+        "${cap-log} %h/.local/state/mail-triage.log"
+        "${pkgs.coreutils}/bin/date '+=== %%F %%T triage start ==='"
+      ];
       ExecStart = "${pkgs.python3}/bin/python3 %h/.local/share/laya/mail/triage.py --apply --summary --query 'not tag:triaged and not tag:draft and date:7d..'";
       StandardOutput = "append:%h/.local/state/mail-triage.log";
       StandardError = "append:%h/.local/state/mail-triage.log";

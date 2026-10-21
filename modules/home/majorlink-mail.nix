@@ -29,7 +29,7 @@
   # mail read and sorted heti / pian / myöhemmin by his rules
   # (~/.config/majorlink/attention-rules); heti gets the Gmail label Kiireellinen.
   # Nothing is shown outside his working hours; held notices come out at the
-  # first run after they start (lieer runs every 5 minutes).
+  # first run after they start (lieer runs every minute).
   systemd.user.services.majorlink-mail-attention = {
     Unit.Description = "Majorlink: read new mail and tell him what cannot wait";
     Service = {
