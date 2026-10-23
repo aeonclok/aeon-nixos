@@ -14,6 +14,9 @@
 
       # Use Ctrl-n to accept autosuggestion
       bind \cn accept-autosuggestion
+
+      # Starting directory counts as seen, so the first command doesn't list it
+      set -g __ls_after_cd_last $PWD
     '';
 
     # Show fastfetch as greeting
@@ -29,6 +32,27 @@
       baremajor = "~/valolink/majorlink/bin/bare-agent";
 
       debug = "./debug.sh $argv";
+
+      # After a prompt command that changed directory, list the 5 most
+      # recently modified entries so a big directory can't flood the
+      # scrollback. Runs on fish_postexec rather than on PWD, so cds inside
+      # functions and completions stay quiet.
+      __ls_after_cd = {
+        onEvent = "fish_postexec";
+        body = ''
+          test "$PWD" = "$__ls_after_cd_last"; and return
+          set -g __ls_after_cd_last $PWD
+          # Explicit `.`: without a path eza reads names from a non-tty stdin
+          set -l entries (${pkgs.eza}/bin/eza -1 --sort=modified -r --color=always . </dev/null 2>/dev/null)
+          set -q entries[1]; or return
+          printf '%s\n' $entries[1..5]
+          if test (count $entries) -gt 5
+            set_color brblack
+            echo "… "(math (count $entries) - 5)" more"
+            set_color normal
+          end
+        '';
+      };
 
       mkcd = ''
         if test (count $argv) -eq 0
