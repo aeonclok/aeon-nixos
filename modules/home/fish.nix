@@ -105,4 +105,5 @@
 
   imports = [ ./starship.nix ];
   programs.fzf.enable = true;
+  programs.zoxide.enable = true;
 }
