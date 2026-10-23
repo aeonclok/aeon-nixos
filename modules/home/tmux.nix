@@ -1,5 +1,7 @@
 { config, pkgs, ... }:
 let
+  P = import ./terminal-palette.nix;
+
   # Print this machine's WAYLAND_DISPLAY if the person at the keyboard sits at
   # it; fail if they're connected over SSH/mosh. Inside tmux that is decided by
   # the most recently active client of this pane's session (its environment, not
@@ -121,6 +123,12 @@ let
       fi
     '';
   };
+
+  # cr: fuzzy-find a Claude Code session (name, project, prompts) and resume it,
+  # or go to the tmux window it is already open in. prefix+R opens it as a popup.
+  cr = pkgs.writeScriptBin "cr" (
+    "#!${pkgs.python3}/bin/python3\n" + builtins.readFile ./claude-resume.py
+  );
 in
 {
   home.packages = [
@@ -128,6 +136,7 @@ in
     clip-paste
     clip-local
     clip-pull
+    cr
   ];
 
   programs.tmux = {
@@ -146,6 +155,34 @@ in
 
       # Pull the clipboard of the machine this client is SSH'd in from.
       bind P run-shell -b "clip-pull '#{client_pid}' '#{client_name}'"
+
+      # Find a Claude Code session and go to it (or resume it in a new window).
+      bind R display-popup -E -w 90% -h 85% -d '#{pane_current_path}' "cr --popup"
+
+      # Status bar in the terminal palette; the current window in blue, the
+      # previous one (prefix+l) in the palette's pink (aerc's and nvim's unread
+      # senders). The other way round, the pink read as the current one.
+      set -g status-style 'fg=${P.text},bg=${P.mantle}'
+      set -g window-status-current-style 'fg=${P.blue},bg=${P.mantle}'
+      set -g window-status-last-style 'fg=${P.pink},bg=${P.mantle}'
+      # No clock or date (the eye goes to the desktop's top bar for those): the
+      # right side shows only the zoom offset when the window is larger than the client.
+      set -g status-right '#{?window_bigger,[#{window_offset_x}#,#{window_offset_y}] ,}'
+      # Bold window numbers, so the number to press stands out from the name. The
+      # current window is bold all through and has a * on both sides
+      # ("*3:Tori + GPU*"; the trailing one is tmux's own flag), so it can't be
+      # mistaken for the previous one.
+      set -g window-status-format '#[bold]#I#[nobold]:#W#{?window_flags,#{window_flags}, }'
+      set -g window-status-current-format '#[bold]*#I:#W#{?window_flags,#{window_flags}, }'
+
+      # A window running Claude Code is named after its session: Claude Code puts
+      # the session name in the pane title ("✳ Laya email thing"; the first
+      # character is its status glyph), so the name follows /rename. Other
+      # windows keep the command name. ([:alnum:] can't be used: the colon ends
+      # the s/// modifier.) Windows renamed by hand keep their name until
+      # "set -w automatic-rename on". Cut at 12 characters (+ …) so a half-width
+      # terminal fits five windows.
+      set -g automatic-rename-format '#{?pane_in_mode,[tmux],#{?#{==:#{pane_current_command},claude},#{=/12/…:#{s/^[^a-zA-Z0-9 ]+ //:pane_title}},#{pane_current_command}}}#{?pane_dead,[dead],}'
 
       # Don't copy env from attaching clients: attaching over SSH (e.g. Termux)
       # would drop WAYLAND_DISPLAY and set SSH_CONNECTION for every new pane,
