@@ -7,7 +7,6 @@
     ../../modules/home/foot.nix
     ../../modules/home/waybar.nix
     ../../modules/home/tmux.nix
-    ../../modules/home/mail.nix
   ];
 
   home = {
