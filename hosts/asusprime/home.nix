@@ -7,6 +7,7 @@
     ../../modules/home/foot.nix
     ../../modules/home/waybar.nix
     ../../modules/home/tmux.nix
+    ../../modules/home/photocraft.nix
     ../../modules/home/mail.nix
     ../../modules/home/laya-mail.nix # mail triage model + automatic triage (asusprime only)
     ../../modules/home/majorlink-sessions.nix # weekly check of work sessions waiting for Majorlink (asusprime only)
