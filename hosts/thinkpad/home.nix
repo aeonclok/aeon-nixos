@@ -4,6 +4,7 @@
     ../../modules/home/base.nix
     ../../modules/home/fish.nix
     ../../modules/home/wezterm.nix
+    ../../modules/home/foot.nix
     ../../modules/home/waybar.nix
     ../../modules/home/tmux.nix
   ];
