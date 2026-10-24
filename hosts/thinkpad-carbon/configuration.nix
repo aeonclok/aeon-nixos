@@ -43,15 +43,16 @@
       }
     ];
     # [ LEVEL LOW HIGH ]: step up when temp reaches HIGH, step down at LOW.
-    # Quiet-biased — fan stays off below 55 °C, ramps toward level 7 by ~83 °C.
+    # About 5 °C earlier than the old quiet curve (off below 55, full at 86):
+    # fan off below 50 °C, full speed from 80 °C. 5 °C hysteresis per step.
     levels = [
-      [ 0 0 55 ]
-      [ 1 50 63 ]
-      [ 2 58 70 ]
-      [ 3 65 77 ]
-      [ 4 72 82 ]
-      [ 5 78 86 ]
-      [ 7 83 32767 ]
+      [ 0 0 50 ]
+      [ 1 45 57 ]
+      [ 2 52 64 ]
+      [ 3 59 70 ]
+      [ 4 65 75 ]
+      [ 5 70 80 ]
+      [ 7 75 32767 ]
     ];
   };
 
